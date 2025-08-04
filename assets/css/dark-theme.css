@@ -1,0 +1,46 @@
+/* Estilos customizados para o tema escuro */
+
+/* Barra de progresso */
+#quantidade_barra {
+  font-size: 28px;
+  color: gray;
+  font-weight: bold;
+  width: 50%;
+  background-color: transparent !important;
+}
+
+/* Animações para o ícone de lua no tema escuro */
+@keyframes breathing {
+  0% {
+    filter: drop-shadow(0 0 2px rgba(253, 224, 71, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 0 8px rgba(253, 224, 71, 0.6));
+  }
+  100% {
+    filter: drop-shadow(0 0 2px rgba(253, 224, 71, 0.3));
+  }
+}
+
+.dark .fa-moon {
+  animation: breathing 3s ease-in-out infinite;
+}
+
+/* Estilos para canvas QR Code */
+canvas a {
+  background-color: #ff0080 !important;
+}
+
+/* Transições suaves para mudança de tema */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Prevenir FOUC (Flash of Unstyled Content) */
+html {
+  visibility: hidden;
+}
+
+html.theme-loaded {
+  visibility: visible;
+} 
