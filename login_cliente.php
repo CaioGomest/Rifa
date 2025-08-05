@@ -123,7 +123,7 @@ if (isset($_SESSION['usuario']['cliente_id']) || isset($_SESSION['usuario']['usu
             </div>
 
             <!-- Tabs -->
-            <div class="flex rounded-lg bg-gray-800 dark:bg-gray-100 p-1 mb-6">
+            <div class="flex rounded-lg dark:bg-gray-800 bg-gray-100 p-1 mb-6">
                 <button id="tab-login" class="tab-btn active flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200">
                     <i class="fas fa-sign-in-alt mr-2"></i>Entrar
                 </button>

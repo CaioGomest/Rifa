@@ -146,6 +146,100 @@
       margin: 0 auto;
       background: #222;
     }
+
+    /* Estilos para transições do sistema de login */
+    .secao-compra {
+      transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    }
+
+    .secao-compra.slide-out {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+
+    .login-container {
+      transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+      transform: translateX(100%);
+      opacity: 0;
+    }
+
+    .login-container.slide-in {
+      transform: translateX(0);
+      opacity: 1;
+    }
+
+    /* Animações para os formulários */
+    .form-fade-in {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Estilos para os inputs com ícones */
+    .input-with-icon {
+      position: relative;
+    }
+
+    .input-with-icon input {
+      padding-left: 2.5rem;
+    }
+
+    .input-with-icon i {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6b7280;
+      z-index: 10;
+    }
+
+    /* Estilos para os botões */
+    .btn-primary {
+      background: linear-gradient(135deg, #10b981, #059669);
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #059669, #047857);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    /* Estilos para o checkbox personalizado */
+    .custom-checkbox {
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border: 2px solid #fff;
+      border-radius: 3px;
+      background: transparent;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .custom-checkbox:checked {
+      background: #fff;
+    }
+
+    .custom-checkbox:checked::after {
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #f59e0b;
+      font-size: 12px;
+      font-weight: bold;
+    }
   </style>
 
 
@@ -476,7 +570,7 @@ if ($imagens) {
 
           <!-- Adição Rápida -->
           <?php if (!$modo_exclusivo && $campanhas[0]['habilitar_adicao_rapida'] == '1'): ?>
-            <div class="mb-6">
+            <div class="mb-6 secao-compra">
               <p class="text-sm font-medium text-black dark:text-white">Adição Rápida</p>
               <div class="grid grid-cols-3 gap-4 mt-2">
                 <?php
@@ -494,7 +588,7 @@ if ($imagens) {
 
           <!-- Pacotes padrão -->
           <?php if ($campanhas[0]['habilitar_pacote_promocional'] == '1' && !isset($_REQUEST['cx'])): ?>
-            <div class="mb-6">
+            <div class="mb-6 secao-compra">
               <p class="text-sm font-medium text-black dark:text-white">Pacotes padrão</p>
 
               <?php
@@ -553,7 +647,7 @@ if ($imagens) {
         <?php endif; ?>
 
 
-        <div class="mb-6">
+        <div class="mb-6 secao-compra">
           <label for="quantidade" class="block text-sm font-medium text-black dark:text-white">
             Quantidade (Mín: <?php echo $compra_minima; ?>)
           </label>
@@ -592,7 +686,7 @@ if ($imagens) {
 
         <!-- Comprar -->
 
-        <form action="processamento_pagamento.php" method="POST" id="formComprar" onsubmit="return validarCompra(event)">
+        <form action="processamento_pagamento.php" method="POST" id="formComprar" onsubmit="return validarCompra(event)" class="secao-compra">
           <input type="hidden" name="campanha_id" value="<?php echo $id; ?>">
           <input type="hidden" name="valor_total" id="valor_total"
             value="<?php echo $campanhas[0]['preco'] * $compra_minima; ?>">
@@ -640,7 +734,7 @@ if ($imagens) {
         if(!isset($_SESSION['usuario']) || $isCliente)
         {
         ?>
-        <div class="w-full flex flex-col gap-2 mt-2">
+        <div class="w-full flex flex-col gap-2 mt-2 secao-compra">
           <button onclick="verificarLogin('titulos')"
             class="border border-[#1BC863] text-[#1BC863] rounded-lg font-semibold px-4 py-2 flex items-center justify-center gap-2 transition-all mb-1">
             <span class="iconify" data-icon="tabler:numbers"></span>
@@ -655,14 +749,14 @@ if ($imagens) {
         <?php
 
         if (!empty($campanhas[0]['mostrar_cotas_premiadas']) && !empty($campanhas[0]['cotas_premiadas'])): ?>
-          <div class="mt-4">
+          <div class="w-full px-4 mb-2 secao-compra">
             <p class="text-sm font-medium text-black dark:text-white mb-2">🔥 Cotas premiadas - Achou ganhou!</p>
             <div class="grid grid-cols-3 sm:grid-cols-6 md:grid-cols-6 lg:grid-cols-6 gap-2 font-bold">
               <?php
               $cotas_premiadas = explode(',', $campanhas[0]['cotas_premiadas']);
               foreach ($cotas_premiadas as $cota) {
                 echo
-                  "<div class='bg-green-600 text-black dark:text-white text-center py-2 px-1 rounded-lg'>" . trim($cota) . "</div>";
+                  "<div class='bg-green-600 dark:text-black text-white text-center py-2 px-1 rounded-lg'>" . trim($cota) . "</div>";
               }
               ?>
             </div>
@@ -708,7 +802,7 @@ if ($imagens) {
           // Buscar top compradores da campanha
           $top_compradores = listaClientesTopCompradores($conn, $id, $data_inicio, $data_fim, $campanhas[0]['quantidade_ranking']);
           if (!empty($top_compradores)): ?>
-            <div class="mt-4">
+            <div class="w-full px-4 mb-2 secao-compra">
               <p class="text-sm font-medium text-black dark:text-white mb-2">🏆 Top Compradores</p>
               <div class="grid grid-cols-1 gap-2">
                 <?php
@@ -750,6 +844,145 @@ if ($imagens) {
 
 
         </div>
+
+        <!-- Sistema de Login/Cadastro Inline -->
+        <div id="loginCadastroContainerLayout0" class="hidden">
+          <!-- Sistema de Login -->
+          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
+            <h3 class="text-xl font-bold mb-6 text-center text-gray-800 dark:text-white">Fazer login</h3>
+            
+            <!-- Formulário de Login -->
+            <form id="formLoginInline" class="space-y-4 mb-6">
+              <div class="relative">
+                <label class="block text-gray-700 dark:text-gray-300 mb-2">Celular</label>
+                <div class="relative">
+                  <i class="fas fa-phone absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                  <input type="tel" name="telefone" required
+                    class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg pl-10 pr-4 py-3 text-gray-800 dark:text-white"
+                    placeholder="Digite seu número de telefone">
+                </div>
+              </div>
+
+              <div class="relative">
+                <label class="block text-gray-700 dark:text-gray-300 mb-2">CPF</label>
+                <div class="relative">
+                  <i class="fas fa-id-card absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                  <input type="text" name="cpf" required
+                    class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg pl-10 pr-4 py-3 text-gray-800 dark:text-white"
+                    placeholder="Digite seu CPF">
+                </div>
+              </div>
+
+              <button type="submit"
+                class="bg-green-600 hover:bg-green-700 text-white w-full py-3 rounded-lg text-lg font-bold transition-colors">
+                Continuar Login
+              </button>
+            </form>
+
+            <div class="text-center">
+              <button onclick="mostrarCadastro()" 
+                class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg text-sm font-medium transition-colors">
+                Não tem conta? Cadastre-se
+              </button>
+            </div>
+
+            <!-- Resumo do Pedido -->
+            <div class="mt-6 p-4 bg-green-600 rounded-lg">
+              <div class="text-white text-center">
+                <p class="font-bold">Valor do pedido: R$ <span id="valorPedidoLoginLayout0">0,00</span></p>
+              </div>
+            </div>
+
+            <!-- Termos de Uso -->
+            <div class="mt-4 p-3 bg-orange-500 rounded-lg">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <input type="checkbox" id="aceitarTermosLayout0" class="mr-2">
+                  <label for="aceitarTermosLayout0" class="text-white text-sm">Aceito os termos de uso</label>
+                </div>
+                <button type="button" onclick="verTermosUso()" 
+                  class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs transition-colors">
+                  Ver Termos de Uso
+                </button>
+              </div>
+            </div>
+
+            <!-- Mensagem de Erro -->
+            <div id="mensagemErroLayout0" class="hidden mt-4 p-3 bg-red-500 rounded-lg">
+              <p class="text-white text-sm text-center">Para prosseguir você deve aceitar Termos de Uso.</p>
+            </div>
+          </div>
+
+
+
+           <!-- Formulário de Cadastro Inline -->
+        <div id="cadastroContainerLayout0" 1 class="hidden w-full">
+          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
+            <h3 class="text-xl font-bold mb-6 text-center text-gray-800 dark:text-white">Cadastro</h3>
+            
+            <form id="formCadastroInline" class="space-y-4">
+              <input type="hidden" name="telefone" id="telefone_cadastro_inline">
+
+              <div class="relative">
+                <label class="block text-gray-700 dark:text-gray-300 mb-2">Nome Completo</label>
+                <div class="relative">
+                  <i class="fas fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                  <input type="text" name="nome" required
+                    class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg pl-10 pr-4 py-3 text-gray-800 dark:text-white"
+                    placeholder="Digite seu nome completo">
+                </div>
+              </div>
+
+              <div class="relative">
+                <label class="block text-gray-700 dark:text-gray-300 mb-2">E-mail</label>
+                <div class="relative">
+                  <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                  <input type="email" name="email" required
+                    class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg pl-10 pr-4 py-3 text-gray-800 dark:text-white"
+                    placeholder="Digite seu e-mail">
+                </div>
+              </div>
+
+              <div class="relative">
+                <label class="block text-gray-700 dark:text-gray-300 mb-2">CPF</label>
+                <div class="relative">
+                  <i class="fas fa-id-card absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                  <input type="text" name="cpf" required
+                    class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg pl-10 pr-4 py-3 text-gray-800 dark:text-white"
+                    placeholder="Digite seu CPF">
+                </div>
+              </div>
+
+              <button type="submit"
+                class="bg-green-600 hover:bg-green-700 text-white w-full py-3 rounded-lg text-lg font-bold transition-colors">
+                Cadastrar
+              </button>
+            </form>
+
+            <div class="text-center mt-4">
+              <button onclick="voltarParaLogin()" 
+                class="text-blue-500 hover:text-blue-600 text-sm font-medium transition-colors">
+                Já tenho uma conta, fazer login
+              </button>
+            </div>
+          </div>
+        </div>
+
+          <!-- Botões de Navegação -->
+          <div class="flex justify-between mt-4">
+            <button onclick="voltarParaCompra()" 
+              class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg flex items-center transition-colors">
+              <i class="fas fa-arrow-left mr-2"></i>
+              Voltar
+            </button>
+            <button onclick="continuarComLogin()" 
+              class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg transition-colors">
+              Saiba se sua cota continua
+            </button>
+          </div>
+        </div>
+
+       
       </section>
     </main>
   <?php } else { ?>
@@ -951,7 +1184,7 @@ if ($imagens) {
 
 
           <!-- Barra de promoções -->
-          <div class="flex mt-2 items-center w-full">
+          <div class="flex mt-2 items-center w-full secao-compra">
             <h1 class="text-1xl md:text-3xl font-bold mb-1">
               📣 Promoção
             </h1>
@@ -959,7 +1192,7 @@ if ($imagens) {
           </div>
 
 
-          <div class="w-full px-4 mt-3 flex flex-wrap gap-2 justify-center bg-gray-100 dark:bg-gray-700 rounded-2xl p-2">
+          <div class="w-full px-4 mt-3 flex flex-wrap gap-2 justify-center bg-gray-100 dark:bg-gray-700 rounded-2xl p-2 secao-compra">
             <?php
             $pacotes_promocionais_origin = $campanhas[0]['pacote_promocional'];
             $pacotes_promocionais_origin = json_decode($pacotes_promocionais_origin, true);
@@ -1045,7 +1278,7 @@ if ($imagens) {
 
 
           <!-- Grid Seletores de Quantidade -->
-          <div class="grid grid-cols-3 gap-1 w-full mt-4">
+          <div class="grid grid-cols-3 gap-1 w-full mt-4 secao-compra">
 
             <?php
             $incrementos = [25, 50, 100, 250, 500, 1000];
@@ -1074,7 +1307,7 @@ if ($imagens) {
           </div>
 
           
-          <div style="display: flex;justify-content: start;width: 100%;" class="mt-4">
+          <div style="display: flex;justify-content: start;width: 100%;" class="mt-4 secao-compra">
             <label for="quantidade" class="block text-sm font-medium text-black dark:text-white">
               Quantidade (Mín: <?php echo $compra_minima; ?>)
             </label>
@@ -1082,7 +1315,7 @@ if ($imagens) {
 
           <!-- Custom Quantidade Seletor -->
           <div
-            class="flex items-center justify-center gap-2 mt-4 mb-2 w-full px-4 bg-gray-100 dark:bg-gray-800 p-2 rounded-2xl flex-col border border-gray-300 dark:border-[#000000]">
+            class="flex items-center justify-center gap-2 mt-4 mb-2 w-full px-4 bg-gray-100 dark:bg-gray-800 p-2 rounded-2xl flex-col border border-gray-300 dark:border-[#000000] secao-compra">
             <div class="flex items-center space-x-2">
               <button onclick="alterarQuantidade(-5,true)"
                 class="bg-[#1BC863] hover:bg-[#43996d] text-white rounded-lg font-bold w-10 h-10 text-xl">-5</button>
@@ -1107,14 +1340,14 @@ if ($imagens) {
 
           </div>
           <!-- Botão Quero Participar -->
-          <div class="w-full px-4 mb-2">
+          <div class="w-full px-4 mb-2 secao-compra">
 
 
 
 
 
             <form action="processamento_pagamento.php" method="POST" id="formComprar"
-              onsubmit="return validarCompra(event)">
+              onsubmit="return validarCompra(event)" class="secao-compra">
               <input type="hidden" name="campanha_id" value="<?php echo $id; ?>">
               <input type="hidden" name="valor_total" id="valor_total"
                 value="<?php echo $campanhas[0]['preco'] * $compra_minima; ?>">
@@ -1154,7 +1387,7 @@ if ($imagens) {
         {
         ?>
             <!-- Botão "Ver meus números" e valor -->
-            <div class="w-full flex flex-col gap-2 mt-2">
+            <div class="w-full flex flex-col gap-2 mt-2 secao-compra">
               <button onclick="verificarLogin('titulos')"
                 class="border border-[#1BC863] text-[#1BC863] rounded-lg font-semibold px-4 py-2 flex items-center justify-center gap-2 transition-all mb-1">
                 <span class="iconify" data-icon="tabler:numbers"></span>
@@ -1170,14 +1403,14 @@ if ($imagens) {
               <?php
 
               if (!empty($campanhas[0]['mostrar_cotas_premiadas']) && !empty($campanhas[0]['cotas_premiadas'])): ?>
-                <div class="mt-4">
+                <div class="w-full px-4 mb-2 secao-compra">
                   <p class="text-sm font-medium text-black dark:text-white mb-2">🔥 Cotas premiadas - Achou ganhou!</p>
                   <div class="grid grid-cols-3 sm:grid-cols-6 md:grid-cols-6 lg:grid-cols-6 gap-2 font-bold">
                     <?php
                     $cotas_premiadas = explode(',', $campanhas[0]['cotas_premiadas']);
                     foreach ($cotas_premiadas as $cota) {
                       echo
-                        "<div class='bg-green-600 text-black dark:text-white text-center py-2 px-1 rounded-lg'>" . trim($cota) . "</div>";
+                        "<div class='bg-green-600 dark:text-black text-white text-center py-2 px-1 rounded-lg'>" . trim($cota) . "</div>";
                     }
                     ?>
                   </div>
@@ -1223,7 +1456,7 @@ if ($imagens) {
                 // Buscar top compradores da campanha
                 $top_compradores = listaClientesTopCompradores($conn, $id, $data_inicio, $data_fim, $campanhas[0]['quantidade_ranking']);
                 if (!empty($top_compradores)): ?>
-                  <div class="w-full px-4 mb-2">
+                  <div class="w-full px-4 mb-2 secao-compra">
                     <p class="text-sm font-medium text-black dark:text-white mb-2">🏆 Top Compradores</p>
                     <div class="grid grid-cols-1 gap-2">
                       <?php
@@ -1270,84 +1503,152 @@ if ($imagens) {
                     <p class="text-sm text-gray-600 dark:text-[#b8b9ad]">Sorteio feito pela Loteria Federal. Todos os dados do veículo, como suas
           modificações serão divulgadas pelo Instagram.</p>
       </div> -->
+
+          <!-- Sistema de Login/Cadastro Inline -->
+          <div id="loginCadastroContainerLayout0" class="hidden w-full">
+            <!-- Sistema de Login -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
+              <h3 class="text-xl font-bold mb-6 text-center text-gray-800 dark:text-white">Fazer login</h3>
+              
+              <!-- Formulário de Login -->
+              <form id="formLoginInline" class="space-y-4 mb-6">
+                <div class="relative">
+                  <label class="block text-gray-700 dark:text-gray-300 mb-2">Celular</label>
+                  <div class="relative">
+                    <i class="fas fa-phone absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <input type="tel" name="telefone" required
+                      class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg pl-10 pr-4 py-3 text-gray-800 dark:text-white"
+                      placeholder="Digite seu número de telefone">
+                  </div>
+                </div>
+
+                <div class="relative">
+                  <label class="block text-gray-700 dark:text-gray-300 mb-2">CPF</label>
+                  <div class="relative">
+                    <i class="fas fa-id-card absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <input type="text" name="cpf" required
+                      class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg pl-10 pr-4 py-3 text-gray-800 dark:text-white"
+                      placeholder="Digite seu CPF">
+                  </div>
+                </div>
+
+                <button type="submit"
+                  class="bg-green-600 hover:bg-green-700 text-white w-full py-3 rounded-lg text-lg font-bold transition-colors">
+                  Continuar Login
+                </button>
+              </form>
+
+              <div class="text-center">
+                <button onclick="mostrarCadastro()" 
+                  class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg text-sm font-medium transition-colors">
+                  Não tem conta? Cadastre-se
+                </button>
+              </div>
+
+              <!-- Resumo do Pedido -->
+              <div class="mt-6 p-4 bg-green-600 rounded-lg">
+                <div class="text-white text-center">
+                  <p class="font-bold">Valor do pedido: R$ <span id="valorPedidoLoginLayout1">0,00</span></p>
+                </div>
+              </div>
+
+              <!-- Termos de Uso -->
+              <div class="mt-4 p-3 bg-orange-500 rounded-lg">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center">
+                    <input type="checkbox" id="aceitarTermosLayout1" class="mr-2">
+                    <label for="aceitarTermosLayout1" class="text-white text-sm">Aceito os termos de uso</label>
+                  </div>
+                  <button type="button" onclick="verTermosUso()" 
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs transition-colors">
+                    Ver Termos de Uso
+                  </button>
+                </div>
+              </div>
+
+              <!-- Mensagem de Erro -->
+              <div id="mensagemErroLayout1" class="hidden mt-4 p-3 bg-red-500 rounded-lg">
+                <p class="text-white text-sm text-center">Para prosseguir você deve aceitar Termos de Uso.</p>
+              </div>
+            </div>
+
+
+
+             <!-- Formulário de Cadastro Inline -->
+          <div id="cadastroContainerLayout0" 2 class="hidden w-full">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
+              <h3 class="text-xl font-bold mb-6 text-center text-gray-800 dark:text-white">Cadastro</h3>
+              
+              <form id="formCadastroInline" class="space-y-4">
+                <input type="hidden" name="telefone" id="telefone_cadastro_inline">
+
+                <div class="relative">
+                  <label class="block text-gray-700 dark:text-gray-300 mb-2">Nome Completo</label>
+                  <div class="relative">
+                    <i class="fas fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <input type="text" name="nome" required
+                      class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg pl-10 pr-4 py-3 text-gray-800 dark:text-white"
+                      placeholder="Digite seu nome completo">
+                  </div>
+                </div>
+
+                <div class="relative">
+                  <label class="block text-gray-700 dark:text-gray-300 mb-2">E-mail</label>
+                  <div class="relative">
+                    <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <input type="email" name="email" required
+                      class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg pl-10 pr-4 py-3 text-gray-800 dark:text-white"
+                      placeholder="Digite seu e-mail">
+                  </div>
+                </div>
+
+                <div class="relative">
+                  <label class="block text-gray-700 dark:text-gray-300 mb-2">CPF</label>
+                  <div class="relative">
+                    <i class="fas fa-id-card absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <input type="text" name="cpf" required
+                      class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg pl-10 pr-4 py-3 text-gray-800 dark:text-white"
+                      placeholder="Digite seu CPF">
+                  </div>
+                </div>
+
+                <button type="submit"
+                  class="bg-green-600 hover:bg-green-700 text-white w-full py-3 rounded-lg text-lg font-bold transition-colors">
+                  Cadastrar
+                </button>
+              </form>
+
+              <div class="text-center mt-4">
+                <button onclick="voltarParaLogin()" 
+                  class="text-blue-500 hover:text-blue-600 text-sm font-medium transition-colors">
+                  Já tenho uma conta, fazer login
+                </button>
+              </div>
+            </div>
+          </div>
+
+          
+            <!-- Botões de Navegação -->
+            <div class="flex justify-between mt-4">
+              <button onclick="voltarParaCompra()" 
+                class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg flex items-center transition-colors">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Voltar
+              </button>
+              <button onclick="continuarComLogin()" 
+                class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg transition-colors">
+                Saiba se sua cota continua
+              </button>
+            </div>
+          </div>
+
+         
         </div>
         </>
 
     </main>
     <?php
   } ?>
-
-  <!-- Modal Verificação por Telefone -->
-  <div id="modalTelefone" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-    <div class="m-4 bg-white dark:bg-gray-800  p-8 rounded-lg w-96 relative">
-      <button onclick="fecharModal('modalTelefone')" class="absolute top-4 right-4 text-gray-400 hover:text-white">
-        <i class="fas fa-times"></i>
-      </button>
-
-      <h3 class="text-xl font-bold mb-6 text-center text-gray-800 dark:text-white">Verificar Cliente</h3>
-
-      <form id="formTelefone" class="space-y-4">
-        <div>
-          <label class="block text-gray-700 dark:text-gray-300 mb-2">Seu Telefone</label>
-          <input type="tel" name="telefone" required
-            class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-gray-800 dark:text-white"
-            placeholder="Digite seu número de telefone">
-        </div>
-
-        <button type="submit"
-          class="bg-green-600 hover:bg-green-700 text-white w-full py-3 rounded-lg text-lg font-bold">
-          Verificar
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal Cadastro -->
-  <div id="modalCadastro" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-    <div class="m-4 bg-white dark:bg-gray-800  p-8 rounded-lg w-96 relative">
-      <button onclick="fecharModal('modalCadastro')" class="absolute top-4 right-4 text-gray-400 hover:text-white">
-        <i class="fas fa-times"></i>
-      </button>
-
-      <h3 class="text-xl font-bold mb-6 text-center text-gray-800 dark:text-white">Cadastro</h3>
-
-      <form id="formCadastro" class="space-y-4">
-        <input type="hidden" name="telefone" id="telefone_cadastro">
-
-        <?php if (empty($campos_obrigatorios) || in_array('nome', $campos_obrigatorios)): ?>
-          <div>
-            <label class="block text-gray-700 dark:text-gray-300 mb-2">Seu Nome</label>
-            <input type="text" name="nome" <?php echo in_array('nome', $campos_obrigatorios) ? 'required' : ''; ?>
-              class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-gray-800 dark:text-white"
-              placeholder="Digite seu nome completo">
-          </div>
-        <?php endif; ?>
-
-        <?php if (empty($campos_obrigatorios) || in_array('email', $campos_obrigatorios)): ?>
-          <div>
-            <label class="block text-gray-700 dark:text-gray-300 mb-2">Seu E-mail</label>
-            <input type="email" name="email" <?php echo in_array('email', $campos_obrigatorios) ? 'required' : ''; ?>
-              class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-gray-800 dark:text-white"
-              placeholder="Digite seu e-mail">
-          </div>
-        <?php endif; ?>
-
-        <?php if (in_array('cpf', $campos_obrigatorios)): ?>
-          <div>
-            <label class="block text-gray-700 dark:text-gray-300 mb-2">Seu CPF</label>
-            <input type="text" name="cpf" required
-              class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 text-gray-800 dark:text-white"
-              placeholder="Digite seu CPF">
-          </div>
-        <?php endif; ?>
-
-        <button type="submit"
-          class="bg-green-600 hover:bg-green-700 text-white w-full py-3 rounded-lg text-lg font-bold">
-          Cadastrar
-        </button>
-      </form>
-    </div>
-  </div>
 
   <?php require_once('footer.php') ?>
 
@@ -1393,16 +1694,142 @@ if ($imagens) {
       return;
     }
 
-    // Caso não esteja logado, redireciona para a página de login
-    const campanhaId = new URLSearchParams(window.location.search).get('id');
-    window.location.href = 'login.php?acao=' + acao + (campanhaId ? '&campanha_id=' + campanhaId : '');
+    // Caso não esteja logado, mostra o sistema de login inline
+    mostrarSistemaLogin(acao);
+  }
+
+  // Função para mostrar o sistema de login
+  function mostrarSistemaLogin(acao = 'comprar') {
+    // Encontra a seção de compra (botões, formulários, etc.)
+    const secoesCompra = document.querySelectorAll('.secao-compra');
+    
+    // Detecta qual layout está sendo usado
+    const layout0 = document.getElementById('loginCadastroContainerLayout0');
+    const layout1 = document.getElementById('loginCadastroContainerLayout1');
+    const loginContainer = layout0 || layout1;
+    
+    // Determina qual layout está ativo
+    const isLayout0 = layout0 !== null;
+    const isLayout1 = layout1 !== null;
+    
+    // Atualiza o valor do pedido
+    const quantidade = parseInt(document.getElementById('quantidade_barra').value);
+    const precoUnitario = <?php echo $campanhas[0]['preco']; ?>;
+    const valorTotal = quantidade * precoUnitario;
+    
+    // Usa o ID correto baseado no layout
+    const valorPedidoLoginId = isLayout0 ? 'valorPedidoLoginLayout0' : 'valorPedidoLoginLayout1';
+    const valorPedidoLogin = document.getElementById(valorPedidoLoginId);
+    if (valorPedidoLogin) {
+      valorPedidoLogin.textContent = valorTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    
+    // Animação de slide out das seções de compra
+    secoesCompra.forEach(secao => {
+      secao.classList.add('slide-out');
+    });
+    
+    setTimeout(() => {
+      // Esconde as seções de compra
+      secoesCompra.forEach(secao => {
+        secao.classList.add('hidden');
+      });
+      
+      // Mostra o sistema de login
+      loginContainer.classList.remove('hidden');
+      loginContainer.classList.add('slide-in');
+    }, 500);
+  }
+
+  // Função para voltar para a compra
+  function voltarParaCompra() {
+    const secoesCompra = document.querySelectorAll('.secao-compra');
+    
+    // Detecta qual layout está sendo usado
+    const layout0 = document.getElementById('loginCadastroContainerLayout0');
+    const layout1 = document.getElementById('loginCadastroContainerLayout1');
+    const loginContainer = layout0 || layout1;
+    
+    const cadastroContainerLayout0 = document.getElementById('cadastroContainerLayout0');
+    const cadastroContainerLayout1 = document.getElementById('cadastroContainerLayout1');
+    const cadastroContainer = cadastroContainerLayout0 || cadastroContainerLayout1;
+    
+    // Esconde o cadastro se estiver visível
+    if (!cadastroContainer.classList.contains('hidden')) {
+      cadastroContainer.classList.add('hidden');
+    }
+    
+    // Animação de slide in das seções de compra
+    loginContainer.classList.remove('slide-in');
+    
+    setTimeout(() => {
+      loginContainer.classList.add('hidden');
+      
+      // Mostra as seções de compra removendo a classe hidden e slide-out
+      secoesCompra.forEach(secao => {
+        secao.classList.remove('hidden', 'slide-out');
+      });
+    }, 500);
+  }
+
+  // Função para mostrar o formulário de cadastro
+  function mostrarCadastro() {
+    const loginForm = document.getElementById('formLoginInline').parentElement;
+    
+    // Detecta qual layout está sendo usado
+    const cadastroContainerLayout0 = document.getElementById('cadastroContainerLayout0');
+    const cadastroContainerLayout1 = document.getElementById('cadastroContainerLayout1');
+    const cadastroContainer = cadastroContainerLayout0 || cadastroContainerLayout1;
+    
+    loginForm.classList.add('hidden');
+    cadastroContainer.classList.remove('hidden');
+    cadastroContainer.classList.add('form-fade-in');
+  }
+
+  // Função para voltar para o login
+  function voltarParaLogin() {
+    const loginForm = document.getElementById('formLoginInline').parentElement;
+    
+    // Detecta qual layout está sendo usado
+    const cadastroContainerLayout0 = document.getElementById('cadastroContainerLayout0');
+    const cadastroContainerLayout1 = document.getElementById('cadastroContainerLayout1');
+    const cadastroContainer = cadastroContainerLayout0 || cadastroContainerLayout1;
+    
+    cadastroContainer.classList.add('hidden');
+    loginForm.classList.remove('hidden');
+  }
+
+  // Função para continuar com login
+  function continuarComLogin() {
+    // Detecta qual layout está sendo usado
+    const layout0 = document.getElementById('loginCadastroContainerLayout0');
+    const layout1 = document.getElementById('loginCadastroContainerLayout1');
+    const isLayout0 = layout0 !== null;
+    const isLayout1 = layout1 !== null;
+    
+    // Usa o ID correto baseado no layout
+    const aceitarTermosId = isLayout0 ? 'aceitarTermosLayout0' : 'aceitarTermosLayout1';
+    const mensagemErroId = isLayout0 ? 'mensagemErroLayout0' : 'mensagemErroLayout1';
+    
+    const aceitarTermos = document.getElementById(aceitarTermosId);
+    const mensagemErro = document.getElementById(mensagemErroId);
+    
+    if (!aceitarTermos.checked) {
+      mensagemErro.classList.remove('hidden');
+      return;
+    }
+    
+    // Submete o formulário de login
+    document.getElementById('formLoginInline').dispatchEvent(new Event('submit'));
+  }
+
+  // Função para ver termos de uso
+  function verTermosUso() {
+    alert('Termos de uso serão exibidos aqui.');
   }
 
 
-  function fecharModal(modalId) {
-    document.getElementById(modalId).classList.add('hidden');
-    document.getElementById(modalId).classList.remove('flex');
-  }
+
 
   function alterarQuantidade(qtd, adicionar = false) {
     const precoUnitario = <?php echo $campanhas[0]['preco']; ?>;
@@ -1481,8 +1908,8 @@ if ($imagens) {
       document.getElementById('formComprar').cliente_id.value = clienteId;
       document.getElementById('formComprar').submit();
     } else {
-      // Se não estiver logado, abre o modal de telefone
-      abrirModalTelefone('comprar');
+      // Se não estiver logado, mostra o sistema de login inline
+      mostrarSistemaLogin('comprar');
     }
     
   }
@@ -1519,7 +1946,36 @@ if ($imagens) {
   document.addEventListener('DOMContentLoaded', () => {
     // Inicializar o carrossel
     inicializarCarrossel();
+    
+    // Inicializar o sistema de login
+    inicializarSistemaLogin();
   });
+
+  // Função para inicializar o sistema de login
+  function inicializarSistemaLogin() {
+    // Adiciona máscara para CPF
+    const cpfInputs = document.querySelectorAll('input[name="cpf"]');
+    cpfInputs.forEach(input => {
+      input.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+        value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+        e.target.value = value;
+      });
+    });
+
+    // Adiciona máscara para telefone
+    const telefoneInputs = document.querySelectorAll('input[name="telefone"]');
+    telefoneInputs.forEach(input => {
+      input.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        value = value.replace(/(\d{2})(\d)/, '($1) $2');
+        value = value.replace(/(\d{5})(\d)/, '$1-$2');
+        e.target.value = value;
+      });
+    });
+  }
 
   let slideAtual = 0;
   let slides = [];
@@ -1597,12 +2053,31 @@ if ($imagens) {
     }
   }
 
-  // Formulário de Verificação por Telefone
-  document.getElementById('formTelefone').addEventListener('submit', function (e) {
+
+
+  // Formulário de Login Inline (Layout 0)
+  document.getElementById('formLoginInline').addEventListener('submit', function (e) {
     e.preventDefault();
     const formData = new FormData(this);
+    const mensagemErro = document.getElementById('mensagemErro');
+    const aceitarTermos = document.getElementById('aceitarTermos');
 
-    fetch('verificar_cliente_telefone.php', {
+    // Verifica se aceitou os termos
+    if (!aceitarTermos.checked) {
+      mensagemErro.classList.remove('hidden');
+      return;
+    }
+
+    // Esconde mensagem de erro se estiver visível
+    mensagemErro.classList.add('hidden');
+
+    // Mostra loading no botão
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Entrando...';
+    submitBtn.disabled = true;
+
+    fetch('ajax_login.php', {
       method: 'POST',
       body: formData
     })
@@ -1611,20 +2086,20 @@ if ($imagens) {
         if (data.success) {
           // Atualiza o clienteId após sucesso
           document.getElementById('cliente_id').value = data.cliente_id;
-          fecharModal('modalTelefone'); // Fecha o modal de telefone
-
-          // Realiza a ação pós-login (compra ou títulos)
-          if (acaoAposLogin == 'comprar') {
-            document.getElementById('formComprar').submit(); // Se for comprar, submete o formulário
-          } else if (acaoAposLogin == 'titulos') {
-            window.location.href = 'meus_titulos.php?cliente_id=' + data.cliente_id; // Se for ver títulos, redireciona
+          
+          // Se for cliente, volta para a compra e submete
+          if (data.isCliente) {
+            voltarParaCompra();
+            setTimeout(() => {
+              document.getElementById('formComprar').submit();
+            }, 600);
+          } else {
+            alert('Usuários do sistema não podem comprar cotas.');
+            voltarParaCompra();
           }
         } else if (data.need_register) {
-          // Se for necessário o cadastro, abre o modal de cadastro
-          document.getElementById('telefone_cadastro').value = formData.get('telefone');
-          fecharModal('modalTelefone');
-          document.getElementById('modalCadastro').classList.remove('hidden');
-          document.getElementById('modalCadastro').classList.add('flex');
+          // Se for necessário o cadastro, mostra o formulário de cadastro
+          mostrarCadastro();
         } else {
           alert(data.message || 'Ocorreu um erro ao processar sua solicitação. Tente novamente.');
         }
@@ -1632,15 +2107,28 @@ if ($imagens) {
       .catch(error => {
         console.error('Erro:', error);
         alert('Ocorreu um erro ao processar sua solicitação. Por favor, tente novamente mais tarde.');
+      })
+      .finally(() => {
+        // Restaura o botão
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
       });
   });
 
-  // Formulário de Cadastro
-  document.getElementById('formCadastro').addEventListener('submit', function (e) {
+
+
+  // Formulário de Cadastro Inline
+  document.getElementById('formCadastroInline').addEventListener('submit', function (e) {
     e.preventDefault();
     const formData = new FormData(this);
 
-    fetch('verificar_cliente.php', {
+    // Mostra loading no botão
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Cadastrando...';
+    submitBtn.disabled = true;
+
+    fetch('ajax_cadastro.php', {
       method: 'POST',
       body: formData
     })
@@ -1648,22 +2136,52 @@ if ($imagens) {
       .then(data => {
         if (data.success) {
           document.getElementById('cliente_id').value = data.cliente_id;
-          fecharModal('modalCadastro');
-
-          if (acaoAposLogin == 'comprar') {
+          
+          // Volta para a compra e submete
+          voltarParaCompra();
+          setTimeout(() => {
             document.getElementById('formComprar').submit();
-          } else if (acaoAposLogin == 'titulos') {
-            window.location.href = 'meus_titulos.php?cliente_id=' + data.cliente_id;
-          }
+          }, 600);
         } else {
-          alert(data.message || 'Ocorreu um erro ao processar sua solicitação. Tente novamente. (2)');
+          alert(data.message || 'Ocorreu um erro ao processar sua solicitação. Tente novamente.');
         }
       })
       .catch(error => {
         console.error('Erro:', error);
         alert('Ocorreu um erro ao processar sua solicitação. Por favor, tente novamente mais tarde.');
+      })
+      .finally(() => {
+        // Restaura o botão
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
       });
   });
+
+  // Event listener para o checkbox de termos (Layout 0)
+  document.addEventListener('DOMContentLoaded', function() {
+    // Detecta qual layout está sendo usado
+    const layout0 = document.getElementById('loginCadastroContainerLayout0');
+    const layout1 = document.getElementById('loginCadastroContainerLayout1');
+    const isLayout0 = layout0 !== null;
+    const isLayout1 = layout1 !== null;
+    
+    // Usa o ID correto baseado no layout
+    const aceitarTermosId = isLayout0 ? 'aceitarTermosLayout0' : 'aceitarTermosLayout1';
+    const mensagemErroId = isLayout0 ? 'mensagemErroLayout0' : 'mensagemErroLayout1';
+    
+    const aceitarTermos = document.getElementById(aceitarTermosId);
+    const mensagemErro = document.getElementById(mensagemErroId);
+    
+    if (aceitarTermos && mensagemErro) {
+      aceitarTermos.addEventListener('change', function() {
+        if (this.checked) {
+          mensagemErro.classList.add('hidden');
+        }
+      });
+    }
+  });
+
+
 
   function validarCompra(event) {
     event.preventDefault();
@@ -1674,10 +2192,11 @@ if ($imagens) {
     const codigo_afiliado = document.querySelector('input[name="codigo_afiliado"]').value;
 
     if (!cliente_id) {
-      // alert('Por favor, faça login antes de comprar.');
-      abrirModalTelefone();
+      // Mostra o sistema de login inline
+      mostrarSistemaLogin('comprar');
       return false;
     }
+    
     // Atualizar os valores do formulário antes de enviar
     document.getElementById('numeros_solicitados').value = JSON.stringify(numeros_solicitados);
     document.getElementById('quantidade').value = quantidade;
