@@ -14,7 +14,7 @@ $usuarios = listaUsuarios($conn, NULL, NULL, NULL, NULL, NULL, 0);
     <title>Usuários</title>
 </head>
 
-<body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white">
+<body class="bg-gray-100 text-gray-900 dark:bg-[#18181B] dark:text-white">
     <div class="flex h-screen">
         <?php require("sidebar.php"); ?>
 
@@ -29,11 +29,11 @@ $usuarios = listaUsuarios($conn, NULL, NULL, NULL, NULL, NULL, 0);
             </header>
 
             <section>
-                <div class="bg-white dark:bg-gray-800 p-4 rounded-md shadow-md">
+                <div class="bg-white dark:bg-[#27272A] p-4 rounded-md shadow-md">
                     <div class="overflow-x-auto">
                         <div class="min-w-[800px]">
                             <table class="w-full text-left">
-                                <thead class="bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-gray-100">
+                                <thead class="bg-gray-300 dark:bg-[#3F3F46] text-gray-800 dark:text-gray-100">
                                     <tr>
                                         <th class="p-2">FOTO</th>
                                         <th class="p-2">NOME</th>
@@ -53,7 +53,7 @@ $usuarios = listaUsuarios($conn, NULL, NULL, NULL, NULL, NULL, 0);
                                                          alt="Avatar" 
                                                          class="w-8 h-8 rounded-full object-cover">
                                                 <?php else: ?>
-                                                    <div class="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center">
+                                                    <div class="w-8 h-8 bg-gray-200 dark:bg-[#3F3F46] rounded-full flex items-center justify-center">
                                                         <span class="text-sm">👤</span>
                                                     </div>
                                                 <?php endif; ?>

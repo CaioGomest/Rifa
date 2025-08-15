@@ -52,23 +52,29 @@ $email = trim($_POST['email'] ?? '');
 $telefone = preg_replace('/\D/', '', trim($_POST['telefone'] ?? ''));
 $cpf = preg_replace('/\D/', '', trim($_POST['cpf'] ?? ''));
 
-// Validações
-if (empty($nome)) {
-    echo json_encode(['success' => false, 'message' => 'Por favor, preencha o nome.']);
-    exit;
-}
+// Busca configurações do sistema para campos obrigatórios
+require_once('functions/functions_sistema.php');
+$config = listaInformacoes($conn);
+$campos_obrigatorios = explode(',', $config['campos_obrigatorios']);
 
-if (empty($email)) {
-    echo json_encode(['success' => false, 'message' => 'Por favor, preencha o email.']);
-    exit;
-}
-
+// Validações - Telefone sempre obrigatório
 if (empty($telefone)) {
     echo json_encode(['success' => false, 'message' => 'Por favor, preencha o telefone.']);
     exit;
 }
 
-if (!validarEmail($email)) {
+// Validações dinâmicas baseadas nos campos obrigatórios
+if (in_array('nome', $campos_obrigatorios) && empty($nome)) {
+    echo json_encode(['success' => false, 'message' => 'Por favor, preencha o nome.']);
+    exit;
+}
+
+if (in_array('email', $campos_obrigatorios) && empty($email)) {
+    echo json_encode(['success' => false, 'message' => 'Por favor, preencha o email.']);
+    exit;
+}
+
+if (!empty($email) && !validarEmail($email)) {
     echo json_encode(['success' => false, 'message' => 'Email inválido.']);
     exit;
 }
@@ -84,6 +90,12 @@ if (!empty($cpf) && !validarCPF($cpf)) {
     exit;
 }
 
+// Se CPF é obrigatório mas não foi fornecido
+if (in_array('cpf', $campos_obrigatorios) && empty($cpf)) {
+    echo json_encode(['success' => false, 'message' => 'Por favor, preencha o CPF.']);
+    exit;
+}
+
 // Verifica se o cliente já existe
 $filtros = ['telefone' => $telefone, 'email' => $email];
 $clientes = buscarClientes($conn, $filtros);
@@ -95,10 +107,17 @@ if (!empty($clientes)) {
 
 // Se não encontrou, insere novo cliente
 $dados = [
-    'nome' => $nome,
-    'email' => $email,
     'telefone' => $telefone
 ];
+
+// Adiciona campos dinamicamente baseado nos campos obrigatórios
+if (!empty($nome)) {
+    $dados['nome'] = $nome;
+}
+
+if (!empty($email)) {
+    $dados['email'] = $email;
+}
 
 // Adiciona CPF se fornecido
 if (!empty($cpf)) {

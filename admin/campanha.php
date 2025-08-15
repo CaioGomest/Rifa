@@ -3,11 +3,9 @@
     <?php
     require("header.php");
 
-    // Definição inicial do action
     $action 			= isset($_REQUEST['action']) 				? $_REQUEST['action'] : null;
     $id 				= isset($_REQUEST['id']) 					? $_REQUEST['id'] : 0;
 
-    // Coleta dos dados do formulário
     $nome = isset($_REQUEST['nome']) ? $_REQUEST['nome'] : '';
     $slug = '0'; // Sempre envia 0 para o slug
     $descricao = isset($_REQUEST['descricao']) ? $_REQUEST['descricao'] : '';
@@ -61,6 +59,8 @@
     $campanha_destaque 			= isset($_REQUEST['campanha_destaque']) 		? $_REQUEST['campanha_destaque'] : '0';
     $habilitar_cotas_em_dobro 	= isset($_REQUEST['habilitar_cotas_em_dobro']) 	? $_REQUEST['habilitar_cotas_em_dobro'] : '0';
     $cotas_premiadas 			= isset($_REQUEST['cotas_premiadas']) 			? $_REQUEST['cotas_premiadas'] : '';
+    $quantidade_cotas_premiadas = isset($_REQUEST['quantidade_cotas_premiadas']) ? $_REQUEST['quantidade_cotas_premiadas'] : '';
+    $premio_cotas_premiadas 	= isset($_REQUEST['premio_cotas_premiadas']) 	? $_REQUEST['premio_cotas_premiadas'] : '';
     $descricao_cotas_premiadas 	= isset($_REQUEST['descricao_cotas_premiadas']) ? $_REQUEST['descricao_cotas_premiadas'] : '';
     $titulo_cotas_dobro         = isset($_REQUEST['titulo_cotas_dobro'])          ? $_REQUEST['titulo_cotas_dobro']          : '';
     $subtitulo_cotas_dobro      = isset($_REQUEST['subtitulo_cotas_dobro'])       ? $_REQUEST['subtitulo_cotas_dobro']       : '';
@@ -72,7 +72,23 @@
     $selecionar_top_ganhadores = isset($_REQUEST['selecionar_top_ganhadores']) ? $_REQUEST['selecionar_top_ganhadores'] : '0';
     $filtro_periodo_top_ganhadores = isset($_REQUEST['filtro_periodo_top_ganhadores']) ? $_REQUEST['filtro_periodo_top_ganhadores'] : '{"filtro":"hoje","valor":""}';
 
-    // Se tiver ID, significa que está editando
+    // Variáveis para Roletas e Raspadinhas
+    $habilitar_roleta = isset($_REQUEST['habilitar_roleta']) ? $_REQUEST['habilitar_roleta'] : '0';
+    $titulo_roleta = isset($_REQUEST['titulo_roleta']) ? $_REQUEST['titulo_roleta'] : '🎰 Roleta da Sorte';
+    $descricao_roleta = isset($_REQUEST['descricao_roleta']) ? $_REQUEST['descricao_roleta'] : '';
+    $itens_roleta = isset($_REQUEST['nome_item_roleta']) ? array_map(function($nome, $status) {
+    return ['nome' => $nome, 'status' => $status];
+}, $_REQUEST['nome_item_roleta'], $_REQUEST['status_item_roleta']) : [];
+    
+    // Removidos: pacotes de roleta agora são tratados pelos pacotes da campanha
+    
+    $habilitar_raspadinha = isset($_REQUEST['habilitar_raspadinha']) ? $_REQUEST['habilitar_raspadinha'] : '0';
+    $titulo_raspadinha = isset($_REQUEST['titulo_raspadinha']) ? $_REQUEST['titulo_raspadinha'] : '🎫 Raspadinha da Sorte';
+    $descricao_raspadinha = isset($_REQUEST['descricao_raspadinha']) ? $_REQUEST['descricao_raspadinha'] : '';
+    $itens_raspadinha = isset($_REQUEST['nome_item_raspadinha']) ? array_map(function($nome, $status) {
+    return ['nome' => $nome, 'status' => $status];
+}, $_REQUEST['nome_item_raspadinha'], $_REQUEST['status_item_raspadinha']) : [];
+
     if ($id > 0) 
     {
         $action = 'editar';
@@ -80,7 +96,6 @@
         $data_sorteio = date("d/m/Y H:i:s", strtotime($campanhas[0]["data_sorteio"]));
     }
 
-    // Processamento do formulário apenas se houver POST
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $upload_dir = '../uploads/campanhas/';
@@ -88,15 +103,14 @@
             mkdir($upload_dir, 0777, true);
         }
 
-        // Processamento da imagem principal
         $caminho_imagem = isset($_POST['caminho_imagem_atual']) ? $_POST['caminho_imagem_atual'] : '';
         $caminho_imagem = salvarImagemPrincipal('imagem_principal', $caminho_imagem, $upload_dir);
 
-        // Processamento da galeria
+
         $galeria_imagens = isset($_POST['galeria_imagens_atual']) ? explode(',', $_POST['galeria_imagens_atual']) : [];
         $galeria_imagens = salvarGaleriaImagens('galeria', $galeria_imagens, $upload_dir);
 
-        // Processamento baseado no action
+
         switch ($action) {
             case 'criar':
                 // Validação dos campos obrigatórios
@@ -163,6 +177,7 @@
                     $vencedor_sorteio,
                     $habilitar_cotas_em_dobro,
                     $cotas_premiadas,
+                    $premio_cotas_premiadas,
                     $descricao_cotas_premiadas,
 
                     $selecionar_top_ganhadores,
@@ -174,6 +189,16 @@
                     $titulo_cotas_dobro,
                     $subtitulo_cotas_dobro,
                     $layout,
+                    
+                    // Novos parâmetros para Roletas e Raspadinhas
+                    $habilitar_roleta,
+                    $titulo_roleta,
+                    $descricao_roleta,
+                    $itens_roleta,
+                    $habilitar_raspadinha,
+                    $titulo_raspadinha,
+                    $descricao_raspadinha,
+                    $itens_raspadinha,
                 );
                 
                 if (is_numeric($criar) && $criar > 0)
@@ -245,6 +270,7 @@
 
                     $habilitar_cotas_em_dobro,
                     $cotas_premiadas,
+                    $premio_cotas_premiadas,
                     $descricao_cotas_premiadas,
                     $titulo_cotas_dobro,
                     $subtitulo_cotas_dobro,
@@ -254,6 +280,16 @@
 
                     $mostrar_cotas_premiadas,
                     $status_cotas_premiadas,
+                    
+                    // Novos parâmetros para Roletas e Raspadinhas
+                    $habilitar_roleta,
+                    $titulo_roleta,
+                    $descricao_roleta,
+                    $itens_roleta,
+                    $habilitar_raspadinha,
+                    $titulo_raspadinha,
+                    $descricao_raspadinha,
+                    $itens_raspadinha,
                 );
 
                 if ($editar === true) 
@@ -271,15 +307,12 @@
         }
     }
 
-    // Se não houver action definido e não houver ID, significa que é uma nova campanha
-    if (!$action && !$id) 
+	if (!$action && !$id) 
         $action = 'criar';
 
-    // Gera o slug automaticamente baseado no nome
     if (empty($slug) && !empty($nome))
         $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $nome)));
 
-    // Função para obter mensagem de erro do upload
     function getUploadErrorMessage($error)
     {
         switch ($error) 
@@ -304,7 +337,7 @@
     }
     ?>
 
-    <body class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-white">
+    <body class="bg-gray-100 text-gray-800 dark:bg-[#18181B] dark:text-white">
         <div class="flex h-screen">
             <?php
             require("sidebar.php");
@@ -313,7 +346,7 @@
             <main class="flex-1 p-4 lg:p-8 overflow-auto">
                 <section>
 
-                    <div class="bg-white dark:bg-gray-800 p-6 rounded-md shadow">
+                    <div class="bg-white dark:bg-[#27272A] p-6 rounded-md shadow">
                         <header class="flex justify-between items-center mb-6">
                             <h1 class="text-2xl font-bold">
                                 <?php echo $action == "criar" || !isset($action) ? "Criar Campanha" : "Editar Campanha"; ?>
@@ -353,9 +386,9 @@
                                 <a href="#" class="hover:text-purple-700 dark:hover:text-purple-400 tab-link"
                                     data-tab="cotas_premiadas">Cotas Premiadas</a>
                             </li>
+                            
                         </ul>
 
-                        <!-- Conteúdo das abas -->
                         <form method="POST" action="" onsubmit="return valida();" enctype="multipart/form-data">
                             <input type="hidden" name="action" value="<?php echo $action; ?>">
                             <input type="hidden" name="id" value="<?php echo $id; ?>">
@@ -371,7 +404,7 @@
                                         <label for="nome" class="block mb-2 font-medium">Nome <span
                                                 class="text-red-500">*</span></label>
                                         <input type="text" id="nome" name="nome" required
-                                            class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                            class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                             value="<?php echo isset($campanhas[0]['nome']) ? $campanhas[0]['nome'] : ''; ?>">
                                         <span class="text-red-500 text-sm hidden" id="erro-nome">Este campo é
                                             obrigatório</span>
@@ -380,21 +413,21 @@
                                         <label for="descricao" class="block mb-2 font-medium">Descrição <span
                                                 class="text-red-500">*</span></label>
                                         <textarea id="descricao" name="descricao" required
-                                            class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"><?php echo isset($campanhas[0]['descricao']) ? $campanhas[0]['descricao'] : ''; ?></textarea>
+                                            class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"><?php echo isset($campanhas[0]['descricao']) ? $campanhas[0]['descricao'] : ''; ?></textarea>
                                         <span class="text-red-500 text-sm hidden" id="erro-descricao">Este campo é
                                             obrigatório</span>
                                     </div>
                                     <div>
                                         <label for="data_sorteio" class="block mb-2 font-medium">Data Sorteio<span class="text-red-500">*</span></label>
                                         <input type="datetime-local" name="data_sorteio" id="data_sorteio" required value="<?php echo $data_sorteio ; ?>" 
-                                            class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-60">
+                                            class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-60">
                                     </div>
                                     <div>
     <label for="preco" class="block mb-2 font-medium">Preço <span class="text-red-500">*</span></label>
     <div class="relative">
         <span class="absolute left-2 top-2 text-gray-500">$</span>
         <input type="text" id="preco" name="preco" required 
-            class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 pl-8 rounded-md border border-gray-300 dark:border-gray-600"
+            class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 pl-8 rounded-md border border-gray-300 dark:border-gray-600"
             value="<?php echo isset($campanhas[0]['preco']) ? number_format($campanhas[0]['preco'], 2, ',', '.') : ''; ?>"
             oninput="formatPrice(this)">
     </div>
@@ -418,13 +451,13 @@
                                     <div>
                                         <label for="subtitulo" class="block mb-2 font-medium">Subtítulo</label>
                                         <input type="text" id="subtitulo" name="subtitulo"
-                                            class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                            class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                             value="<?php echo isset($campanhas[0]['subtitulo']) ? $campanhas[0]['subtitulo'] : ''; ?>">
                                     </div>
                                     <div>
                                         <label for="tipo_sorteio" class="block mb-2 font-medium">Tipo de Sorteio</label>
                                         <select id="tipo_sorteio" name="tipo_sorteio" required
-                                            class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                                            class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
                                             <option value="0" <?php echo isset($campanhas[0]['tipo_sorteio']) && $campanhas[0]['tipo_sorteio'] == 0 ? 'selected' : ''; ?>>Automático</option>
                                             <option value="1" <?php echo isset($campanhas[0]['tipo_sorteio']) && $campanhas[0]['tipo_sorteio'] == 1 ? 'selected' : ''; ?>>Manual</option>
                                         </select>
@@ -433,7 +466,7 @@
                                     <div>
                                         <label for="layout" class="block mb-2 font-medium">Layout</label>
                                         <select id="layout" name="layout" required
-                                            class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                                            class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
                                             <option value="0" <?php echo isset($campanhas[0]['layout']) && $campanhas[0]['layout'] == 0 ? 'selected' : ''; ?>>Rincon</option>
                                             <option value="1" <?php echo isset($campanhas[0]['layout']) && $campanhas[0]['layout'] == 1 ? 'selected' : ''; ?>>Buzeira</option>
                                         </select>
@@ -442,14 +475,14 @@
                                     <div>
                                         <label for="compra_minima" class="block mb-2 font-medium">Compra Mínima<span class="text-red-500">*</span></label>
                                         <input type="number" id="compra_minima" name="compra_minima" required
-                                            class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                            class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                             value="<?php echo isset($campanhas[0]['compra_minima']) ? $campanhas[0]['compra_minima'] : ''; ?>">
                                     </div>
                                     <div>
                                         <label for="compra_maxima" class="block mb-2 font-medium">Compra Máxima <span
                                                 class="text-red-500">*</span></label>
                                         <input type="number" id="compra_maxima" name="compra_maxima" required
-                                            class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                            class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                             value="<?php echo isset($campanhas[0]['compra_maxima']) ? $campanhas[0]['compra_maxima'] : ''; ?>">
                                         <span class="text-red-500 text-sm hidden" id="erro-compra_maxima">Este campo é
                                             obrigatório</span>
@@ -458,7 +491,7 @@
                                         <label for="quantidade_numeros" class="block mb-2 font-medium">Quantidade de Números
                                             <span class="text-red-500">*</span></label>
                                         <input type="number" id="quantidade_numeros" name="quantidade_numeros" required
-                                            class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                            class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                             value="<?php echo isset($campanhas[0]['quantidade_numeros']) ? $campanhas[0]['quantidade_numeros'] : ''; ?>">
                                         <span class="text-red-500 text-sm hidden" id="erro-quantidade_numeros">Este campo é
                                             obrigatório</span>
@@ -466,7 +499,7 @@
                                     <div>
                                         <label for="status" class="block mb-2 font-medium">Status</label>
                                         <select id="status" name="status" required
-                                            class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                                            class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
                                             <option value="1" <?php echo isset($campanhas[0]['status']) && $campanhas[0]['status'] == 1 ? 'selected' : ''; ?>>Ativa</option>
                                             <option value="0" <?php echo isset($campanhas[0]['status']) && $campanhas[0]['status'] == 0 ? 'selected' : ''; ?>>Inativa</option>
                                         </select>
@@ -497,7 +530,7 @@
                                             <?php endif; ?>
                                             <div class="flex items-center justify-center w-full">
                                                 <label for="imagem_principal"
-                                                    class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                                                    class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-[#3F3F46] hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                                                     <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                                         <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
                                                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
@@ -523,7 +556,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Galeria de Imagens -->
                                     <div>
                                         <label class="block mb-2 font-medium">Galeria de imagens</label>
                                         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4">
@@ -554,7 +586,7 @@
                                         </div>
                                         <div class="flex items-center justify-center w-full">
                                             <label for="galeria"
-                                                class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                                                class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-[#3F3F46] hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                                                 <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                                     <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
                                                         aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -641,15 +673,15 @@
                                                 if (is_array($pacotes_promocionais)) {
                                                     foreach ($pacotes_promocionais as $pacote_promocional) {
                                                         ?>
-                                                        <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
-                                                            <div class="grid grid-cols-4 gap-4">
+                                                        <div class="bg-white dark:bg-[#27272A] p-4 rounded-lg shadow">
+                                                            <div class="grid grid-cols-6 gap-4">
                                                                 <div>
                                                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                                                                         Valor do Bilhete
                                                                     </label>
                                                                     <input type="number" step="0.01" name="pacote_promocional[]" 
                                                                         value="<?php echo $pacote_promocional['valor_bilhete']; ?>"
-                                                                        class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                                                        class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                                                         onkeyup="calcularValorPacote(this)">
                                                                 </div>
                                                                 <div>
@@ -658,17 +690,41 @@
                                                                     </label>
                                                                     <input type="number" name="pacote_promocional[]" 
                                                                         value="<?php echo $pacote_promocional['quantidade_numeros']; ?>"
-                                                                        class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                                                        class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                                                         onkeyup="calcularValorPacote(this)">
                                                                 </div>
                                                                 <div>
-                                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
-                                                                        Valor do Pacote
-                                                                    </label>
-                                                                    <input type="number" step="0.01" name="pacote_promocional[]" 
-                                                                        value="<?php echo $pacote_promocional['valor_pacote']; ?>"
-                                                                        class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
-                                                                        readonly>
+                                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Valor do Pacote</label>
+                                                                    <input type="number" step="0.01" name="pacote_promocional[]" value="<?php echo $pacote_promocional['valor_pacote']; ?>" class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600" readonly>
+                                                                </div>
+                                                                <div>
+                                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Benefício do Pacote</label>
+                                                                    <?php $bt = isset($pacote_promocional['beneficio_tipo']) ? $pacote_promocional['beneficio_tipo'] : ''; ?>
+                                                                    <select name="beneficio_tipo_promocional[]" class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                                                                        <option value="" <?php echo $bt==''?'selected':''; ?>>Nenhum</option>
+                                                                        <option value="roleta" <?php echo $bt=='roleta'?'selected':''; ?>>Roleta</option>
+                                                                        <option value="raspadinha" <?php echo $bt=='raspadinha'?'selected':''; ?>>Raspadinha</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div>
+                                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Qtd. Benefício</label>
+                                                                    <input type="number" min="0" name="beneficio_quantidade_promocional[]" value="<?php echo isset($pacote_promocional['beneficio_quantidade']) ? (int)$pacote_promocional['beneficio_quantidade'] : 0; ?>" class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                                                                </div>
+                                                                <div>
+                                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Benefício do Pacote</label>
+                                                                    <select name="beneficio_tipo_promocional[]" 
+                                                                        class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                                                                        <?php $bt = isset($pacote_promocional['beneficio_tipo']) ? $pacote_promocional['beneficio_tipo'] : ''; ?>
+                                                                        <option value="" <?php echo $bt==''?'selected':''; ?>>Nenhum</option>
+                                                                        <option value="roleta" <?php echo $bt=='roleta'?'selected':''; ?>>Roleta</option>
+                                                                        <option value="raspadinha" <?php echo $bt=='raspadinha'?'selected':''; ?>>Raspadinha</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div>
+                                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Qtd. Benefício</label>
+                                                                    <input type="number" min="0" name="beneficio_quantidade_promocional[]" 
+                                                                        value="<?php echo isset($pacote_promocional['beneficio_quantidade']) ? (int)$pacote_promocional['beneficio_quantidade'] : 0; ?>"
+                                                                        class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
                                                                 </div>
                                                             </div>
                                                             <button type="button" class="mt-2 text-red-600 hover:text-red-800 text-sm" onclick="removerDesconto(this)">
@@ -715,15 +771,15 @@
                                                 if (is_array($pacotes)) {
                                                     foreach ($pacotes as $pacote) {
                                                         ?>
-                                                        <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
-                                                            <div class="grid grid-cols-4 gap-4">
+                                                        <div class="bg-white dark:bg-[#27272A] p-4 rounded-lg shadow">
+                                                            <div class="grid grid-cols-6 gap-4">
                                                                 <div>
                                                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                                                                         Valor do Bilhete
                                                                     </label>
                                                                     <input type="number" step="0.01" name="valor_bilhete_exclusivo[]" 
                                                                         value="<?php echo $pacote['valor_bilhete']; ?>"
-                                                                        class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                                                        class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                                                         onkeyup="calcularValorPacote(this)">
                                                                 </div>
                                                                 <div>
@@ -732,7 +788,7 @@
                                                                     </label>
                                                                     <input type="number" name="quantidade_desconto_exclusivo[]" 
                                                                         value="<?php echo $pacote['quantidade_numeros']; ?>"
-                                                                        class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                                                        class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                                                         onkeyup="calcularValorPacote(this)">
                                                                 </div>
                                                                 <div>
@@ -741,7 +797,7 @@
                                                                     </label>
                                                                     <input type="number" step="0.01" name="valor_desconto_exclusivo[]" 
                                                                         value="<?php echo $pacote['valor_pacote']; ?>"
-                                                                        class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                                                        class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                                                         readonly>
                                                                 </div>
                                                                 <div>
@@ -750,7 +806,7 @@
                                                                     </label>
                                                                     <input type="text" name="codigo_desconto_exclusivo[]" 
                                                                         value="<?php echo $pacote['codigo_pacote']; ?>"
-                                                                        class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                                                                        class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
                                                                 </div>
                                                             </div>
                                                             <button type="button" class="mt-2 text-red-600 hover:text-red-800 text-sm" onclick="removerDesconto(this)">
@@ -788,7 +844,7 @@
                                     <div id="div_quantidade_ranking" class="mb-4 hidden">
                                         <label for="quantidade_ranking" class="block mb-2 font-medium">Quantidade no Ranking (1 a 10)</label>
                                         <input type="text" id="quantidade_ranking" name="quantidade_ranking" min="1" max="10"
-                                            class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                            class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                             value="<?php echo isset($campanhas[0]['quantidade_ranking']) ? $campanhas[0]['quantidade_ranking'] : ''; ?>">
                                     </div>
 
@@ -805,7 +861,7 @@
 
                                     <div id="div_filtro_periodo_top_ganhadores" class="mb-4 hidden">
                                         <label class="block text-sm font-medium mb-1">Filtro de Período</label>
-                                        <select id="filtro_periodo_top_ganhadores" name="filtro_periodo_top_ganhadores" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                        <select id="filtro_periodo_top_ganhadores" name="filtro_periodo_top_ganhadores" class="w-full p-2 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
                                             <option value='{"filtro":"hoje","valor":""}' <?php 
                                                 $filtro_salvo = isset($campanhas[0]['filtro_periodo_top_ganhadores']) ? json_decode($campanhas[0]['filtro_periodo_top_ganhadores'], true) : null;
                                                 echo ($filtro_salvo && $filtro_salvo['filtro'] === 'hoje') ? 'selected' : ''; 
@@ -824,7 +880,7 @@
                                         <div id="div_datas_personalizadas" class="hidden mt-4 space-y-4">
                                             <div>
                                                 <label class="block text-sm font-medium mb-1">Data Inicial</label>
-                                                <input type="date" id="data_inicial_personalizada" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white" 
+                                                <input type="date" id="data_inicial_personalizada" class="w-full p-2 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white" 
                                                     value="<?php 
                                                         if ($filtro_salvo && $filtro_salvo['filtro'] === 'personalizado' && !empty($filtro_salvo['valor'])) {
                                                             $datas = explode(' até ', $filtro_salvo['valor']);
@@ -834,7 +890,7 @@
                                             </div>
                                             <div>
                                                 <label class="block text-sm font-medium mb-1">Data Final</label>
-                                                <input type="date" id="data_final_personalizada" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                                <input type="date" id="data_final_personalizada" class="w-full p-2 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white"
                                                     value="<?php 
                                                         if ($filtro_salvo && $filtro_salvo['filtro'] === 'personalizado' && !empty($filtro_salvo['valor'])) {
                                                             $datas = explode(' até ', $filtro_salvo['valor']);
@@ -854,7 +910,7 @@
                                         <label for="vencedor_sorteio" class="block mb-2 font-medium">Telefone do ganhador do
                                             sorteio</label>
                                         <input type="text" id="vencedor_sorteio" name="vencedor_sorteio"
-                                            class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                            class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                             value="<?php echo isset($campanhas[0]['vencedor_sorteio']) ? $campanhas[0]['vencedor_sorteio'] : ''; ?>">
                                     </div>
                                 </div>
@@ -876,34 +932,293 @@
                                     <div>
                                         <label class="block text-sm font-medium mb-1">Título do Alerta</label>
                                         <input type="text" id="titulo_cotas_dobro" name="titulo_cotas_dobro" 
-                                            class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                            class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                             value="<?php echo isset($campanhas[0]['titulo_cotas_dobro']) ? $campanhas[0]['titulo_cotas_dobro'] : ''; ?>"
                                             placeholder="Ex: COTAS EM DOBRO ATIVADAS!">
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium mb-1">Subtítulo do Alerta</label>
                                         <input type="text" id="subtitulo_cotas_dobro" name="subtitulo_cotas_dobro" 
-                                            class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                            class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                             value="<?php echo isset($campanhas[0]['subtitulo_cotas_dobro']) ? $campanhas[0]['subtitulo_cotas_dobro'] : ''; ?>"
                                             placeholder="Ex: Aproveite! Todas as cotas estão valendo em dobro.">
                                     </div>
                                 </div>
                                 <div class="mb-4">
-                                    <label for="cotas_premiadas" class="block mb-2 font-medium">Cotas premiadas</label>
-                                    <input type="text" id="cotas_premiadas" name="cotas_premiadas"
-                                        class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
-                                        value="<?php echo isset($campanhas[0]['cotas_premiadas']) ? $campanhas[0]['cotas_premiadas'] : ''; ?>"
-                                        placeholder="Separe os valores por vírgula e não utilize espaço, ex: 12345,54321,78965">
-                                    <p class="text-sm text-gray-500 mt-1">Separe os valores por vírgula e não utilize
-                                        espaço, ex: 12345,54321,78965</p>
+                                    <label for="quantidade_cotas_premiadas" class="block mb-2 font-medium">Quantidade de Cotas Premiadas (MAX: 20)</label>
+                                    <input type="number" id="quantidade_cotas_premiadas" name="quantidade_cotas_premiadas" min="1" max="20"
+                                        class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                        value="<?php echo isset($campanhas[0]['quantidade_cotas_premiadas']) ? $campanhas[0]['quantidade_cotas_premiadas'] : ''; ?>"
+                                        placeholder="Quantidade de cotas que serão selecionadas automaticamente">
+                                    <p class="text-sm text-gray-500 mt-1">Quantidade de cotas que serão selecionadas automaticamente</p>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="premio_cotas_premiadas" class="block mb-2 font-medium">Prêmio das Cotas Premiadas</label>
+                                    <input type="text" id="premio_cotas_premiadas" name="premio_cotas_premiadas"
+                                        class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                        value="<?php echo isset($campanhas[0]['premio_cotas_premiadas']) ? $campanhas[0]['premio_cotas_premiadas'] : ''; ?>"
+                                        placeholder="Ex: R$ 500 ou AUDI A3">
+                                    <p class="text-sm text-gray-500 mt-1">Prêmio que será associado às cotas premiadas</p>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="cotas_premiadas" class="block mb-2 font-medium">Cotas Premiadas Atuais</label>
+                                    <div class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-3 rounded-md border border-gray-300 dark:border-gray-600 min-h-[60px]">
+                                        <?php 
+                                        require_once('../functions/functions_sistema.php');
+                                        if (isset($campanhas[0]['cotas_premiadas']) && !empty($campanhas[0]['cotas_premiadas'])) {
+                                            $cotas = explode(',', $campanhas[0]['cotas_premiadas']);
+                                            $largura_cota = obterLarguraCotaPorCampanha($conn, $campanhas[0]['id']);
+                                            foreach ($cotas as $cota) {
+                                                $cota_fmt = formatarCotaComLargura($cota, $largura_cota);
+                                                echo '<span class="inline-block bg-green-600 text-white px-2 py-1 rounded mr-2 mb-2">' . $cota_fmt . '</span>';
+                                            }
+                                        } else {
+                                            echo 'Nenhuma cota premiada definida';
+                                        }
+                                        ?>
+                                    </div>
+                                    <p class="text-sm text-gray-500 mt-1">Cotas selecionadas automaticamente pelo sistema</p>
                                 </div>
                                 <div>
                                     <label for="descricao_cotas_premiadas" class="block mb-2 font-medium">Descrição</label>
                                     <textarea id="descricao_cotas_premiadas" name="descricao_cotas_premiadas"
-                                        class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                        class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                         placeholder="ex: A premiação da(s) cota(s) premiada(s) serão efetuadas no dia da campanha, fique esperto!"><?php echo isset($campanhas[0]['descricao_cotas_premiadas']) ? $campanhas[0]['descricao_cotas_premiadas'] : ''; ?></textarea>
                                     <p class="text-sm text-gray-500 mt-1">ex: A premiação da(s) cota(s) premiada(s) serão
                                         efetuadas no dia da campanha, fique esperto!</p>
+                                </div>
+                            </div>
+
+                            <div id="roletas_raspadinhas" class="tab-content hidden">
+                                <h2 class="text-xl font-semibold mb-4">Roletas e Raspadinhas</h2>
+                                
+                                <!-- Configuração da Roleta -->
+                                <div class="mb-6">
+                                    <h3 class="text-lg font-semibold mb-4">🎰 Configuração da Roleta</h3>
+                                    <div class="mb-4">
+                                        <label for="habilitar_roleta" class="block mb-2 font-medium">Habilitar Roleta</label>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="habilitar_roleta" name="habilitar_roleta" value="1"
+                                                <?php echo isset($campanhas[0]['habilitar_roleta']) && $campanhas[0]['habilitar_roleta'] ? 'checked' : ''; ?>>
+                                            <div class="toggle-switch-background">
+                                                <div class="toggle-switch-handle"></div>
+                                            </div>
+                                        </label>
+                                    </div>
+                                    
+                                    <div id="config_roleta" class="space-y-4" style="display: <?php echo isset($campanhas[0]['habilitar_roleta']) && $campanhas[0]['habilitar_roleta'] ? 'block' : 'none'; ?>">
+                                        <div>
+                                            <label for="titulo_roleta" class="block mb-2 font-medium">Título da Roleta</label>
+                                            <input type="text" id="titulo_roleta" name="titulo_roleta"
+                                                class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                                value="<?php echo isset($campanhas[0]['titulo_roleta']) ? $campanhas[0]['titulo_roleta'] : '🎰 Roleta da Sorte'; ?>"
+                                                placeholder="Ex: 🎰 Roleta da Sorte">
+                                        </div>
+                                        
+                                        <div>
+                                            <label for="descricao_roleta" class="block mb-2 font-medium">Descrição da Roleta</label>
+                                            <textarea id="descricao_roleta" name="descricao_roleta"
+                                                class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                                placeholder="Ex: Gire a roleta e ganhe prêmios incríveis!"><?php echo isset($campanhas[0]['descricao_roleta']) ? $campanhas[0]['descricao_roleta'] : ''; ?></textarea>
+                                        </div>
+                                        
+                                        <div>
+                                            <label for="itens_roleta" class="block mb-2 font-medium">Itens da Roleta</label>
+                                            <div id="itens_roleta_container" class="space-y-3">
+                                                <?php
+                                                if (isset($campanhas[0]['itens_roleta']) && !empty($campanhas[0]['itens_roleta'])) {
+                                                    $itens = json_decode($campanhas[0]['itens_roleta'], true);
+                                                    if (is_array($itens)) {
+                                                        foreach ($itens as $index => $item) {
+                                                            ?>
+                                                            <div class="bg-white dark:bg-[#27272A] p-4 rounded-lg shadow border">
+                                                                <div class="grid grid-cols-2 gap-4">
+                                                                    <div>
+                                                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                                                                            Nome do Item
+                                                                        </label>
+                                                                        <input type="text" name="nome_item_roleta[]" 
+                                                                            value="<?php echo $item['nome']; ?>"
+                                                                            class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                                                            placeholder="Ex: R$ 50,00">
+                                                                    </div>
+                                                                    <div>
+                                                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                                                                            Status
+                                                                        </label>
+                                                                        <select name="status_item_roleta[]" 
+                                                                            class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                                                                            <option value="disponivel" <?php echo $item['status'] == 'disponivel' ? 'selected' : ''; ?>>Disponível</option>
+                                                                            <option value="bloqueado" <?php echo $item['status'] == 'bloqueado' ? 'selected' : ''; ?>>Bloqueado</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <button type="button" class="mt-2 text-red-600 hover:text-red-800 text-sm" onclick="removerItemRoleta(this)">
+                                                                    Remover Item
+                                                                </button>
+                                                            </div>
+                                                            <?php
+                                                        }
+                                                    }
+                                                }
+                                                ?>
+                                            </div>
+                                            <button type="button" onclick="adicionarItemRoleta()"
+                                                class="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+                                                Adicionar Item da Roleta
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Configuração dos Pacotes de Roleta -->
+                                <div class="mb-6">
+                                    <h3 class="text-lg font-semibold mb-4">📦 Pacotes de Roleta (removidos)</h3>
+                                    <div id="pacotes_roleta" class="space-y-4" style="display:none;">
+                                        <div class="bg-purple-100 dark:bg-purple-900 p-4 rounded-md mb-4">
+                                            <p class="text-sm text-purple-800 dark:text-purple-200">
+                                                <span class="font-bold">🎰 Pacotes de Roleta!</span><br>
+                                                Configure pacotes com diferentes quantidades de giros na roleta. Cada pacote gera um código único para validação.
+                                            </p>
+                                        </div>
+                                        <div id="pacotes_roleta_container" class="space-y-4">
+                                            <?php
+                                            if (false) {
+                                                $pacotes = [];
+                                                if (is_array($pacotes)) {
+                                                    foreach ($pacotes as $pacote) {
+                                                        ?>
+                                                        <div class="bg-white dark:bg-[#27272A] p-4 rounded-lg shadow">
+                                                            <div class="grid grid-cols-4 gap-4">
+                                                                <div>
+                                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                                                                        Valor do Pacote
+                                                                    </label>
+                                                                    <input type="number" step="0.01" name="valor_pacote_roleta[]" 
+                                                                        value="<?php echo $pacote['valor_pacote']; ?>"
+                                                                        class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                                                                </div>
+                                                                <div>
+                                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                                                                        Quantidade de Giros
+                                                                    </label>
+                                                                    <input type="number" name="quantidade_giros_roleta[]" 
+                                                                        value="<?php echo $pacote['quantidade_giros']; ?>"
+                                                                        class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                                                                </div>
+                                                                <div>
+                                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                                                                        Código do Pacote
+                                                                    </label>
+                                                                    <input type="text" name="codigo_pacote_roleta[]" 
+                                                                        value="<?php echo $pacote['codigo_pacote']; ?>"
+                                                                        class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                                                                </div>
+                                                                <div>
+                                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                                                                        Destaque
+                                                                    </label>
+                                                                    <select name="destaque_pacote_roleta[]" 
+                                                                        class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                                                                        <option value="0" <?php echo $pacote['destaque'] == '0' ? 'selected' : ''; ?>>Normal</option>
+                                                                        <option value="1" <?php echo $pacote['destaque'] == '1' ? 'selected' : ''; ?>>Mais Popular</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <button type="button" class="mt-2 text-red-600 hover:text-red-800 text-sm" onclick="removerPacoteRoleta(this)">
+                                                                Remover Pacote
+                                                            </button>
+                                                        </div>
+                                                        <?php
+                                                    }
+                                                }
+                                            }
+                                            ?>
+                                        </div>
+                                        <button type="button" onclick="adicionarPacoteRoleta()"
+                                            class="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+                                            Adicionar Pacote de Roleta
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Configuração da Raspadinha -->
+                                <div class="mb-6">
+                                    <h3 class="text-lg font-semibold mb-4">🎫 Configuração da Raspadinha</h3>
+                                    <div class="mb-4">
+                                        <label for="habilitar_raspadinha" class="block mb-2 font-medium">Habilitar Raspadinha</label>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="habilitar_raspadinha" name="habilitar_raspadinha" value="1"
+                                                <?php echo isset($campanhas[0]['habilitar_raspadinha']) && $campanhas[0]['habilitar_raspadinha'] ? 'checked' : ''; ?>>
+                                            <div class="toggle-switch-background">
+                                                <div class="toggle-switch-handle"></div>
+                                            </div>
+                                        </label>
+                                    </div>
+                                    
+                                    <div id="config_raspadinha" class="space-y-4" style="display: <?php echo isset($campanhas[0]['habilitar_raspadinha']) && $campanhas[0]['habilitar_raspadinha'] ? 'block' : 'none'; ?>">
+                                        <div>
+                                            <label for="titulo_raspadinha" class="block mb-2 font-medium">Título da Raspadinha</label>
+                                            <input type="text" id="titulo_raspadinha" name="titulo_raspadinha"
+                                                class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                                value="<?php echo isset($campanhas[0]['titulo_raspadinha']) ? $campanhas[0]['titulo_raspadinha'] : '🎫 Raspadinha da Sorte'; ?>"
+                                                placeholder="Ex: 🎫 Raspadinha da Sorte">
+                                        </div>
+                                        
+                                        <div>
+                                            <label for="descricao_raspadinha" class="block mb-2 font-medium">Descrição da Raspadinha</label>
+                                            <textarea id="descricao_raspadinha" name="descricao_raspadinha"
+                                                class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                                placeholder="Ex: Raspe e descubra prêmios incríveis!"><?php echo isset($campanhas[0]['descricao_raspadinha']) ? $campanhas[0]['descricao_raspadinha'] : ''; ?></textarea>
+                                        </div>
+                                        
+                                        <div>
+                                            <label for="itens_raspadinha" class="block mb-2 font-medium">Itens da Raspadinha</label>
+                                            <div id="itens_raspadinha_container" class="space-y-3">
+                                                <?php
+                                                if (isset($campanhas[0]['itens_raspadinha']) && !empty($campanhas[0]['itens_raspadinha'])) {
+                                                    $itens = json_decode($campanhas[0]['itens_raspadinha'], true);
+                                                    if (is_array($itens)) {
+                                                        foreach ($itens as $index => $item) {
+                                                            ?>
+                                                            <div class="bg-white dark:bg-[#27272A] p-4 rounded-lg shadow border">
+                                                                <div class="grid grid-cols-2 gap-4">
+                                                                    <div>
+                                                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                                                                            Nome do Item
+                                                                        </label>
+                                                                        <input type="text" name="nome_item_raspadinha[]" 
+                                                                            value="<?php echo $item['nome']; ?>"
+                                                                            class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                                                            placeholder="Ex: R$ 100,00">
+                                                                    </div>
+                                                                    <div>
+                                                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                                                                            Status
+                                                                        </label>
+                                                                        <select name="status_item_raspadinha[]" 
+                                                                            class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                                                                            <option value="disponivel" <?php echo $item['status'] == 'disponivel' ? 'selected' : ''; ?>>Disponível</option>
+                                                                            <option value="bloqueado" <?php echo $item['status'] == 'bloqueado' ? 'selected' : ''; ?>>Bloqueado</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <button type="button" class="mt-2 text-red-600 hover:text-red-800 text-sm" onclick="removerItemRaspadinha(this)">
+                                                                    Remover Item
+                                                                </button>
+                                                            </div>
+                                                            <?php
+                                                        }
+                                                    }
+                                                }
+                                                ?>
+                                            </div>
+                                            <button type="button" onclick="adicionarItemRaspadinha()"
+                                                class="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+                                                Adicionar Item da Raspadinha
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -977,6 +1292,38 @@
                         $("#div_progresso_manual").show("fast");
                     else
                         $("#div_progresso_manual").hide("slow");
+                }
+
+                // Event listeners para Roletas e Raspadinhas
+                validaRoleta();
+                $("#habilitar_roleta").click(function ()
+                {
+                    validaRoleta();
+                });
+
+                function validaRoleta()
+                {
+                    if($("#habilitar_roleta").is(":checked"))
+                        $("#config_roleta").show("fast");
+                    else
+                        $("#config_roleta").hide("slow");
+                }
+
+                validaPacotesRoleta();
+                // Removido: validação de exibição de pacotes de roleta
+
+                validaRaspadinha();
+                $("#habilitar_raspadinha").click(function ()
+                {
+                    validaRaspadinha();
+                });
+
+                function validaRaspadinha()
+                {
+                    if($("#habilitar_raspadinha").is(":checked"))
+                        $("#config_raspadinha").show("fast");
+                    else
+                        $("#config_raspadinha").hide("slow");
                 }
 
                 $("#submit").click(function()
@@ -1087,18 +1434,18 @@
                     document.getElementById('pacote_exclusivo').querySelector('.space-y-4');
                     
                 const novoDesconto = document.createElement('div');
-                novoDesconto.className = 'bg-white dark:bg-gray-800 p-4 rounded-lg shadow';
+                novoDesconto.className = 'bg-white dark:bg-[#27272A] p-4 rounded-lg shadow';
                 
                 const sufixo = tipo === 'promocional' ? 'pacote_promocional' : 'pacotes_exclusivos';
                 
                 novoDesconto.innerHTML = `
-                    <div class="grid grid-cols-4 gap-4">
+                    <div class="grid grid-cols-6 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                                 Valor do Bilhete
                             </label>
                             <input type="number" step="0.01" name="${sufixo}[]" 
-                                class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                 onchange="calcularValorPacote(this)" onkeyup="calcularValorPacote(this)">
                         </div>
                         <div>
@@ -1106,7 +1453,7 @@
                                 Quantidade de números
                             </label>
                             <input type="number" name="${sufixo}[]" 
-                                class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                 onchange="calcularValorPacote(this)" onkeyup="calcularValorPacote(this)">
                         </div>
                         <div>
@@ -1114,8 +1461,20 @@
                                 Valor do Pacote
                             </label>
                             <input type="number" step="0.01" name="${sufixo}[]" 
-                                class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                 readonly>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Benefício do Pacote</label>
+                            <select name="beneficio_tipo_promocional[]" class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                                <option value="">Nenhum</option>
+                                <option value="roleta">Roleta</option>
+                                <option value="raspadinha">Raspadinha</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Qtd. Benefício</label>
+                            <input type="number" min="0" name="beneficio_quantidade_promocional[]" class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
                         </div>
                     </div>
                     <button type="button" class="mt-2 text-red-600 hover:text-red-800 text-sm" onclick="removerDesconto(this)">
@@ -1136,18 +1495,18 @@
                     document.getElementById('pacote_exclusivo').querySelector('.space-y-4');
                     
                 const novoDesconto = document.createElement('div');
-                novoDesconto.className = 'bg-white dark:bg-gray-800 p-4 rounded-lg shadow';
+                novoDesconto.className = 'bg-white dark:bg-[#27272A] p-4 rounded-lg shadow';
                 
                 const sufixo = tipo === 'promocional' ? 'pacote_promocional' : 'pacotes_exclusivos';
                 
                 novoDesconto.innerHTML = `
-                    <div class="grid grid-cols-4 gap-4">
+                    <div class="grid grid-cols-6 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                                 Valor do Bilhete
                             </label>
                             <input type="number" step="0.01" name="${sufixo}[]" 
-                                class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                 onchange="calcularValorPacote(this)" onkeyup="calcularValorPacote(this)">
                         </div>
                         <div>
@@ -1155,7 +1514,7 @@
                                 Quantidade de números
                             </label>
                             <input type="number" name="${sufixo}[]" 
-                                class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                 onchange="calcularValorPacote(this)" onkeyup="calcularValorPacote(this)">
                         </div>
                         <div>
@@ -1163,7 +1522,7 @@
                                 Valor do Pacote
                             </label>
                             <input type="number" step="0.01" name="${sufixo}[]" 
-                                class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                 readonly>
                         </div>
                         <div>
@@ -1171,7 +1530,19 @@
                                 Código do Pacote
                             </label>
                             <input type="text" name="${sufixo}[]" 
-                                class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                                class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Benefício do Pacote</label>
+                            <select name="beneficio_tipo_exclusivo[]" class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                                <option value="">Nenhum</option>
+                                <option value="roleta">Roleta</option>
+                                <option value="raspadinha">Raspadinha</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Qtd. Benefício</label>
+                            <input type="number" min="0" name="beneficio_quantidade_exclusivo[]" class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
                         </div>
                     </div>
                     <button type="button" class="mt-2 text-red-600 hover:text-red-800 text-sm" onclick="removerDesconto(this)">
@@ -1252,6 +1623,134 @@
                 }
             }
 
+            // Funções para Roletas e Raspadinhas
+            function adicionarItemRoleta() {
+                const container = document.getElementById('itens_roleta_container');
+                const novoItem = document.createElement('div');
+                novoItem.className = 'bg-white dark:bg-[#27272A] p-4 rounded-lg shadow border';
+                
+                novoItem.innerHTML = `
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                                Nome do Item
+                            </label>
+                            <input type="text" name="nome_item_roleta[]" 
+                                class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                placeholder="Ex: R$ 50,00">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                                Status
+                            </label>
+                            <select name="status_item_roleta[]" 
+                                class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                                <option value="disponivel">Disponível</option>
+                                <option value="bloqueado">Bloqueado</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="button" class="mt-2 text-red-600 hover:text-red-800 text-sm" onclick="removerItemRoleta(this)">
+                        Remover Item
+                    </button>
+                `;
+                container.appendChild(novoItem);
+            }
+
+            function removerItemRoleta(button) {
+                const itemDiv = button.closest('.bg-white');
+                itemDiv.remove();
+            }
+
+            function adicionarPacoteRoleta()
+			{
+                novoPacote.innerHTML = `
+                    <div class="grid grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                                Valor do Pacote
+                            </label>
+                            <input type="number" step="0.01" name="valor_pacote_roleta[]" 
+                                class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                                Quantidade de Giros
+                            </label>
+                            <input type="number" name="quantidade_giros_roleta[]" 
+                                class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                                Código do Pacote
+                            </label>
+                            <input type="text" name="codigo_pacote_roleta[]" 
+                                class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                                Destaque
+                            </label>
+                            <select name="destaque_pacote_roleta[]" 
+                                class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                                <option value="0">Normal</option>
+                                <option value="1">Mais Popular</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="button" class="mt-2 text-red-600 hover:text-red-800 text-sm" onclick="removerPacoteRoleta(this)">
+                        Remover Pacote
+                    </button>
+                `;
+                container.appendChild(novoPacote);
+
+                const novoCodigoInput = novoPacote.querySelector('input[name="codigo_pacote_roleta[]"]');
+                gerarCodigoAleatorio(novoCodigoInput);
+            }
+
+            function removerPacoteRoleta(button) {
+                const pacoteDiv = button.closest('.bg-white');
+                pacoteDiv.remove();
+            }
+
+            function adicionarItemRaspadinha() {
+                const container = document.getElementById('itens_raspadinha_container');
+                const novoItem = document.createElement('div');
+                novoItem.className = 'bg-white dark:bg-[#27272A] p-4 rounded-lg shadow border';
+                
+                novoItem.innerHTML = `
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                                Nome do Item
+                            </label>
+                            <input type="text" name="nome_item_raspadinha[]" 
+                                class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                placeholder="Ex: R$ 100,00">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                                Status
+                            </label>
+                            <select name="status_item_raspadinha[]" 
+                                class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                                <option value="disponivel">Disponível</option>
+                                <option value="bloqueado">Bloqueado</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="button" class="mt-2 text-red-600 hover:text-red-800 text-sm" onclick="removerItemRaspadinha(this)">
+                        Remover Item
+                    </button>
+                `;
+                container.appendChild(novoItem);
+            }
+
+            function removerItemRaspadinha(button) {
+                const itemDiv = button.closest('.bg-white');
+                itemDiv.remove();
+            }
+
             function valida()
             {
                 const form = document.querySelector('form');
@@ -1262,36 +1761,49 @@
                     const containersPromocionais = document.querySelectorAll('#pacote_promocional #descontos-container > div');
                     
                     containersPromocionais.forEach(container => {
-                        const inputs = container.querySelectorAll('input[type="number"], input[type="text"]');
-                        if (inputs.length >= 3) {
+                        const valores = container.querySelectorAll('input[type="number"]');
+                        const selectBeneficio = container.querySelector('select[name="beneficio_tipo_promocional[]"]');
+                        const valorBilhete = parseFloat(valores[0]?.value || 0);
+                        const quantidadeNumeros = parseInt(valores[1]?.value || 0);
+                        const valorPacote = parseFloat(valores[2]?.value || 0);
+                        const beneficioQtd = parseInt(container.querySelector('input[name="beneficio_quantidade_promocional[]"]')?.value || 0);
+                        const beneficioTipo = selectBeneficio ? selectBeneficio.value : '';
+                        if (!isNaN(valorBilhete) && !isNaN(quantidadeNumeros) && !isNaN(valorPacote)) {
                             pacotesPromocionais.push({
-                                valor_bilhete: parseFloat(inputs[0].value) || 0,
-                                quantidade_numeros: parseInt(inputs[1].value) || 0,
-                                valor_pacote: parseFloat(inputs[2].value) || 0
+                                valor_bilhete: valorBilhete,
+                                quantidade_numeros: quantidadeNumeros,
+                                valor_pacote: valorPacote,
+                                beneficio_tipo: beneficioTipo,
+                                beneficio_quantidade: beneficioQtd
                             });
                         }
                     });
                 }
 
-                // Coleta os dados dos pacotes exclusivos
                 const pacotesExclusivos = [];
                 if (document.getElementById('habilita_pacote_promocional_exclusivo') && document.getElementById('habilita_pacote_promocional_exclusivo').checked) {
                     const containersExclusivos = document.querySelectorAll('#pacote_exclusivo .space-y-4 > div');
                     
                     containersExclusivos.forEach(container => {
-                        const inputs = container.querySelectorAll('input[type="number"], input[type="text"]');
-                        if (inputs.length >= 4) {
+                        const valorBilhete = parseFloat(container.querySelector('input[name="valor_bilhete_exclusivo[]"]')?.value || 0);
+                        const quantidadeNumeros = parseInt(container.querySelector('input[name="quantidade_desconto_exclusivo[]"]')?.value || 0);
+                        const valorPacote = parseFloat(container.querySelector('input[name="valor_desconto_exclusivo[]"]')?.value || 0);
+                        const codigoPacote = container.querySelector('input[name="codigo_desconto_exclusivo[]"]')?.value || '';
+                        const beneficioTipo = (container.querySelector('select[name="beneficio_tipo_exclusivo[]"]') || {}).value || '';
+                        const beneficioQtd = parseInt(container.querySelector('input[name="beneficio_quantidade_exclusivo[]"]')?.value || 0);
+                        if (!isNaN(valorBilhete) && !isNaN(quantidadeNumeros) && !isNaN(valorPacote)) {
                             pacotesExclusivos.push({
-                                valor_bilhete: parseFloat(inputs[0].value) || 0,
-                                quantidade_numeros: parseInt(inputs[1].value) || 0,
-                                valor_pacote: parseFloat(inputs[2].value) || 0,
-                                codigo_pacote: inputs[3].value
+                                valor_bilhete: valorBilhete,
+                                quantidade_numeros: quantidadeNumeros,
+                                valor_pacote: valorPacote,
+                                codigo_pacote: codigoPacote,
+                                beneficio_tipo: beneficioTipo,
+                                beneficio_quantidade: beneficioQtd
                             });
                         }
                     });
                 }
 
-                // Tratamento do filtro de período dos top ganhadores
                 const filtroPeriodo = document.getElementById('filtro_periodo_top_ganhadores');
                 if (filtroPeriodo) {
                     let filtroData = {

@@ -57,7 +57,7 @@ $pedidos_efetuados = count($pedidos_total);
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 
-<body class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-white min-h-screen">
+<body class="bg-gray-100 text-gray-800 dark:bg-[#18181B] dark:text-white min-h-screen">
     <div class="flex flex-col lg:flex-row min-h-screen">
         <?php require("sidebar.php"); ?>
 
@@ -66,11 +66,11 @@ $pedidos_efetuados = count($pedidos_total);
                 <h1 class="text-2xl font-bold mb-6">Relatórios</h1>
 
                 <!-- Filtros -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 mb-6">
+                <div class="bg-white dark:bg-[#27272A] rounded-lg shadow-lg p-4 mb-6">
                     <form method="GET" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                         <div class="relative">
                             <select name="campanha"
-                                class="w-full border rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white appearance-none">
+                                class="w-full border rounded-lg p-2.5 dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white appearance-none">
                                 <option value="">Todas as campanhas</option>
                                 <?php foreach ($campanhas as $camp): ?>
                                     <option value="<?php echo $camp['id']; ?>" <?php echo $campanha == $camp['id'] ? 'selected' : ''; ?>>
@@ -85,7 +85,7 @@ $pedidos_efetuados = count($pedidos_total);
 
                         <div class="relative">
                             <select name="status"
-                                class="w-full border rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white appearance-none">
+                                class="w-full border rounded-lg p-2.5 dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white appearance-none">
                                 <option value="">Todos os status</option>
                                 <option value="0" <?php echo $status == '0' ? 'selected' : ''; ?>>Pendente</option>
                                 <option value="1" <?php echo $status == '1' ? 'selected' : ''; ?>>Pago</option>
@@ -98,7 +98,7 @@ $pedidos_efetuados = count($pedidos_total);
 
                         <div class="relative">
                             <select name="metodo"
-                                class="w-full border rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white appearance-none">
+                                class="w-full border rounded-lg p-2.5 dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white appearance-none">
                                 <option value="">Todos os métodos</option>
                                 <option value="Pay2M" <?php echo $metodo == 'Pay2M' ? 'selected' : ''; ?>>Pay2M</option>
                                 <option value="Manual" <?php echo $metodo == 'Manual' ? 'selected' : ''; ?>>Manual
@@ -110,10 +110,10 @@ $pedidos_efetuados = count($pedidos_total);
                         </div>
 
                         <input type="date" name="data_inicio" value="<?php echo $data_inicio; ?>"
-                            class="border rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            class="border rounded-lg p-2.5 dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
 
                         <input type="date" name="data_fim" value="<?php echo $data_fim; ?>"
-                            class="border rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            class="border rounded-lg p-2.5 dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
 
                         <div class="lg:col-span-5 flex justify-end">
                             <button type="submit"
@@ -127,7 +127,7 @@ $pedidos_efetuados = count($pedidos_total);
                 <!-- Cards -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                     <!-- Cotas vendidas -->
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                    <div class="bg-white dark:bg-[#27272A] rounded-lg shadow-lg p-6">
                         <div class="flex items-center">
                             <div class="p-3 rounded-full bg-green-100 dark:bg-green-900">
                                 <i class="fas fa-ticket-alt text-green-500"></i>
@@ -141,7 +141,7 @@ $pedidos_efetuados = count($pedidos_total);
                     </div>
 
                     <!-- Novos clientes -->
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                    <div class="bg-white dark:bg-[#27272A] rounded-lg shadow-lg p-6">
                         <div class="flex items-center">
                             <div class="p-3 rounded-full bg-orange-100 dark:bg-orange-900">
                                 <i class="fas fa-users text-orange-500"></i>
@@ -155,7 +155,7 @@ $pedidos_efetuados = count($pedidos_total);
                     </div>
 
                     <!-- Pedidos efetuados -->
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                    <div class="bg-white dark:bg-[#27272A] rounded-lg shadow-lg p-6">
                         <div class="flex items-center">
                             <div class="p-3 rounded-full bg-blue-100 dark:bg-blue-900">
                                 <i class="fas fa-shopping-cart text-blue-500"></i>
@@ -169,7 +169,7 @@ $pedidos_efetuados = count($pedidos_total);
                     </div>
 
                     <!-- Faturamento -->
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                    <div class="bg-white dark:bg-[#27272A] rounded-lg shadow-lg p-6">
                         <div class="flex items-center">
                             <div class="p-3 rounded-full bg-cyan-100 dark:bg-cyan-900">
                                 <i class="fas fa-dollar-sign text-cyan-500"></i>
@@ -184,7 +184,7 @@ $pedidos_efetuados = count($pedidos_total);
                 </div>
 
                 <!-- Tabela -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+                <div class="bg-white dark:bg-[#27272A] rounded-lg shadow-lg overflow-hidden">
                     <div class="overflow-x-auto">
                         <?php if (empty($pedidos)): ?>
                             <div class="p-8 text-center text-gray-500 dark:text-gray-400">
@@ -193,7 +193,7 @@ $pedidos_efetuados = count($pedidos_total);
                             </div>
                         <?php else: ?>
                             <table class="w-full">
-                                <thead class="bg-gray-50 dark:bg-gray-700">
+                                <thead class="bg-gray-50 dark:bg-[#3F3F46]">
                                     <tr>
                                         <th
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
@@ -221,7 +221,7 @@ $pedidos_efetuados = count($pedidos_total);
                                             Total</th>
                                     </tr>
                                 </thead>
-                                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                <tbody class="bg-white dark:bg-[#27272A] divide-y divide-gray-200 dark:divide-gray-700">
                                         <?php foreach ($pedidos as $pedido):
                                             $campanha_pedido = listaCampanhas($conn, $pedido['campanha_id']);
                                         ?>
@@ -283,7 +283,7 @@ $pedidos_efetuados = count($pedidos_total);
                             $query_string = http_build_query($query);
                             ?>
                             <a href="?<?php echo $query_string; ?>"
-                                class="px-3 py-1 rounded-md text-sm font-medium <?php echo $i == $pagina ? 'bg-purple-600 text-white' : 'bg-white dark:bg-gray-700 text-gray-800 dark:text-white '; ?>">
+                                class="px-3 py-1 rounded-md text-sm font-medium <?php echo $i == $pagina ? 'bg-purple-600 text-white' : 'bg-white dark:bg-[#3F3F46] text-gray-800 dark:text-white '; ?>">
                                 <?php echo $i; ?>
                             </a>
                         <?php endfor; ?>

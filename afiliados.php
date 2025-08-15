@@ -17,7 +17,7 @@ $totais_pagamentos = getTotalPagamentos($conn, $usuario_id);
 ?>
 
             <!-- Histórico de Pagamentos -->
-            <div class="bg-white dark:bg-gray-800  p-6 rounded-lg shadow-md mb-6">
+            <div class="bg-white dark:bg-[#27272A]  p-6 rounded-lg shadow-md mb-6">
                 <h2 class="text-lg font-semibold mb-4">Histórico de Pagamentos</h2>
 
                 <!-- Resumo de Pagamentos -->
@@ -97,7 +97,7 @@ $totais_pagamentos = getTotalPagamentos($conn, $usuario_id);
 
             <!-- Modal de Visualização do Comprovante -->
             <div id="modalComprovante" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
-                <div class="bg-white dark:bg-gray-800  p-6 rounded-lg w-full max-w-2xl">
+                <div class="bg-white dark:bg-[#27272A]  p-6 rounded-lg w-full max-w-2xl">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-semibold">Comprovante de Pagamento</h3>
                         <button onclick="fecharModalComprovante()" class="text-gray-500 hover:text-gray-700">

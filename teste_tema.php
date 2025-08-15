@@ -30,13 +30,13 @@ $isDarkMode = $config['tema'] == 'escuro';
         }
     </script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen">
+<body class="bg-gray-100 dark:bg-[#18181B] text-gray-900 dark:text-gray-100 min-h-screen">
     <div class="container mx-auto px-4 py-8">
         <h1 class="text-3xl font-bold mb-8 text-center">Teste do Tema Escuro</h1>
         
         <div class="max-w-4xl mx-auto space-y-6">
             <!-- Informações do banco -->
-            <div class="bg-white dark:bg-gray-800  p-6 rounded-lg shadow-md">
+            <div class="bg-white dark:bg-[#27272A]  p-6 rounded-lg shadow-md">
                 <h2 class="text-xl font-semibold mb-4">Informações do Banco</h2>
                 <p><strong>Tema no banco:</strong> <?php echo $config['tema']; ?></p>
                 <p><strong>isDarkMode:</strong> <?php echo $isDarkMode ? 'true' : 'false'; ?></p>
@@ -44,7 +44,7 @@ $isDarkMode = $config['tema'] == 'escuro';
             </div>
 
             <!-- Teste de classes Tailwind -->
-            <div class="bg-white dark:bg-gray-800  p-6 rounded-lg shadow-md">
+            <div class="bg-white dark:bg-[#27272A]  p-6 rounded-lg shadow-md">
                 <h2 class="text-xl font-semibold mb-4">Teste de Classes Tailwind</h2>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -61,7 +61,7 @@ $isDarkMode = $config['tema'] == 'escuro';
             </div>
 
             <!-- Botão de teste -->
-            <div class="bg-white dark:bg-gray-800  p-6 rounded-lg shadow-md">
+            <div class="bg-white dark:bg-[#27272A]  p-6 rounded-lg shadow-md">
                 <h2 class="text-xl font-semibold mb-4">Controles</h2>
                 <div class="flex space-x-4">
                     <button onclick="mudarModo()" class="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white px-4 py-2 rounded">
@@ -74,7 +74,7 @@ $isDarkMode = $config['tema'] == 'escuro';
             </div>
 
             <!-- Informações do localStorage -->
-            <div class="bg-white dark:bg-gray-800  p-6 rounded-lg shadow-md">
+            <div class="bg-white dark:bg-[#27272A]  p-6 rounded-lg shadow-md">
                 <h2 class="text-xl font-semibold mb-4">Informações do localStorage</h2>
                 <div id="localStorageInfo">
                     <p><strong>Tema salvo:</strong> <span id="savedTheme">Carregando...</span></p>

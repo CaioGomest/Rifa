@@ -13,6 +13,12 @@ $senha_db = '';
 $nome_db = "rifa";
 $porta_db = "3306";
 
+// $localhost = "127.0.0.1";
+// $usuario = "u214219698_rifas";
+// $senha_db = 'lAlOIzOK1+b';
+// $nome_db = "u214219698_rifas";
+// $porta_db = "3306";
+
 try {
     $conn = new mysqli($localhost, $usuario, $senha_db, $nome_db);
 

@@ -131,11 +131,12 @@ try {
             $nums = array_map('intval', array_filter(explode(',', $pedido['numeros_pedido'])));
             $cota_premiada = !empty($nums) ? min($nums) : null;
         }
+        $largura = obterLarguraCotaPorCampanha($conn, $campanha_id);
         $ganhadores[] = [
             'nome' => $pedido['cliente_nome'],
             'telefone' => $pedido['cliente_telefone'],
             'cotas' => $pedido['quantidade'],
-           'cota_premiada' => $cota_premiada !== null ? str_pad((string)$cota_premiada, 7, "0", STR_PAD_LEFT) : '',
+           'cota_premiada' => $cota_premiada !== null ? formatarCotaComLargura($cota_premiada, $largura) : '',
             'data_compra' => date('d/m/Y', strtotime($pedido['data_criacao']))
         ];
     }

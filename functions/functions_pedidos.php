@@ -126,7 +126,7 @@ function listaVendasAfiliados($conn, $pedido_id = null, $cliente_id = null, $cam
     }
 }
 
-function criarPedido($conn, $cliente_id, $campanha_id, $afiliado_id, $quantidade, $valor_total, $status, $data_criacao, $data_atualizacao, $nome_produto, $token_pedido, $numeros_pedido, $metodo_pagamento = null, $expiracao_pedido = null, $codigo_pix = null, $qrcode_pix = null, $id_mp = null, $valor_desconto = null)
+function criarPedido($conn, $cliente_id, $campanha_id, $afiliado_id, $quantidade, $valor_total, $status, $data_criacao, $data_atualizacao, $nome_produto, $token_pedido, $numeros_pedido, $metodo_pagamento = null, $expiracao_pedido = null, $codigo_pix = null, $qrcode_pix = null, $id_mp = null, $valor_desconto = null, $codigo_pacote_roleta = null, $quantidade_giros_roleta = null, $codigo_pacote_raspadinha = null, $quantidade_raspadinhas = null, $tipo_jogo = null)
 {
     // Inserir pedido
     $query = "INSERT INTO lista_pedidos (
@@ -146,12 +146,17 @@ function criarPedido($conn, $cliente_id, $campanha_id, $afiliado_id, $quantidade
         codigo_pix,
         qrcode_pix,
         id_mp,
-        valor_desconto
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        valor_desconto,
+        codigo_pacote_roleta,
+        quantidade_giros_roleta,
+        codigo_pacote_raspadinha,
+        quantidade_raspadinhas,
+        tipo_jogo
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($query);
     $status = 0; // pendente
     $stmt->bind_param(
-        "iiisdssssssssssss",
+        "iiisdsssssssssssssssss",
         $cliente_id,
         $campanha_id,
         $afiliado_id,
@@ -168,7 +173,12 @@ function criarPedido($conn, $cliente_id, $campanha_id, $afiliado_id, $quantidade
         $codigo_pix,
         $qrcode_pix,
         $id_mp,
-        $valor_desconto
+        $valor_desconto,
+        $codigo_pacote_roleta,
+        $quantidade_giros_roleta,
+        $codigo_pacote_raspadinha,
+        $quantidade_raspadinhas,
+        $tipo_jogo
     );
 
     if ($stmt->execute()) 
@@ -212,7 +222,7 @@ function criarPedido($conn, $cliente_id, $campanha_id, $afiliado_id, $quantidade
     }
 
     function cancelarPedido($conn, $pedido_id) {
-        $query = "UPDATE lista_pedidos SET status = 3, data_atualizacao = NOW() WHERE id = " . mysqli_real_escape_string($conn, $pedido_id);
+        $query = "UPDATE lista_pedidos SET status = 2, data_atualizacao = NOW() WHERE id = " . mysqli_real_escape_string($conn, $pedido_id);
         return mysqli_query($conn, $query);
     }
 
@@ -237,15 +247,15 @@ function criarPedido($conn, $cliente_id, $campanha_id, $afiliado_id, $quantidade
             
             // Formatar o status
             switch($pedido['status']) {
-                case 1:
+                case 0:
                     $pedido['status_texto'] = 'Pendente';
                     $pedido['status_classe'] = 'bg-yellow-500';
                     break;
-                case 2:
+                case 1:
                     $pedido['status_texto'] = 'Pago';
                     $pedido['status_classe'] = 'bg-green-500';
                     break;
-                case 3:
+                case 2:
                     $pedido['status_texto'] = 'Cancelado';
                     $pedido['status_classe'] = 'bg-red-500';
                     break;
@@ -317,3 +327,121 @@ function criarPedido($conn, $cliente_id, $campanha_id, $afiliado_id, $quantidade
             return false;
         }
     } 
+
+    // =========================
+    // Metadados do Pedido (JSON)
+    // =========================
+
+    function garantirColunaJogosPedidos($conn) {
+        $checkJogos = mysqli_query($conn, "SHOW COLUMNS FROM lista_pedidos LIKE 'jogos'");
+        if ($checkJogos && mysqli_num_rows($checkJogos) === 0) {
+            mysqli_query($conn, "ALTER TABLE lista_pedidos ADD COLUMN jogos LONGTEXT NULL");
+        }
+    }
+
+    function obterJogosDoPedido($conn, $pedido_id) {
+        $pedido_id = intval($pedido_id);
+        $sql = "SELECT jogos FROM lista_pedidos WHERE id = $pedido_id";
+        $res = mysqli_query($conn, $sql);
+        if (!$res) return [];
+        $row = mysqli_fetch_assoc($res);
+        if (!$row || empty($row['jogos'])) return [];
+        $dados = json_decode($row['jogos'], true);
+        return is_array($dados) ? $dados : [];
+    }
+
+    function salvarJogosDoPedido($conn, $pedido_id, $jogosArray) {
+        garantirColunaJogosPedidos($conn);
+        $pedido_id = intval($pedido_id);
+        $json = json_encode($jogosArray, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $stmt = $conn->prepare("UPDATE lista_pedidos SET jogos = ? WHERE id = ?");
+        $stmt->bind_param("si", $json, $pedido_id);
+
+        return $stmt->execute();
+    }
+
+    function getPedidoPorToken($conn, $token) {
+        $token = mysqli_real_escape_string($conn, $token);
+        $sql = "SELECT * FROM lista_pedidos WHERE token_pedido = '$token' LIMIT 1";
+        $res = mysqli_query($conn, $sql);
+        if ($res && mysqli_num_rows($res) > 0) {
+            return mysqli_fetch_assoc($res);
+        }
+        return null;
+    }
+
+    // Atualiza saldos de jogos nos contadores do pedido
+    function consumirJogoDoPedido($conn, $pedido_id, $tipo) {
+        $pedido_id = intval($pedido_id);
+        $tipo = $tipo === 'roleta' ? 'roleta' : ($tipo === 'raspadinha' ? 'raspadinha' : null);
+        if (!$tipo) return [ 'success' => false, 'message' => 'Tipo inválido' ];
+
+        $dados = obterJogosDoPedido($conn, $pedido_id);
+        if (!isset($dados['jogos'])) $dados['jogos'] = [];
+        if (!isset($dados['jogos'][$tipo])) {
+            return [ 'success' => false, 'message' => 'Jogo não disponível neste pedido' ];
+        }
+
+        $registro = $dados['jogos'][$tipo];
+        $campoColuna = $tipo === 'roleta' ? 'quantidade_giros_roleta' : 'quantidade_raspadinhas';
+        $campoRestantes = $tipo === 'roleta' ? 'giros_restantes' : 'cartelas_restantes';
+
+        $restantes = isset($registro[$campoRestantes]) ? intval($registro[$campoRestantes]) : 0;
+        if ($restantes <= 0) {
+            return [ 'success' => false, 'message' => 'Sem créditos disponíveis' ];
+        }
+
+        // Decrementa
+        $restantes -= 1;
+        $dados['jogos'][$tipo][$campoRestantes] = $restantes;
+
+        // Atualiza contadores persistidos
+        salvarJogosDoPedido($conn, $pedido_id, $dados);
+
+        // Atualiza coluna herdada para refletir no front que lê do pedido
+        $stmt = $conn->prepare("UPDATE lista_pedidos SET $campoColuna = GREATEST(COALESCE($campoColuna,0)-1,0) WHERE id = ?");
+        $stmt->bind_param("i", $pedido_id);
+        $stmt->execute();
+
+        return [ 'success' => true, 'restantes' => $restantes ];
+    }
+
+    // Registra o resultado de um jogo (ganho/perda) dentro do JSON 'jogos' do pedido
+    function registrarResultadoJogo($conn, $pedido_id, $tipo, $resultado)
+    {
+        $pedido_id = intval($pedido_id);
+        $tipo = $tipo === 'roleta' ? 'roleta' : ($tipo === 'raspadinha' ? 'raspadinha' : null);
+        if (!$tipo) {
+            return [ 'success' => false, 'message' => 'Tipo inválido' ];
+        }
+
+        $dados = obterJogosDoPedido($conn, $pedido_id);
+        if (!isset($dados['jogos'])) $dados['jogos'] = [];
+        if (!isset($dados['jogos'][$tipo])) $dados['jogos'][$tipo] = [];
+
+        // Array de resultados gerais
+        if (!isset($dados['jogos'][$tipo]['resultados'])) $dados['jogos'][$tipo]['resultados'] = [];
+
+        // Se for ganho, manter um atalho em 'premios'
+        $isWin = isset($resultado['tipo']) && $resultado['tipo'] === 'premio';
+        if ($isWin && !isset($dados['jogos'][$tipo]['premios'])) {
+            $dados['jogos'][$tipo]['premios'] = [];
+        }
+
+        // Anexa timestamp se não existir
+        if (!isset($resultado['data'])) {
+            $resultado['data'] = date('c');
+        }
+
+        $dados['jogos'][$tipo]['resultados'][] = $resultado;
+        if ($isWin) {
+            $dados['jogos'][$tipo]['premios'][] = [
+                'nome' => isset($resultado['nome']) ? (string)$resultado['nome'] : '',
+                'data' => $resultado['data'],
+            ];
+        }
+
+        $ok = salvarJogosDoPedido($conn, $pedido_id, $dados);
+        if ($ok) return [ 'success' => true ];
+        return [ 'success' => false, 'message' => 'Falha ao salvar resultado' ];
+    }

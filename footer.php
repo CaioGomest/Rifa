@@ -21,6 +21,11 @@
     }
   }
 </script>
+<?php 
+  // Template de alertas (exibe automaticamente com parametros na URL)
+  // Mantido no footer para garantir que o DOM exista quando o script rodar
+  require_once('assets/template_alerta.php');
+?>
 </body>
 
 </html>

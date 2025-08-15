@@ -11,16 +11,22 @@
   require_once('header.php');
   require_once('functions/functions_pedidos.php');
   require_once('functions/functions_clientes.php');
+  require_once('functions/functions_sistema.php');
   $config = listaInformacoes($conn);
   $campos_obrigatorios = explode(',', $config['campos_obrigatorios']);
   $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : 0;
   $campanhas = listaCampanhas($conn, $id, NULL, 1);
   $numeros_disponiveis = obterNumerosDisponiveis($conn, $id);
+  $largura_cota = obterLarguraCotaPorCampanha($conn, $id);
 
   if ($campanhas[0]['cotas_premiadas'])
     $cotas_premiadas = explode(',', $campanhas[0]['cotas_premiadas']);
   else
     $cotas_premiadas = [];
+
+
+
+    // print_r($campanhas[0]);
 
   // if ($campanhas[0]['status_cotas_premiadas'] == 'bloqueado')
   //     $reais_numeros_disponiveis = array_values(array_diff($numeros_disponiveis, $cotas_premiadas));
@@ -153,19 +159,24 @@
     }
 
     .secao-compra.slide-out {
-      transform: translateX(-100%);
+      transform: translateX(-50%);
       opacity: 0;
     }
 
     .login-container {
       transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
-      transform: translateX(100%);
+      transform: translateX(50%);
       opacity: 0;
     }
 
     .login-container.slide-in {
       transform: translateX(0);
       opacity: 1;
+    }
+    
+    .login-container.slide-out {
+      transform: translateX(-50%);
+      opacity: 0;
     }
 
     /* Animações para os formulários */
@@ -182,6 +193,16 @@
         opacity: 1;
         transform: translateY(0);
       }
+    }
+    
+    /* Transições para os formulários */
+    #formLoginInline, #formCadastroInline {
+      transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+    }
+    
+    /* Transições para os containers de formulário */
+    .bg-white.dark\\:bg-gray-800.rounded-lg.shadow-lg.p-6.mb-6 {
+      transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
     }
 
     /* Estilos para os inputs com ícones */
@@ -240,6 +261,21 @@
       font-size: 12px;
       font-weight: bold;
     }
+    
+    /* Animação de atenção para a mensagem de erro dos Termos de Uso */
+    @keyframes attentionShake {
+      0% { transform: translateX(0); }
+      15% { transform: translateX(-10px); }
+      30% { transform: translateX(10px); }
+      45% { transform: translateX(-8px); }
+      60% { transform: translateX(8px); }
+      75% { transform: translateX(-4px); }
+      90% { transform: translateX(4px); }
+      100% { transform: translateX(0); }
+    }
+    .attention-shake {
+      animation: attentionShake 600ms cubic-bezier(.36,.07,.19,.97) both;
+    }
   </style>
 
 
@@ -284,6 +320,8 @@ $codigo_afiliado = isset($_REQUEST['ref']) ? $_REQUEST['ref'] : '';
 ;
 $campanhas = listaCampanhas($conn, $id, NULL, 1);
 $modo_exclusivo = isset($_REQUEST['cx']) ? true : false;
+
+ 
 if ($id == 0) {
   header('location: index.php');
   die();
@@ -353,7 +391,7 @@ if ($imagens) {
 
 ?>
 
-<body class="bg-gray-100 text-black dark:bg-gray-900 dark:text-white transition-all">
+<body class="bg-gray-100 text-black dark:bg-[#18181B] dark:text-white transition-all">
 
   <?php
   if ($campanhas[0]["layout"] == 0) {
@@ -361,7 +399,7 @@ if ($imagens) {
     <!-- Main Content -->
     <main class="container mx-auto px-0 py-8">
       <section class="mb-10 w-full md:w-4/5 lg:w-3/5 mx-auto relative -top-12" style="margin-bottom: 0px;">
-        <div class="bg-gray-100 dark:bg-gray-800 rounded-lg shadow-lg p-[18px]">
+        <div class="bg-gray-100 dark:bg-[#27272A] rounded-lg shadow-lg p-[18px]">
           <!-- Título -->
           <h2 class="text-[15px] font-bold text-green-500 uppercase text-center mb-[18px] w-full" style="float: left;">
             <span style=" display: flex; width: 100%; align-items: center; justify-content: center;">
@@ -403,88 +441,94 @@ if ($imagens) {
           </div>
 
           <script>
-            const carousel = document.getElementById("carousel");
-            const prev = document.getElementById("prev");
-            const next = document.getElementById("next");
-            const indicators = document.querySelectorAll(".indicator");
-            let index = 0;
+            (function () {
+              const carousel = document.getElementById("carousel");
+              if (!carousel) return;
+              const prev = document.getElementById("prev");
+              const next = document.getElementById("next");
+              const indicators = document.querySelectorAll(".indicator");
+              let index = 0;
 
-            function updateCarousel() {
-              carousel.style.transform = `translateX(-${index * 100}%)`;
-              indicators.forEach((dot, i) => {
-                dot.classList.toggle("opacity-100", i === index);
+              function updateCarousel() {
+                carousel.style.transform = `translateX(-${index * 100}%)`;
+                indicators.forEach((dot, i) => {
+                  dot.classList.toggle("opacity-100", i === index);
+                });
+              }
+
+              if (prev) {
+                prev.addEventListener("click", () => {
+                  index = index > 0 ? index - 1 : indicators.length - 1;
+                  updateCarousel();
+                });
+              }
+
+              if (next) {
+                next.addEventListener("click", () => {
+                  index = index < indicators.length - 1 ? index + 1 : 0;
+                  updateCarousel();
+                });
+              }
+
+              indicators.forEach(dot => {
+                dot.addEventListener("click", (e) => {
+                  index = parseInt(e.target.dataset.index);
+                  updateCarousel();
+                });
               });
-            }
 
-            prev.addEventListener("click", () => {
-              index = index > 0 ? index - 1 : indicators.length - 1;
-              updateCarousel();
-            });
+              let isMouseDown = false;
+              let startX;
+              let scrollLeft;
 
-            next.addEventListener("click", () => {
-              index = index < indicators.length - 1 ? index + 1 : 0;
-              updateCarousel();
-            });
-
-            indicators.forEach(dot => {
-              dot.addEventListener("click", (e) => {
-                index = parseInt(e.target.dataset.index);
-                updateCarousel();
+              carousel.addEventListener('mousedown', (e) => {
+                isMouseDown = true;
+                startX = e.pageX - carousel.offsetLeft;
+                scrollLeft = carousel.scrollLeft;
               });
-            });
 
-            let isMouseDown = false;
-            let startX;
-            let scrollLeft;
+              carousel.addEventListener('mouseleave', () => {
+                isMouseDown = false;
+              });
 
-            carousel.addEventListener('mousedown', (e) => {
-              isMouseDown = true;
-              startX = e.pageX - carousel.offsetLeft;
-              scrollLeft = carousel.scrollLeft;
-            });
+              carousel.addEventListener('mouseup', () => {
+                isMouseDown = false;
+              });
 
-            carousel.addEventListener('mouseleave', () => {
-              isMouseDown = false;
-            });
+              carousel.addEventListener('mousemove', (e) => {
+                if (!isMouseDown) return;
+                e.preventDefault();
+                const x = e.pageX - carousel.offsetLeft;
+                const walk = (x - startX) * 3; // Quanto mais alto o valor, mais rápido o movimento
+                carousel.scrollLeft = scrollLeft - walk;
+              });
 
-            carousel.addEventListener('mouseup', () => {
-              isMouseDown = false;
-            });
+              // Função para swipe no toque
+              carousel.addEventListener('touchstart', (e) => {
+                isMouseDown = true;
+                startX = e.touches[0].pageX - carousel.offsetLeft;
+                scrollLeft = carousel.scrollLeft;
+              });
 
-            carousel.addEventListener('mousemove', (e) => {
-              if (!isMouseDown) return;
-              e.preventDefault();
-              const x = e.pageX - carousel.offsetLeft;
-              const walk = (x - startX) * 3; // Quanto mais alto o valor, mais rápido o movimento
-              carousel.scrollLeft = scrollLeft - walk;
-            });
+              carousel.addEventListener('touchend', () => {
+                isMouseDown = false;
+              });
 
-            // Função para swipe no toque
-            carousel.addEventListener('touchstart', (e) => {
-              isMouseDown = true;
-              startX = e.touches[0].pageX - carousel.offsetLeft;
-              scrollLeft = carousel.scrollLeft;
-            });
-
-            carousel.addEventListener('touchend', () => {
-              isMouseDown = false;
-            });
-
-            carousel.addEventListener('touchmove', (e) => {
-              if (!isMouseDown) return;
-              e.preventDefault();
-              const x = e.touches[0].pageX - carousel.offsetLeft;
-              const walk = (x - startX) * 3;
-              carousel.scrollLeft = scrollLeft - walk;
-            });
-
+              carousel.addEventListener('touchmove', (e) => {
+                if (!isMouseDown) return;
+                e.preventDefault();
+                const x = e.touches[0].pageX - carousel.offsetLeft;
+                const walk = (x - startX) * 3;
+                carousel.scrollLeft = scrollLeft - walk;
+              });
+            })();
           </script>
 
 
           <!-- Barra de Progresso -->
           <?php if ($campanhas[0]['habilitar_barra_progresso'] == '1'): ?>
             <div class="mt-4">
-              <div class="w-full bg-gray-300 dark:bg-gray-700 rounded-full h-6 mb-2 relative overflow-hidden">
+              <div class="w-full bg-gray-300 dark:bg-[#3F3F46] rounded-full h-6 mb-2 relative overflow-hidden">
                 <div class="bg-green-600 h-6 rounded-full progress-bar-animated relative"
                   style="width: <?php echo $porcentagem_vendida; ?>%"></div>
                 <div class="absolute inset-0 flex items-center justify-center text-white text-sm w-full">
@@ -528,8 +572,8 @@ if ($imagens) {
           </div>
 
           <!-- Descrição -->
-          <div class="mb-6">
-            <p class="bg-white dark:bg-gray-700 p-2 rounded-lg text-[15px] font-semibold mb-2">
+          <div class="mb-6 secao-compra">
+            <p class="bg-white dark:bg-[#3F3F46] p-2 rounded-lg text-[15px] font-semibold mb-2">
               <?php echo $campanhas[0]['descricao']; ?>
             </p>
             <?php if (!empty($campanhas[0]['subtitulo'])): ?>
@@ -539,7 +583,7 @@ if ($imagens) {
 
           <!-- Notificação de Cotas em Dobro -->
           <?php if ($campanhas[0]['habilitar_cotas_em_dobro'] == '1'): ?>
-            <div class="mb-6">
+            <div class="secao-compra mb-6">
               <div style="display: flex;justify-content: center;padding: 10px;"
                 class=" bg-yellow-600 text-whi rounded-lg flex items-center gap-2">
                 <span class="text-3xl" style="padding: 0px 5px 0px 10px;">🎉</span>
@@ -557,10 +601,10 @@ if ($imagens) {
 
           <!-- Oferta Exclusiva -->
           <?php if ($modo_exclusivo): ?>
-            <div class="mb-6">
+            <div class="secao-compra mb-6">
               <div class="bg-purple-100 dark:bg-purple-900 p-4 rounded-md">
                 <p class="text-sm text-purple-800 dark:text-purple-200">
-                  <span class="font-bold">⭐ Oferta Exclusiva!</span><br>
+                  <span class="font-bold">⭐ Oferta Exclusiva!1</span><br>
                   Compre com desconto: Condição especial de pacotes por tempo LIMITADO! Não perca essa oportunidade de
                   aumentar suas chances de ganhar!
                 </p>
@@ -599,12 +643,24 @@ if ($imagens) {
                 foreach ($pacotes_promocionais as $pacote) {
                   $qtd = intval($pacote['quantidade_numeros']);
                   $valor_original = $qtd * $campanhas[0]['preco'];
-                  echo "<button onclick='alterarQuantidadePromocional($qtd, " . $pacote['valor_pacote'] . ")' class='bg-white dark:bg-gray-700 text-center p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-all'>
+                  $beneficio_tipo = isset($pacote['beneficio_tipo']) ? $pacote['beneficio_tipo'] : '';
+                  $beneficio_qtd = isset($pacote['beneficio_quantidade']) ? (int)$pacote['beneficio_quantidade'] : 0;
+                  $beneficio_html = '';
+                  if (!empty($beneficio_tipo) && $beneficio_qtd > 0) {
+                    $badge_start = "<div class='mt-2 flex justify-center'><span class='inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-yellow-400/15 dark:bg-yellow-500/20 text-yellow-600 dark:text-yellow-300 ring-1 ring-yellow-400/40 dark:ring-yellow-500/40'>";
+                    $badge_end = "</span></div>";
+                    if ($beneficio_tipo === 'roleta') {
+                      $beneficio_html = $badge_start . "<i class='fa-solid fa-coins'></i> {$beneficio_qtd} " . ($beneficio_qtd > 1 ? 'Giros' : 'Giro') . $badge_end;
+                    } elseif ($beneficio_tipo === 'raspadinha') {
+                      $beneficio_html = $badge_start . "<i class='fa-solid fa-ticket'></i> {$beneficio_qtd} " . ($beneficio_qtd > 1 ? 'Raspadinhas' : 'Raspadinha') . $badge_end;
+                    }
+                  }
+                  echo "<button onclick=\"alterarQuantidadePromocional($qtd, " . $pacote['valor_pacote'] . ", false, '" . ($beneficio_tipo ?? '') . "', " . ($beneficio_qtd ?? 0) . ")\" class='bg-white dark:bg-[#3F3F46] text-center p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-all'>
                         <div class='text-black dark:text-white text-lg font-bold mb-1'>$qtd números</div>
                         <div class='text-red-500 dark:text-red-600 text-sm mb-1 line-through'>R$ " . number_format($valor_original, 2, ',', '.') . "</div>
-                        <div class='text-green-500 dark:text-green-600 text-xl font-bold'>R$ " . number_format($pacote['valor_pacote'], 2, ',', '.') . "</div>
-                   
-                        </button>";
+                        <div class='text-green-500 dark:text-green-600 text-xl font-bold'>R$ " . number_format($pacote['valor_pacote'], 2, ',', '.') . "</div>" .
+                        $beneficio_html .
+                        "</button>";
                 }
               } else {
                 echo "<p class='text-sm text-gray-400'>Nenhum pacote promocional disponível no momento.</p>";
@@ -617,7 +673,7 @@ if ($imagens) {
         <!-- Pacotes exclusivos -->
         <?php
         if ($campanhas[0]['habilita_pacote_promocional_exclusivo'] == '1' && $modo_exclusivo): ?>
-          <div class="mb-6">
+          <div class="secao-compra mb-6">
             <p class="text-sm font-medium text-black dark:text-white">Pacotes Exclusivos</p>
             <?php
             $pacotes_promocionais_exclusivos = $campanhas[0]['pacotes_exclusivos'];
@@ -631,11 +687,24 @@ if ($imagens) {
                 if ($codigo_exclusivo == $pacote['codigo_pacote']) {
                   $qtd = intval($pacote['quantidade_numeros']);
                   $valor_original = $qtd * $campanhas[0]['preco'];
-                  echo "<button onclick='alterarQuantidadePromocional($qtd, " . $pacote['valor_pacote'] . ")' class='bg-purple-600 text-white py-2 rounded text-center'>
+                  $beneficio_tipo = isset($pacote['beneficio_tipo']) ? $pacote['beneficio_tipo'] : '';
+                  $beneficio_qtd = isset($pacote['beneficio_quantidade']) ? (int)$pacote['beneficio_quantidade'] : 0;
+                  $beneficio_html = '';
+                  if (!empty($beneficio_tipo) && $beneficio_qtd > 0) {
+                    $badge_start = "<div class='mt-2 flex justify-center'><span class='inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-yellow-300/20 dark:bg-yellow-500/20 text-yellow-100 dark:text-yellow-200 ring-1 ring-yellow-300/40 dark:ring-yellow-500/40'>";
+                    $badge_end = "</span></div>";
+                    if ($beneficio_tipo === 'roleta') {
+                      $beneficio_html = $badge_start . "<i class='fa-solid fa-coins'></i> {$beneficio_qtd} " . ($beneficio_qtd > 1 ? 'Giros' : 'Giro') . $badge_end;
+                    } elseif ($beneficio_tipo === 'raspadinha') {
+                      $beneficio_html = $badge_start . "<i class='fa-solid fa-ticket'></i> {$beneficio_qtd} " . ($beneficio_qtd > 1 ? 'Raspadinhas' : 'Raspadinha') . $badge_end;
+                    }
+                  }
+                  echo "<button onclick=\"alterarQuantidadePromocional($qtd, " . $pacote['valor_pacote'] . ", false, '" . ($beneficio_tipo ?? '') . "', " . ($beneficio_qtd ?? 0) . ")\" class='bg-purple-600 text-white py-2 rounded text-center'>
                             <span class='block text-lg font-bold'>$qtd números</span>
                             <span class='block text-red-300 text-sm mb-1 line-through'>R$ " . number_format($valor_original, 2, ',', '.') . "</span>
-                            <span class='block text-green-300 text-lg font-bold'>R$ " . number_format($pacote['valor_pacote'], 2, ',', '.') . "</span>
-                          </button>";
+                            <span class='block text-green-300 text-lg font-bold'>R$ " . number_format($pacote['valor_pacote'], 2, ',', '.') . "</span>" .
+                            $beneficio_html .
+                          "</button>";
                 }
               }
               echo '</div>';
@@ -646,6 +715,134 @@ if ($imagens) {
           </div>
         <?php endif; ?>
 
+        <!-- Pacotes de Roleta removidos: uso passa a ser pacotes gerais da campanha -->
+        <?php if (false): ?>
+        <div class="mb-8 px-4 mt-2">
+            <div class="max-w-7xl mx-auto">
+                <!-- Header com título e descrição -->
+                <div class="text-center mb-8 pacote-roleta-header">
+                    <div class="flex items-center justify-center mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mr-3">
+                            <span class="text-2xl">🎰</span>
+                        </div>
+                        <h3 class="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white">Pacotes de Roleta</h3>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">
+                        Escolha o pacote ideal para suas rodadas na roleta
+                    </p>
+                </div>
+
+                <!-- Seletor de quantidade rápida -->
+                <div class="mb-8">
+                    <div class="bg-white dark:bg-[#27272A] rounded-2xl p-4 shadow-lg border border-gray-200 dark:border-gray-700">
+                        <h4 class="text-lg font-semibold text-gray-800 dark:text-white mb-4 text-center">Quantidade Rápida</h4>
+                        <div class="flex flex-wrap justify-center gap-3 quantidade-rapida-container">
+                            <button onclick="quantidadeRapida(25)" class="quantidade-rapida-btn bg-gray-100 dark:bg-[#3F3F46] hover:bg-green-100 dark:hover:bg-green-800 text-gray-700 dark:text-gray-300 hover:text-green-700 dark:hover:text-green-300 px-6 py-3 rounded-xl font-medium transition-all duration-200 border-2 border-transparent hover:border-green-300">
+                                +25
+                            </button>
+                            <button onclick="quantidadeRapida(50)" class="quantidade-rapida-btn bg-gray-100 dark:bg-[#3F3F46] hover:bg-green-100 dark:hover:bg-green-800 text-gray-700 dark:text-gray-300 hover:text-green-700 dark:hover:text-green-300 px-6 py-3 rounded-xl font-medium transition-all duration-200 border-2 border-transparent hover:border-green-300">
+                                +50
+                            </button>
+                            <button onclick="quantidadeRapida(100)" class="quantidade-rapida-btn bg-gray-100 dark:bg-[#3F3F46] hover:bg-green-100 dark:hover:bg-green-800 text-gray-700 dark:text-gray-300 hover:text-green-700 dark:hover:text-green-300 px-6 py-3 rounded-xl font-medium transition-all duration-200 border-2 border-transparent hover:border-green-300">
+                                +100
+                            </button>
+                            <button onclick="quantidadeRapida(250)" class="quantidade-rapida-btn bg-gray-100 dark:bg-[#3F3F46] hover:bg-green-100 dark:hover:bg-green-800 text-gray-700 dark:text-gray-300 hover:text-green-700 dark:hover:text-green-300 px-6 py-3 rounded-xl font-medium transition-all duration-200 border-2 border-transparent hover:border-green-300">
+                                +250
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grid de pacotes melhorado -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pacote-roleta-grid">
+                          <?php foreach ($itens_roleta as $pacote): ?>
+                    <div class="relative group">    
+                        <?php if (isset($pacote['des  taque']) && $pacote['destaque'] == '1'): ?>
+                        <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 z-20">
+                            <div class="bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg flex items-center badge-popular">
+                                <span class="mr-1">⭐</span>
+                                <span>Mais Popular</span>
+                            </div>
+                        </div>
+                        <?php endif; ?>
+                        
+                        <div class="bg-white dark:bg-[#27272A] border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-6 text-center shadow-lg hover:shadow-2xl transition-all duration-300 h-full flex flex-col justify-between group-hover:border-green-300 dark:group-hover:border-green-500 pacote-roleta-card <?php echo isset($pacote['destaque']) && $pacote['destaque'] == '1' ? 'ring-2 ring-green-500 ring-opacity-30 shadow-green-500/20' : ''; ?>">
+                            <!-- Ícone do pacote -->
+                            <div class="mb-4">
+                                <div class="w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <span class="text-2xl">🎰</span>
+                                </div>
+                            </div> 
+                            
+                            <!-- Quantidade de giros -->
+                            <div class="flex-1">
+                                <div class="text-5xl font-bold text-gray-900 dark:text-white mb-2 leading-none">
+                                    <?php echo htmlspecialchars(isset($pacote['quantidade_giros']) ? $pacote['quantidade_giros'] : ''); ?>
+                                </div>
+                                <div class="text-gray-600 dark:text-gray-300 text-lg font-medium mb-6">
+                                    Giros
+                                </div>
+                            </div>
+                            
+                            <!-- Preço e botão -->
+                            <div class="border-t border-gray-200 dark:border-gray-600 pt-6">
+                                <div class="text-3xl font-bold text-green-600 dark:text-green-400 mb-6">
+                                    R$ <?php echo number_format(isset($pacote['valor_pacote']) ? $pacote['valor_pacote'] : 0, 2, ',', '.'); ?>
+                                </div>
+                                <button type="button" 
+                                        class="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                                        onclick="selecionarPacoteRoleta('<?php echo htmlspecialchars(isset($pacote['codigo_pacote']) ? $pacote['codigo_pacote'] : ''); ?>', <?php echo isset($pacote['valor_pacote']) ? $pacote['valor_pacote'] : 0; ?>, <?php echo isset($pacote['quantidade_giros']) ? $pacote['quantidade_giros'] : 0; ?>)">
+                                    <span class="flex items-center justify-center">
+                                        <span class="mr-2">🛒</span>
+                                        Comprar
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
+
+        <!-- Pacotes de Raspadinha -->
+        <?php if ($campanhas[0]['habilitar_raspadinha'] == '1' && !empty($pacotes_raspadinha)): ?>
+        <div class="mb-8 px-4 mt-2">
+            <h3 class="text-2xl font-bold text-center mb-6 text-gray-800 dark:text-white">🎫 Pacotes de Raspadinha</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
+                <?php foreach ($pacotes_raspadinha as $pacote): ?>
+                <div class="relative">
+                    <?php if (isset($pacote['destaque']) && $pacote['destaque'] == '1'): ?>
+                    <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+                        <span class="bg-green-500 text-white px-4 py-1 rounded-full text-xs font-bold shadow-lg" style="white-space: nowrap;">Mais Popular</span>
+                    </div>
+                    <?php endif; ?>
+                    <div class="bg-white dark:bg-[#27272A] border border-gray-200 dark:border-gray-700 rounded-xl p-6 text-center shadow-lg hover:shadow-xl transition-all duration-300 h-full flex flex-col justify-between <?php echo isset($pacote['destaque']) && $pacote['destaque'] == '1' ? 'ring-2 ring-green-500 ring-opacity-50' : ''; ?>">
+                        <div class="flex-1">
+                            <div class="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+                                <?php echo htmlspecialchars(isset($pacote['quantidade_raspadinhas']) ? $pacote['quantidade_raspadinhas'] : ''); ?>
+                            </div>
+                            <div class="text-gray-600 dark:text-gray-300 text-lg mb-4">
+                                Raspadinhas
+                            </div>
+                        </div>
+                        <div class="border-t border-gray-200 dark:border-gray-600 pt-4">
+                            <div class="text-2xl font-bold text-green-600 dark:text-green-400 mb-4">
+                                R$ <?php echo number_format(isset($pacote['valor_pacote']) ? $pacote['valor_pacote'] : 0, 2, ',', '.'); ?>
+                            </div>
+                            <button type="button" 
+                                    class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-lg transition-colors duration-200 transform hover:scale-105"
+                                    onclick="selecionarPacoteRaspadinha('<?php echo htmlspecialchars(isset($pacote['codigo_pacote']) ? $pacote['codigo_pacote'] : ''); ?>', <?php echo isset($pacote['valor_pacote']) ? $pacote['valor_pacote'] : 0; ?>, <?php echo isset($pacote['quantidade_raspadinhas']) ? $pacote['quantidade_raspadinhas'] : 0; ?>)">
+                                Comprar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <?php endif; ?>
 
         <div class="mb-6 secao-compra">
           <label for="quantidade" class="block text-sm font-medium text-black dark:text-white">
@@ -653,8 +850,112 @@ if ($imagens) {
           </label>
 
           <!-- Custom Quantidade Seletor -->
+          <script>
+            // Fallback para Layouts que usam onclick inline antes das funções serem definidas
+            (function(){
+              const precoUnitarioBase = <?php echo $campanhas[0]['preco']; ?>;
+              const compraMinimaBase = <?php echo $compra_minima; ?>;
+              const compraMaximaBase = <?php echo $compra_maxima; ?>;
+
+              if (typeof window.alterarQuantidade !== 'function') {
+                window.alterarQuantidade = function(qtd, adicionar){
+                  const precoUnitario = precoUnitarioBase;
+                  const compraMinima = compraMinimaBase;
+                  const compraMaxima = compraMaximaBase;
+                  let novaQuantidade;
+                  const inputQtdBarra = document.getElementById('quantidade_barra');
+                  if (!inputQtdBarra) return;
+                  if (adicionar) {
+                    const quantidadeAtual = parseInt(inputQtdBarra.value || compraMinima, 10);
+                    novaQuantidade = quantidadeAtual + qtd;
+                  } else {
+                    novaQuantidade = qtd;
+                  }
+                  if (novaQuantidade < compraMinima) novaQuantidade = compraMinima;
+                  if (novaQuantidade > compraMaxima) novaQuantidade = compraMaxima;
+                  const valorTotal = precoUnitario * novaQuantidade;
+                  inputQtdBarra.value = novaQuantidade;
+                  const inputQtd = document.getElementById('quantidade');
+                  const inputValor = document.getElementById('valor_total');
+                  const btnComprar = document.getElementById('btnComprar');
+                  if (inputQtd) inputQtd.value = novaQuantidade;
+                  if (inputValor) inputValor.value = valorTotal;
+                  if (btnComprar) btnComprar.innerHTML = 'Comprar por R$ ' + valorTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                  const mensagemMaximo = document.querySelector('.text-red-500');
+                  if (mensagemMaximo) mensagemMaximo.style.display = novaQuantidade >= compraMaxima ? 'block' : 'none';
+                }
+              }
+
+              if (typeof window.quantidadeRapida !== 'function') {
+                window.quantidadeRapida = function(quantidade){
+                  const precoUnitario = precoUnitarioBase;
+                  const compraMinima = compraMinimaBase;
+                  const compraMaxima = compraMaximaBase;
+                  let novaQuantidade = parseInt(quantidade, 10);
+                  if (novaQuantidade < compraMinima) novaQuantidade = compraMinima;
+                  if (novaQuantidade > compraMaxima) novaQuantidade = compraMaxima;
+                  const valorTotal = precoUnitario * novaQuantidade;
+                  const inputQtdBarra = document.getElementById('quantidade_barra');
+                  const inputQtd = document.getElementById('quantidade');
+                  const inputValor = document.getElementById('valor_total');
+                  const btnComprar = document.getElementById('btnComprar');
+                  if (inputQtdBarra) inputQtdBarra.value = novaQuantidade;
+                  if (inputQtd) inputQtd.value = novaQuantidade;
+                  if (inputValor) inputValor.value = valorTotal;
+                  if (btnComprar) btnComprar.innerHTML = 'Comprar por R$ ' + valorTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                }
+              }
+
+              if (typeof window.alterarQuantidadePromocional !== 'function') {
+                window.alterarQuantidadePromocional = function(qtd, precoPacote, adicionar, beneficioTipo, beneficioQuantidade){
+                  // Define quantidade de cotas do pedido de acordo com o pacote selecionado
+                  const inputQtdBarra = document.getElementById('quantidade_barra');
+                  const inputQtd = document.getElementById('quantidade');
+                  const inputValor = document.getElementById('valor_total');
+                  const btnComprar = document.getElementById('btnComprar');
+                  
+                  const quantidadeFinal = adicionar ? (parseInt(inputQtdBarra?.value || 0, 10) + qtd) : qtd;
+                  if (inputQtdBarra) inputQtdBarra.value = quantidadeFinal;
+                  if (inputQtd) inputQtd.value = quantidadeFinal;
+                  
+                  // Valor total deve ser o valor do pacote
+                  if (inputValor) inputValor.value = precoPacote;
+                  if (btnComprar) btnComprar.innerHTML = 'Comprar por R$ ' + Number(precoPacote).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                  
+                  // Zera campos de benefícios para evitar sujeira de seleção anterior
+                  let girosInput = document.getElementById('quantidade_giros_roleta');
+                  if (!girosInput) {
+                    girosInput = document.createElement('input');
+                    girosInput.type = 'hidden';
+                    girosInput.id = 'quantidade_giros_roleta';
+                    girosInput.name = 'quantidade_giros_roleta';
+                    document.getElementById('formComprar').appendChild(girosInput);
+                  }
+                  girosInput.value = 0;
+                  
+                  let raspadinhasInput = document.getElementById('quantidade_raspadinhas');
+                  if (!raspadinhasInput) {
+                    raspadinhasInput = document.createElement('input');
+                    raspadinhasInput.type = 'hidden';
+                    raspadinhasInput.id = 'quantidade_raspadinhas';
+                    raspadinhasInput.name = 'quantidade_raspadinhas';
+                    document.getElementById('formComprar').appendChild(raspadinhasInput);
+                  }
+                  raspadinhasInput.value = 0;
+                  
+                  // Aplica benefício do pacote no campo correto
+                  const qtdBeneficio = parseInt(beneficioQuantidade || 0, 10);
+                  if (beneficioTipo === 'roleta' && qtdBeneficio > 0) {
+                    girosInput.value = qtdBeneficio;
+                  } else if (beneficioTipo === 'raspadinha' && qtdBeneficio > 0) {
+                    raspadinhasInput.value = qtdBeneficio;
+                  }
+                }
+              }
+            })();
+          </script>
           <div
-            class="flex items-center justify-center gap-2 mt-4 mb-2 w-full px-4 bg-gray-100 dark:bg-gray-800 p-2 rounded-2xl flex-col border border-gray-300 dark:border-[#000000]">
+            class="flex items-center justify-center gap-2 mt-4 mb-2 w-full px-4 bg-gray-100 dark:bg-[#27272A] p-2 rounded-2xl flex-col border border-gray-300 dark:border-[#000000]">
 
             <div class="flex items-center space-x-2">
               <button onclick="alterarQuantidade(-5,true)"
@@ -663,7 +964,7 @@ if ($imagens) {
                 class="bg-[#1BC863] hover:bg-[#43996d] text-white rounded-lg font-bold w-10 h-10 text-xl">-</button>
 
               <input type="number" id="quantidade_barra" value="<?php echo $compra_minima; ?>"
-                class="flex-1 text-center bg-gray-100 dark:bg-gray-700 text-black dark:text-white rounded-lg border-none"
+                class="flex-1 text-center bg-gray-100 dark:bg-[#3F3F46] text-black dark:text-white rounded-lg border-none"
                 readonly>
 
               <button onclick="alterarQuantidade(1,true)"
@@ -738,33 +1039,42 @@ if ($imagens) {
           <button onclick="verificarLogin('titulos')"
             class="border border-[#1BC863] text-[#1BC863] rounded-lg font-semibold px-4 py-2 flex items-center justify-center gap-2 transition-all mb-1">
             <span class="iconify" data-icon="tabler:numbers"></span>
-            Ver meus números
+            Ver meus números1
           </button>
         </div>
         <?php
         }  
         ?>
 
-        <!-- cotas -->
+        <!-- cotas premiadas -->
         <?php
-
-        if (!empty($campanhas[0]['mostrar_cotas_premiadas']) && !empty($campanhas[0]['cotas_premiadas'])): ?>
-          <div class="w-full px-4 mb-2 secao-compra">
-            <p class="text-sm font-medium text-black dark:text-white mb-2">🔥 Cotas premiadas - Achou ganhou!</p>
-            <div class="grid grid-cols-3 sm:grid-cols-6 md:grid-cols-6 lg:grid-cols-6 gap-2 font-bold">
-              <?php
-              $cotas_premiadas = explode(',', $campanhas[0]['cotas_premiadas']);
-              foreach ($cotas_premiadas as $cota) {
-                echo
-                  "<div class='bg-green-600 dark:text-black text-white text-center py-2 px-1 rounded-lg'>" . trim($cota) . "</div>";
-              }
-              ?>
-            </div>
-            <p class="text-sm text-gray-400 mt-2">
-              <?php echo $campanhas[0]['descricao_cotas_premiadas']; ?>
-            </p>
-          </div>
-        <?php endif; ?>
+        if (!empty($campanhas[0]['mostrar_cotas_premiadas']) && !empty($campanhas[0]['cotas_premiadas'])): 
+            $premios_json = json_decode($campanhas[0]['premio_cotas_premiadas'], true);
+            if (is_array($premios_json) && !empty($premios_json)): ?>
+              <div class="w-full px-4 mb-2 secao-compra">
+                <p class="text-sm font-medium text-black dark:text-white mb-2">🔥 Cotas premiadas - Achou ganhou!</p>
+                <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-3 gap-2">
+                  <?php
+                  foreach ($premios_json as $grupo) {
+            foreach ($grupo['cotas'] as $cota) {
+              $cota_formatada = formatarCotaComLargura($cota, $largura_cota);
+              echo "<div class='bg-blue-600 text-white p-2 rounded-lg text-center min-h-[64px]'>";
+              echo "<div class='flex items-center justify-center mb-1'>";
+              echo "<span class='text-green-400 mr-2'>★</span>";
+              echo "<span class='text-base font-bold'>" . $cota_formatada . "</span>";
+              echo "</div>";
+              echo "<div class='text-xs font-bold'> " . htmlspecialchars($grupo['premio']) . "</div>";
+              echo "</div>";
+            }
+                  }
+                  ?>
+                </div>
+                <p class="text-sm text-gray-400 mt-2">
+                  <?php echo $campanhas[0]['descricao_cotas_premiadas']; ?>
+                </p>
+              </div>
+            <?php endif;
+        endif;  ?>
 
 
         <!-- top compradores -->
@@ -846,43 +1156,33 @@ if ($imagens) {
         </div>
 
         <!-- Sistema de Login/Cadastro Inline -->
-        <div id="loginCadastroContainerLayout0" class="hidden">
+        <div id="loginCadastroContainerLayout0" class="hidden login-container">
           <!-- Sistema de Login -->
-          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
-            <h3 class="text-xl font-bold mb-6 text-center text-gray-800 dark:text-white">Fazer login</h3>
+          <div class="rounded-lg shadow-lg p-6 mb-6 bg-gray-100 dark:bg-[#3F3F46]">
+            <h3 class="text-xl font-bold mb-6 text-center text-gray-800 dark:text-white">Digite seu número</h3>
             
-            <!-- Formulário de Login -->
-            <form id="formLoginInline" class="space-y-4 mb-6">
-              <div class="relative">
-                <label class="block text-gray-700 dark:text-gray-300 mb-2">Celular</label>
+                          <!-- Formulário de Login -->
+              <form id="formLoginInline" class="space-y-4 mb-6">
                 <div class="relative">
-                  <i class="fas fa-phone absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                  <input type="tel" name="telefone" required
-                    class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg pl-10 pr-4 py-3 text-gray-800 dark:text-white"
-                    placeholder="Digite seu número de telefone">
+                  <label class="block text-gray-700 dark:text-gray-300 mb-2">Número de celular</label>
+                  <div class="relative">
+                    <i class="fas fa-phone absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <input type="tel" name="telefone" required
+                      class="w-full bg-gray-200 dark:bg-[#3F3F46] border border-gray-300 dark:border-gray-600 rounded-lg pl-10 pr-4 py-3 text-gray-800 dark:text-white"
+                      placeholder="(11) 99999-9999">
+                  </div>
                 </div>
-              </div>
-
-              <div class="relative">
-                <label class="block text-gray-700 dark:text-gray-300 mb-2">CPF</label>
-                <div class="relative">
-                  <i class="fas fa-id-card absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                  <input type="text" name="cpf" required
-                    class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg pl-10 pr-4 py-3 text-gray-800 dark:text-white"
-                    placeholder="Digite seu CPF">
-                </div>
-              </div>
 
               <button type="submit"
                 class="bg-green-600 hover:bg-green-700 text-white w-full py-3 rounded-lg text-lg font-bold transition-colors">
-                Continuar Login
+                Entrar
               </button>
             </form>
 
             <div class="text-center">
               <button onclick="mostrarCadastro()" 
                 class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg text-sm font-medium transition-colors">
-                Não tem conta? Cadastre-se
+                Primeira vez? Cadastre-se
               </button>
             </div>
 
@@ -916,42 +1216,59 @@ if ($imagens) {
 
 
            <!-- Formulário de Cadastro Inline -->
-        <div id="cadastroContainerLayout0" 1 class="hidden w-full">
-          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
+        <div id="cadastroContainerLayout0" class="hidden w-full">
+          <div class="rounded-lg shadow-lg p-6 mb-6 bg-gray-100 dark:bg-[#3F3F46]">
             <h3 class="text-xl font-bold mb-6 text-center text-gray-800 dark:text-white">Cadastro</h3>
             
             <form id="formCadastroInline" class="space-y-4">
-              <input type="hidden" name="telefone" id="telefone_cadastro_inline">
+              <!-- Campo Telefone - Sempre obrigatório -->
+              <div class="relative">
+                <label class="block text-gray-700 dark:text-gray-300 mb-2">
+                  <i class="fas fa-phone mr-2"></i>Telefone
+                </label>
+                <div class="relative">
+                  <i class="fas fa-phone absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                  <input type="tel" name="telefone" required
+                    class="w-full bg-gray-200 dark:bg-[#3F3F46] border border-gray-300 dark:border-gray-600 rounded-lg pl-10 pr-4 py-3 text-gray-800 dark:text-white"
+                    placeholder="(11) 99999-9999">
+                </div>
+              </div>
 
+              <?php if (empty($campos_obrigatorios) || in_array('nome', $campos_obrigatorios)): ?>
               <div class="relative">
                 <label class="block text-gray-700 dark:text-gray-300 mb-2">Nome Completo</label>
                 <div class="relative">
                   <i class="fas fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                  <input type="text" name="nome" required
-                    class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg pl-10 pr-4 py-3 text-gray-800 dark:text-white"
+                  <input type="text" name="nome" <?php echo in_array('nome', $campos_obrigatorios) ? 'required' : ''; ?>
+                    class="w-full bg-gray-200 dark:bg-[#3F3F46] border border-gray-300 dark:border-gray-600 rounded-lg pl-10 pr-4 py-3 text-gray-800 dark:text-white"
                     placeholder="Digite seu nome completo">
                 </div>
               </div>
+              <?php endif; ?>
 
+              <?php if (empty($campos_obrigatorios) || in_array('email', $campos_obrigatorios)): ?>
               <div class="relative">
                 <label class="block text-gray-700 dark:text-gray-300 mb-2">E-mail</label>
                 <div class="relative">
                   <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                  <input type="email" name="email" required
-                    class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg pl-10 pr-4 py-3 text-gray-800 dark:text-white"
+                  <input type="email" name="email" <?php echo in_array('email', $campos_obrigatorios) ? 'required' : ''; ?>
+                    class="w-full bg-gray-200 dark:bg-[#3F3F46] border border-gray-300 dark:border-gray-600 rounded-lg pl-10 pr-4 py-3 text-gray-800 dark:text-white"
                     placeholder="Digite seu e-mail">
                 </div>
               </div>
+              <?php endif; ?>
 
+              <?php if (in_array('cpf', $campos_obrigatorios)): ?>
               <div class="relative">
                 <label class="block text-gray-700 dark:text-gray-300 mb-2">CPF</label>
                 <div class="relative">
                   <i class="fas fa-id-card absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                   <input type="text" name="cpf" required
-                    class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg pl-10 pr-4 py-3 text-gray-800 dark:text-white"
+                    class="w-full bg-gray-200 dark:bg-[#3F3F46] border border-gray-300 dark:border-gray-600 rounded-lg pl-10 pr-4 py-3 text-gray-800 dark:text-white"
                     placeholder="Digite seu CPF">
                 </div>
               </div>
+              <?php endif; ?>
 
               <button type="submit"
                 class="bg-green-600 hover:bg-green-700 text-white w-full py-3 rounded-lg text-lg font-bold transition-colors">
@@ -962,7 +1279,7 @@ if ($imagens) {
             <div class="text-center mt-4">
               <button onclick="voltarParaLogin()" 
                 class="text-blue-500 hover:text-blue-600 text-sm font-medium transition-colors">
-                Já tenho uma conta, fazer login
+                Já tenho cadastro, fazer login
               </button>
             </div>
           </div>
@@ -975,10 +1292,7 @@ if ($imagens) {
               <i class="fas fa-arrow-left mr-2"></i>
               Voltar
             </button>
-            <button onclick="continuarComLogin()" 
-              class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg transition-colors">
-              Saiba se sua cota continua
-            </button>
+           
           </div>
         </div>
 
@@ -991,7 +1305,7 @@ if ($imagens) {
       <section class=" w-full md:w-4/5 lg:w-3/5 mx-auto relative -top-12" style=" margin-bottom: 0px;">
 
         <div
-          class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg w-full p-0 md:p-4 flex flex-col items-center relative p-2">
+          class="bg-white dark:bg-[#27272A] rounded-2xl shadow-lg w-full p-0 md:p-4 flex flex-col items-center relative p-2">
           <!--border-[#2e3947] border-4-->
           <div class="relative w-full max-w-3xl mx-auto overflow-hidden rounded-lg">
             <div id="carousel" class="flex transition-transform duration-500 ease-in-out">
@@ -1063,7 +1377,7 @@ if ($imagens) {
 
 
 
-          <div class="w-full px-4 py-3 bg-gray-100 dark:bg-gray-700 ">
+          <div class="w-full px-4 py-3 bg-gray-100 dark:bg-[#3F3F46] ">
             <span class="bg-[#1BC863] text-white text-xs rounded px-3 py-1 font-bold inline-block mb-2">Adquira já!</span>
             <h1 class="text-[18px] md:text-[25px] font-bold mb-1">
               <span style="display: flex;align-items: center;" <img src="assets/css/estrela.svg" alt="estrela"
@@ -1141,7 +1455,7 @@ if ($imagens) {
 
           <!-- Chamada promocional -->
           <div class="w-full mt-2 text-center">
-            <span class="block font-semibold text-gray-700 dark:text-[#b8b9ad] bg-gray-100  dark:bg-gray-700 rounded-2xl p-4">
+            <span class="block font-semibold text-gray-700 dark:text-[#b8b9ad] bg-gray-100  dark:bg-[#3F3F46] rounded-2xl p-4">
               <?php
               echo isset($campanhas[0]["descricao"]) ? $campanhas[0]["descricao"] : '';
               ?>
@@ -1150,7 +1464,7 @@ if ($imagens) {
 
           <!-- Notificação de Cotas em Dobro -->
           <?php if ($campanhas[0]['habilitar_cotas_em_dobro'] == '1'): ?>
-            <div class="my-4 w-full">
+            <div class="secao-compra my-4 w-full">
               <div style="display: flex;justify-content: center;padding: 10px;"
                 class=" bg-yellow-600 text-white rounded-lg flex items-center gap-2">
                 <span class="text-3xl" style="padding: 0px 5px 0px 10px;">🎉</span>
@@ -1168,17 +1482,60 @@ if ($imagens) {
 
           <!-- Oferta Exclusiva -->
           <?php if ($modo_exclusivo): ?>
-            <div class="my-4 w-full">
+            <div class="secao-compra my-4 w-full">
               <div class="bg-purple-100 dark:bg-purple-900 p-4 rounded-md">
                 <p class="text-sm text-purple-800 dark:text-purple-200">
-                  <span class="font-bold">⭐ Oferta Exclusiva!</span><br>
+                  <span class="font-bold">⭐ Oferta Exclusiva!123</span><br>
                   Compre com desconto: Condição especial de pacotes por tempo LIMITADO! Não perca essa oportunidade de
                   aumentar suas chances de ganhar!
                 </p>
               </div>
             </div>
           <?php endif; ?>
+ <!-- Pacotes exclusivos -->
+ <?php
+        if ($campanhas[0]['habilita_pacote_promocional_exclusivo'] == '1' && $modo_exclusivo): ?>
+          <div class="secao-compra my-4 w-full">
+            <p class="text-sm font-medium text-black dark:text-white">Pacotes Exclusivos</p>
+            <?php
+            $pacotes_promocionais_exclusivos = $campanhas[0]['pacotes_exclusivos'];
+            $pacotes_promocionais_exclusivos = json_decode($pacotes_promocionais_exclusivos, true);
 
+            if (is_array($pacotes_promocionais_exclusivos) && !empty($pacotes_promocionais_exclusivos && $codigo_exclusivo != 0)) {
+              $grid_cols = count($pacotes_promocionais_exclusivos) > 1 ? 'grid-cols-2' : 'grid-cols-1';
+              echo '<div class="grid mt-2 text-center ' . $grid_cols . ' gap-2">';
+
+              foreach ($pacotes_promocionais_exclusivos as $pacote) {
+                if ($codigo_exclusivo == $pacote['codigo_pacote']) {
+                  $qtd = intval($pacote['quantidade_numeros']);
+                  $valor_original = $qtd * $campanhas[0]['preco'];
+                  $beneficio_tipo = isset($pacote['beneficio_tipo']) ? $pacote['beneficio_tipo'] : '';
+                  $beneficio_qtd = isset($pacote['beneficio_quantidade']) ? (int)$pacote['beneficio_quantidade'] : 0;
+                  $beneficio_html = '';
+                  if (!empty($beneficio_tipo) && $beneficio_qtd > 0) {
+                    $badge_start = "<div class='mt-2 flex justify-center'><span class='inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-yellow-300/20 dark:bg-yellow-500/20 text-yellow-100 dark:text-yellow-200 ring-1 ring-yellow-300/40 dark:ring-yellow-500/40'>";
+                    $badge_end = "</span></div>";
+                    if ($beneficio_tipo === 'roleta') {
+                      $beneficio_html = $badge_start . "<i class='fa-solid fa-coins'></i> {$beneficio_qtd} " . ($beneficio_qtd > 1 ? 'Giros' : 'Giro') . $badge_end;
+                    } elseif ($beneficio_tipo === 'raspadinha') {
+                      $beneficio_html = $badge_start . "<i class='fa-solid fa-ticket'></i> {$beneficio_qtd} " . ($beneficio_qtd > 1 ? 'Raspadinhas' : 'Raspadinha') . $badge_end;
+                    }
+                  }
+                  echo "<button onclick=\"alterarQuantidadePromocional($qtd, " . $pacote['valor_pacote'] . ", false, '" . ($beneficio_tipo ?? '') . "', " . ($beneficio_qtd ?? 0) . ")\" class='bg-purple-600 text-white py-2 rounded text-center'>
+                            <span class='block text-lg font-bold'>$qtd números</span>
+                            <span class='block text-red-300 text-sm mb-1 line-through'>R$ " . number_format($valor_original, 2, ',', '.') . "</span>
+                            <span class='block text-green-300 text-lg font-bold'>R$ " . number_format($pacote['valor_pacote'], 2, ',', '.') . "</span>" .
+                            $beneficio_html .
+                          "</button>";
+                }
+              }
+              echo '</div>';
+            } else {
+              echo "<p class='text-sm text-gray-400'>Nenhum pacote exclusivo disponível no momento.</p>";
+            }
+            ?>
+          </div>
+        <?php endif; ?>
 
 
 
@@ -1192,7 +1549,7 @@ if ($imagens) {
           </div>
 
 
-          <div class="w-full px-4 mt-3 flex flex-wrap gap-2 justify-center bg-gray-100 dark:bg-gray-700 rounded-2xl p-2 secao-compra">
+          <div class="w-full px-4 mt-3 flex flex-wrap gap-2 justify-center bg-gray-100 dark:bg-[#3F3F46] rounded-2xl p-2 secao-compra">
             <?php
             $pacotes_promocionais_origin = $campanhas[0]['pacote_promocional'];
             $pacotes_promocionais_origin = json_decode($pacotes_promocionais_origin, true);
@@ -1208,7 +1565,9 @@ if ($imagens) {
                 $pacotes_promocionais[] = [
                     "valor_bilhete" => $pacote['valor_bilhete'],
                     "quantidade_numeros" => $pacote['quantidade_numeros'],
-                    "valor_pacote" => $pacote['valor_pacote']
+                    "valor_pacote" => $pacote['valor_pacote'],
+                    "beneficio_tipo" => isset($pacote['beneficio_tipo']) ? $pacote['beneficio_tipo'] : '',
+                    "beneficio_quantidade" => isset($pacote['beneficio_quantidade']) ? (int)$pacote['beneficio_quantidade'] : 0
                 ];
             }
             
@@ -1217,10 +1576,20 @@ if ($imagens) {
               foreach ($pacotes_promocionais as $pacote) {
                 $qtd = intval($pacote['quantidade_numeros']);
                 $valor_original = $qtd * $campanhas[0]['preco'];
+                $beneficio_tipo = isset($pacote['beneficio_tipo']) ? $pacote['beneficio_tipo'] : '';
+                $beneficio_qtd = isset($pacote['beneficio_quantidade']) ? (int)$pacote['beneficio_quantidade'] : 0;
+                $beneficio_html = '';
+                if (!empty($beneficio_tipo) && $beneficio_qtd > 0) {
+                  $beneficio_html = "<br><span class='inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-yellow-400/15 dark:bg-yellow-500/20 text-yellow-600 dark:text-yellow-300 ring-1 ring-yellow-400/40 dark:ring-yellow-500/40'>" .
+                    ($beneficio_tipo === 'roleta'
+                      ? "<i class='fa-solid fa-coins'></i> {$beneficio_qtd} " . ($beneficio_qtd > 1 ? 'Giros' : 'Giro')
+                      : "<i class='fa-solid fa-ticket'></i> {$beneficio_qtd} " . ($beneficio_qtd > 1 ? 'Raspadinhas' : 'Raspadinha'))
+                    . "</span>";
+                }
 
                 echo "<span style='background: #1BC863!important;' class='bg-[#1BC863] pacote-promocional' 
                 onclick=\"alterarQuantidadePromocional
-                ($qtd, '" . $pacote['valor_pacote'] . "')\">$qtd por R$ " . number_format($pacote['valor_pacote'], 2, ',', '.') . "</span>";
+                ($qtd, '" . $pacote['valor_pacote'] . "', false, '" . ($beneficio_tipo ?? '') . "', " . ($beneficio_qtd ?? 0) . ")\">$qtd por R$ " . number_format($pacote['valor_pacote'], 2, ',', '.') . $beneficio_html . "</span>";
               }
             } else {
               echo "<p class='text-sm text-gray-400'>Nenhum pacote promocional disponível no momento.</p>";
@@ -1284,7 +1653,7 @@ if ($imagens) {
             $incrementos = [25, 50, 100, 250, 500, 1000];
             foreach ($incrementos as $valor) {
               $isPopular = $valor === 50;
-              $bgClass = $isPopular ? "bg-[#1BC863]" : "bg-gray-600 dark:bg-gray-700";
+              $bgClass = $isPopular ? "bg-[#1BC863]" : "bg-gray-600 dark:bg-[#3F3F46]";
               $textColor = $isPopular ? "text-white" : "text-white";
               $borderClass = "border border-[#343b41]";
               $hoverClass = $isPopular ? "" : "hover:bg-[#232a32]";
@@ -1306,6 +1675,46 @@ if ($imagens) {
 
           </div>
 
+          <!-- Pacotes de Roleta removidos: uso passa a ser pacotes gerais da campanha -->
+          <?php if (false): ?>
+          <div class="mb-8 px-4 mt-2">
+              <h3 class="text-2xl font-bold text-center mb-6 text-gray-800 dark:text-white">🎰 Pacotes de Roleta</h3>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
+                  <?php foreach ($itens_roleta as $pacote): ?>
+                  <div class="relative">
+                      <?php if (isset($pacote['destaque']) && $pacote['destaque'] == '1'): ?>
+                      <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+                          <span class="bg-green-500 text-white px-4 py-1 rounded-full text-xs font-bold shadow-lg" style="white-space: nowrap;">Mais Popular</span>
+                      </div>
+                      <?php endif; ?>
+                      <div class="bg-white dark:bg-[#27272A] border border-gray-200 dark:border-gray-700 rounded-xl p-6 text-center shadow-lg hover:shadow-xl transition-all duration-300 h-full flex flex-col justify-between <?php echo isset($pacote['destaque']) && $pacote['destaque'] == '1' ? 'ring-2 ring-green-500 ring-opacity-50' : ''; ?>">
+                          <div class="flex-1">
+                              <div class="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+                                  <?php echo htmlspecialchars(isset($pacote['quantidade_giros']) ? $pacote['quantidade_giros'] : ''); ?>
+                              </div>
+                              <div class="text-gray-600 dark:text-gray-300 text-lg mb-4">
+                                  Giros
+                              </div>
+                          </div>
+                          <div class="border-t border-gray-200 dark:border-gray-600 pt-4">
+                              <div class="text-2xl font-bold text-green-600 dark:text-green-400 mb-4">
+                                  R$ <?php echo number_format(isset($pacote['valor_pacote']) ? $pacote['valor_pacote'] : 0, 2, ',', '.'); ?>
+                              </div>
+                              <button type="button" 
+                                      class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-lg transition-colors duration-200 transform hover:scale-105"
+                                      onclick="selecionarPacoteRoleta('<?php echo htmlspecialchars(isset($pacote['codigo_pacote']) ? $pacote['codigo_pacote'] : ''); ?>', <?php echo isset($pacote['valor_pacote']) ? $pacote['valor_pacote'] : 0; ?>, <?php echo isset($pacote['quantidade_giros']) ? $pacote['quantidade_giros'] : 0; ?>)">
+                                  Comprar
+                              </button>
+                          </div>
+                      </div>
+                  </div>
+                  <?php endforeach; ?>
+              </div>
+          </div>
+          <?php endif; ?>
+
+         
+          
           
           <div style="display: flex;justify-content: start;width: 100%;" class="mt-4 secao-compra">
             <label for="quantidade" class="block text-sm font-medium text-black dark:text-white">
@@ -1315,7 +1724,7 @@ if ($imagens) {
 
           <!-- Custom Quantidade Seletor -->
           <div
-            class="flex items-center justify-center gap-2 mt-4 mb-2 w-full px-4 bg-gray-100 dark:bg-gray-800 p-2 rounded-2xl flex-col border border-gray-300 dark:border-[#000000] secao-compra">
+            class="flex items-center justify-center gap-2 mt-4 mb-2 w-full px-4 bg-gray-100 dark:bg-[#27272A] p-2 rounded-2xl flex-col border border-gray-300 dark:border-[#000000] secao-compra">
             <div class="flex items-center space-x-2">
               <button onclick="alterarQuantidade(-5,true)"
                 class="bg-[#1BC863] hover:bg-[#43996d] text-white rounded-lg font-bold w-10 h-10 text-xl">-5</button>
@@ -1323,7 +1732,7 @@ if ($imagens) {
                 class="bg-[#1BC863] hover:bg-[#43996d] text-white rounded-lg font-bold w-10 h-10 text-xl">-</button>
 
               <input type="number" id="quantidade_barra" value="<?php echo $compra_minima; ?>"
-                class="flex-1 text-center bg-gray-100 dark:bg-gray-700 text-black dark:text-white rounded-lg border-none"
+                class="flex-1 text-center bg-gray-100 dark:bg-[#3F3F46] text-black dark:text-white rounded-lg border-none"
                 readonly>
 
               <button onclick="alterarQuantidade(1,true)"
@@ -1340,7 +1749,7 @@ if ($imagens) {
 
           </div>
           <!-- Botão Quero Participar -->
-          <div class="w-full px-4 mb-2 secao-compra">
+          <div class="w-full px-4 mb-2 ">
 
 
 
@@ -1387,11 +1796,11 @@ if ($imagens) {
         {
         ?>
             <!-- Botão "Ver meus números" e valor -->
-            <div class="w-full flex flex-col gap-2 mt-2 secao-compra">
+            <div class="w-full flex flex-col gap-2 mt-2">
               <button onclick="verificarLogin('titulos')"
                 class="border border-[#1BC863] text-[#1BC863] rounded-lg font-semibold px-4 py-2 flex items-center justify-center gap-2 transition-all mb-1">
                 <span class="iconify" data-icon="tabler:numbers"></span>
-                Ver meus números
+                Ver meus números 3
               </button>
             </div>
           </div>
@@ -1399,18 +1808,43 @@ if ($imagens) {
           }  ?>
 
 
-              <!-- cotas -->
+              <!-- cotas premiadas -->
               <?php
-
-              if (!empty($campanhas[0]['mostrar_cotas_premiadas']) && !empty($campanhas[0]['cotas_premiadas'])): ?>
+              if (!empty($campanhas[0]['mostrar_cotas_premiadas']) && !empty($campanhas[0]['cotas_premiadas']) && !empty($campanhas[0]['premio_cotas_premiadas'])): 
+                  $premios_json = json_decode($campanhas[0]['premio_cotas_premiadas'], true);
+                  if (is_array($premios_json) && !empty($premios_json)): ?>
+                    <div class="w-full px-4 mb-2 secao-compra">
+                      <p class="text-sm font-medium text-black dark:text-white mb-2">🔥 Cotas premiadas - Achou ganhou!</p>
+                      <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3">
+                        <?php
+                        foreach ($premios_json as $grupo) {
+                          foreach ($grupo['cotas'] as $cota) {
+                            $cota_formatada = formatarCotaComLargura($cota, $largura_cota);
+                            echo "<div class='bg-blue-600 text-white p-3 rounded-lg text-center'>";
+                            echo "<div class='flex items-center justify-center mb-2'>";
+                            echo "<span class='text-green-400 mr-2'>★</span>";
+                            echo "<span class='text-lg font-bold'>" . $cota_formatada . "</span>";
+                            echo "</div>";
+                            echo "<div class='text-sm font-bold'>" . htmlspecialchars($grupo['premio']) . "</div>";
+                            echo "</div>";
+                          }
+                        }
+                        ?>
+                      </div>
+                      <p class="text-sm text-gray-400 mt-2">
+                        <?php echo $campanhas[0]['descricao_cotas_premiadas']; ?>
+                      </p>
+                    </div>
+                  <?php endif;
+              elseif (!empty($campanhas[0]['mostrar_cotas_premiadas']) && !empty($campanhas[0]['cotas_premiadas'])): ?>
                 <div class="w-full px-4 mb-2 secao-compra">
                   <p class="text-sm font-medium text-black dark:text-white mb-2">🔥 Cotas premiadas - Achou ganhou!</p>
                   <div class="grid grid-cols-3 sm:grid-cols-6 md:grid-cols-6 lg:grid-cols-6 gap-2 font-bold">
                     <?php
                     $cotas_premiadas = explode(',', $campanhas[0]['cotas_premiadas']);
                     foreach ($cotas_premiadas as $cota) {
-                      echo
-                        "<div class='bg-green-600 dark:text-black text-white text-center py-2 px-1 rounded-lg'>" . trim($cota) . "</div>";
+                      $cota_formatada = formatarCotaComLargura($cota, $largura_cota);
+                      echo "<div class='bg-green-600 dark:text-black text-white text-center py-2 px-1 rounded-lg'>" . $cota_formatada . "</div>";
                     }
                     ?>
                   </div>
@@ -1505,43 +1939,33 @@ if ($imagens) {
       </div> -->
 
           <!-- Sistema de Login/Cadastro Inline -->
-          <div id="loginCadastroContainerLayout0" class="hidden w-full">
+          <div id="loginCadastroContainerLayout1" class="hidden w-full login-container">
             <!-- Sistema de Login -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
-              <h3 class="text-xl font-bold mb-6 text-center text-gray-800 dark:text-white">Fazer login</h3>
+            <div class="rounded-lg shadow-lg p-6 mb-6 bg-gray-100 dark:bg-[#3F3F46]">
+              <h3 class="text-xl font-bold mb-6 text-center text-gray-800 dark:text-white">Digite seu número</h3>
               
               <!-- Formulário de Login -->
               <form id="formLoginInline" class="space-y-4 mb-6">
                 <div class="relative">
-                  <label class="block text-gray-700 dark:text-gray-300 mb-2">Celular</label>
+                  <label class="block text-gray-700 dark:text-gray-300 mb-2">Número de celular</label>
                   <div class="relative">
                     <i class="fas fa-phone absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                     <input type="tel" name="telefone" required
-                      class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg pl-10 pr-4 py-3 text-gray-800 dark:text-white"
-                      placeholder="Digite seu número de telefone">
-                  </div>
-                </div>
-
-                <div class="relative">
-                  <label class="block text-gray-700 dark:text-gray-300 mb-2">CPF</label>
-                  <div class="relative">
-                    <i class="fas fa-id-card absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                    <input type="text" name="cpf" required
-                      class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg pl-10 pr-4 py-3 text-gray-800 dark:text-white"
-                      placeholder="Digite seu CPF">
+                      class="w-full bg-gray-200 dark:bg-[#3F3F46] border border-gray-300 dark:border-gray-600 rounded-lg pl-10 pr-4 py-3 text-gray-800 dark:text-white"
+                      placeholder="(11) 99999-9999">
                   </div>
                 </div>
 
                 <button type="submit"
                   class="bg-green-600 hover:bg-green-700 text-white w-full py-3 rounded-lg text-lg font-bold transition-colors">
-                  Continuar Login
+                  Entrar
                 </button>
               </form>
 
               <div class="text-center">
                 <button onclick="mostrarCadastro()" 
                   class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg text-sm font-medium transition-colors">
-                  Não tem conta? Cadastre-se
+                  Primeira vez? Cadastre-se
                 </button>
               </div>
 
@@ -1575,42 +1999,59 @@ if ($imagens) {
 
 
              <!-- Formulário de Cadastro Inline -->
-          <div id="cadastroContainerLayout0" 2 class="hidden w-full">
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
+          <div id="cadastroContainerLayout1" class="hidden w-full">
+            <div class="rounded-lg shadow-lg p-6 mb-6 bg-gray-100 dark:bg-[#3F3F46]">
               <h3 class="text-xl font-bold mb-6 text-center text-gray-800 dark:text-white">Cadastro</h3>
               
               <form id="formCadastroInline" class="space-y-4">
-                <input type="hidden" name="telefone" id="telefone_cadastro_inline">
+                <!-- Campo Telefone - Sempre obrigatório -->
+                <div class="relative">
+                  <label class="block text-gray-700 dark:text-gray-300 mb-2">
+                    <i class="fas fa-phone mr-2"></i>Telefone
+                  </label>
+                  <div class="relative">
+                    <i class="fas fa-phone absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <input type="tel" name="telefone" required
+                      class="w-full bg-gray-200 dark:bg-[#3F3F46] border border-gray-300 dark:border-gray-600 rounded-lg pl-10 pr-4 py-3 text-gray-800 dark:text-white"
+                      placeholder="(11) 99999-9999">
+                  </div>
+                </div>
 
+                <?php if (empty($campos_obrigatorios) || in_array('nome', $campos_obrigatorios)): ?>
                 <div class="relative">
                   <label class="block text-gray-700 dark:text-gray-300 mb-2">Nome Completo</label>
                   <div class="relative">
                     <i class="fas fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                    <input type="text" name="nome" required
-                      class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg pl-10 pr-4 py-3 text-gray-800 dark:text-white"
+                    <input type="text" name="nome" <?php echo in_array('nome', $campos_obrigatorios) ? 'required' : ''; ?>
+                      class="w-full bg-gray-200 dark:bg-[#3F3F46] border border-gray-300 dark:border-gray-600 rounded-lg pl-10 pr-4 py-3 text-gray-800 dark:text-white"
                       placeholder="Digite seu nome completo">
                   </div>
                 </div>
+                <?php endif; ?>
 
+                <?php if (empty($campos_obrigatorios) || in_array('email', $campos_obrigatorios)): ?>
                 <div class="relative">
                   <label class="block text-gray-700 dark:text-gray-300 mb-2">E-mail</label>
                   <div class="relative">
                     <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                    <input type="email" name="email" required
-                      class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg pl-10 pr-4 py-3 text-gray-800 dark:text-white"
+                    <input type="email" name="email" <?php echo in_array('email', $campos_obrigatorios) ? 'required' : ''; ?>
+                      class="w-full bg-gray-200 dark:bg-[#3F3F46] border border-gray-300 dark:border-gray-600 rounded-lg pl-10 pr-4 py-3 text-gray-800 dark:text-white"
                       placeholder="Digite seu e-mail">
                   </div>
                 </div>
+                <?php endif; ?>
 
+                <?php if (in_array('cpf', $campos_obrigatorios)): ?>
                 <div class="relative">
                   <label class="block text-gray-700 dark:text-gray-300 mb-2">CPF</label>
                   <div class="relative">
                     <i class="fas fa-id-card absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                     <input type="text" name="cpf" required
-                      class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg pl-10 pr-4 py-3 text-gray-800 dark:text-white"
+                      class="w-full bg-gray-200 dark:bg-[#3F3F46] border border-gray-300 dark:border-gray-600 rounded-lg pl-10 pr-4 py-3 text-gray-800 dark:text-white"
                       placeholder="Digite seu CPF">
                   </div>
                 </div>
+                <?php endif; ?>
 
                 <button type="submit"
                   class="bg-green-600 hover:bg-green-700 text-white w-full py-3 rounded-lg text-lg font-bold transition-colors">
@@ -1621,7 +2062,7 @@ if ($imagens) {
               <div class="text-center mt-4">
                 <button onclick="voltarParaLogin()" 
                   class="text-blue-500 hover:text-blue-600 text-sm font-medium transition-colors">
-                  Já tenho uma conta, fazer login
+                  Já tenho cadastro, fazer login
                 </button>
               </div>
             </div>
@@ -1635,10 +2076,7 @@ if ($imagens) {
                 <i class="fas fa-arrow-left mr-2"></i>
                 Voltar
               </button>
-              <button onclick="continuarComLogin()" 
-                class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg transition-colors">
-                Saiba se sua cota continua
-              </button>
+          
             </div>
           </div>
 
@@ -1654,6 +2092,171 @@ if ($imagens) {
 
 </body>
 
+<?php if ($campanhas[0]["layout"] == 0): ?>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const carousel = document.getElementById("carousel");
+      const indicators = document.querySelectorAll(".indicator");
+      if (!carousel || indicators.length <= 1) return;
+
+      let index = 0;
+      let intervalId = null;
+      let startX = 0;
+      let isDragging = false;
+      let dragThreshold = 50;
+
+      function updateCarousel() {
+        carousel.style.transform = `translateX(-${index * 100}%)`;
+        indicators.forEach((dot, i) => {
+          dot.classList.toggle("opacity-100", i === index);
+        });
+      }
+
+      function nextSlide() {
+        index = (index + 1) % indicators.length;
+        updateCarousel();
+      }
+
+      function prevSlide() {
+        index = (index - 1 + indicators.length) % indicators.length;
+        updateCarousel();
+      }
+
+      indicators.forEach(dot => {
+        dot.addEventListener("click", (e) => {
+          index = parseInt(e.target.dataset.index);
+          updateCarousel();
+          restartAutoplay();
+        });
+      });
+
+      function startAutoplay() {
+        stopAutoplay();
+        intervalId = setInterval(nextSlide, 5000);
+      }
+      function stopAutoplay() {
+        if (intervalId) clearInterval(intervalId);
+      }
+      function restartAutoplay() {
+        stopAutoplay();
+        startAutoplay();
+      }
+
+      // Mouse drag
+      carousel.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startX = e.pageX;
+        stopAutoplay();
+      });
+      document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+      });
+      document.addEventListener('mouseup', (e) => {
+        if (!isDragging) return;
+        let diff = e.pageX - startX;
+        if (diff > dragThreshold) {
+          prevSlide();
+        } else if (diff < -dragThreshold) {
+          nextSlide();
+        }
+        isDragging = false;
+        restartAutoplay();
+      });
+
+      // Touch drag
+      carousel.addEventListener('touchstart', (e) => {
+        isDragging = true;
+        startX = e.touches[0].clientX;
+        stopAutoplay();
+      });
+      carousel.addEventListener('touchend', (e) => {
+        if (!isDragging) return;
+        let diff = e.changedTouches[0].clientX - startX;
+        if (diff > dragThreshold) {
+          prevSlide();
+        } else if (diff < -dragThreshold) {
+          nextSlide();
+        }
+        isDragging = false;
+        restartAutoplay();
+      });
+
+      // Inicialização
+      updateCarousel();
+      startAutoplay();
+    });
+
+
+  </script>
+<?php endif; ?>
+
+<style>
+  /* Melhorias para o modo claro */
+  .dark .pacote-promocional {
+    background-color: #343b41 !important;
+  }
+  
+  .pacote-promocional {
+    background-color: #1BC863 !important;
+    color: white !important;
+  }
+  
+  /* Melhor contraste para textos no modo claro */
+  .dark .text-gray-600 {
+    color: #b8b9ad;
+  }
+  
+  /* Melhor contraste para bordas no modo claro */
+  .border-gray-300 {
+    border-color: #d1d5db;
+  }
+  
+  /* Melhor contraste para backgrounds no modo claro */
+  .bg-gray-100 {
+    background-color: #f3f4f6;
+  }
+  
+  /* Melhor contraste para inputs no modo claro */
+  .bg-gray-100.dark\:bg-gray-700 {
+    background-color: #f3f4f6;
+  }
+  
+  .dark .bg-gray-100.dark\:bg-gray-700 {
+    background-color: #374151;
+  }
+  
+  /* Melhor contraste para botões no modo claro */
+  .bg-gray-600 {
+    background-color: #4b5563;
+  }
+  
+  .dark .bg-gray-600 {
+    background-color: #374151;
+  }
+  
+  /* Melhor contraste para textos em botões */
+  .bg-gray-600 .text-white {
+    color: white;
+  }
+  
+  /* Melhor contraste para bordas de botões */
+  .border-\[#343b41\] {
+    border-color: #6b7280;
+  }
+  
+  .dark .border-\[#343b41\] {
+    border-color: #343b41;
+  }
+  
+  /* Melhor contraste para hover states */
+  .hover\:bg-\[#232a32\]:hover {
+    background-color: #4b5563;
+  }
+  
+  .dark .hover\:bg-\[#232a32\]:hover {
+    background-color: #232a32;
+  }
+</style>
 <script>
   const precoBase = <?php echo $campanhas[0]['preco']; ?>;
   const compraMinima = <?php echo $compra_minima; ?>;
@@ -1698,19 +2301,114 @@ if ($imagens) {
     mostrarSistemaLogin(acao);
   }
 
-  // Função para mostrar o sistema de login
-  function mostrarSistemaLogin(acao = 'comprar') {
-    // Encontra a seção de compra (botões, formulários, etc.)
+  // Função para resetar completamente o estado do sistema
+  function resetarEstadoSistema() {
     const secoesCompra = document.querySelectorAll('.secao-compra');
-    
-    // Detecta qual layout está sendo usado
     const layout0 = document.getElementById('loginCadastroContainerLayout0');
     const layout1 = document.getElementById('loginCadastroContainerLayout1');
-    const loginContainer = layout0 || layout1;
+    const cadastroContainerLayout0 = document.getElementById('cadastroContainerLayout0');
+    const cadastroContainerLayout1 = document.getElementById('cadastroContainerLayout1');
+    
+    // Reseta seções de compra
+    secoesCompra.forEach(secao => {
+      secao.classList.remove('hidden', 'slide-out');
+      secao.style.transform = 'translateX(0)';
+      secao.style.opacity = '1';
+      secao.style.transition = '';
+    });
+    
+    // Esconde containers de login
+    if (layout0) {
+      layout0.classList.add('hidden');
+      layout0.classList.remove('slide-in', 'slide-out');
+    }
+    if (layout1) {
+      layout1.classList.add('hidden');
+      layout1.classList.remove('slide-in', 'slide-out');
+    }
+    
+    // Esconde containers de cadastro
+    if (cadastroContainerLayout0) {
+      cadastroContainerLayout0.classList.add('hidden');
+      cadastroContainerLayout0.classList.remove('form-fade-in');
+    }
+    if (cadastroContainerLayout1) {
+      cadastroContainerLayout1.classList.add('hidden');
+      cadastroContainerLayout1.classList.remove('form-fade-in');
+    }
+    
+    // Limpa estado
+    acaoAposLogin = '';
+  }
+
+  // Função para detectar qual layout está sendo usado
+  function detectarLayout() {
+    const layout0 = document.getElementById('loginCadastroContainerLayout0');
+    const layout1 = document.getElementById('loginCadastroContainerLayout1');
+    
+    // Se apenas um layout existe, usa ele
+    if (layout0 && !layout1) {
+      return { container: layout0, type: 'layout0' };
+    } else if (layout1 && !layout0) {
+      return { container: layout1, type: 'layout1' };
+    }
+    
+    // Se ambos existem, verifica qual está visível
+    if (layout0 && layout1) {
+      if (!layout0.classList.contains('hidden')) {
+        return { container: layout0, type: 'layout0' };
+      } else if (!layout1.classList.contains('hidden')) {
+        return { container: layout1, type: 'layout1' };
+      }
+    }
+    
+    // Fallback: retorna o primeiro que existir
+    if (layout0) {
+      return { container: layout0, type: 'layout0' };
+    } else if (layout1) {
+      return { container: layout1, type: 'layout1' };
+    }
+    
+    return null;
+  }
+
+  // Função para mostrar o sistema de login
+  function mostrarSistemaLogin(acao = 'comprar') {
+    // Reseta o estado do sistema primeiro para garantir funcionamento correto
+    resetarEstadoSistema();
+    
+    // Pequeno delay para garantir que o reset seja aplicado
+    setTimeout(() => {
+      // Encontra a seção de compra (botões, formulários, etc.)
+      const secoesCompra = document.querySelectorAll('.secao-compra');
+    
+    // Detecta qual layout está sendo usado
+    const layoutInfo = detectarLayout();
+    const loginContainer = layoutInfo ? layoutInfo.container : null;
+    const layoutType = layoutInfo ? layoutInfo.type : 'layout0';
     
     // Determina qual layout está ativo
-    const isLayout0 = layout0 !== null;
-    const isLayout1 = layout1 !== null;
+    const isLayout0 = layoutType === 'layout0';
+    const isLayout1 = layoutType === 'layout1';
+    
+    // Limpa qualquer estado residual primeiro
+    acaoAposLogin = acao;
+    
+    // Limpa formulários e containers de cadastro
+    const cadastroContainerLayout0 = document.getElementById('cadastroContainerLayout0');
+    const cadastroContainerLayout1 = document.getElementById('cadastroContainerLayout1');
+    const cadastroContainer = cadastroContainerLayout0 || cadastroContainerLayout1;
+    
+    if (cadastroContainer) {
+      cadastroContainer.classList.add('hidden');
+      cadastroContainer.classList.remove('form-fade-in');
+    }
+    
+    // Garante que o formulário de login esteja visível
+    const loginForm = document.getElementById('formLoginInline');
+    if (loginForm && loginForm.parentElement) {
+      loginForm.parentElement.classList.remove('hidden');
+    }
     
     // Atualiza o valor do pedido
     const quantidade = parseInt(document.getElementById('quantidade_barra').value);
@@ -1724,6 +2422,13 @@ if ($imagens) {
       valorPedidoLogin.textContent = valorTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
     
+    // Reseta o estado das seções de compra primeiro
+    secoesCompra.forEach(secao => {
+      secao.classList.remove('slide-out');
+      secao.style.transform = '';
+      secao.style.opacity = '';
+    });
+    
     // Animação de slide out das seções de compra
     secoesCompra.forEach(secao => {
       secao.classList.add('slide-out');
@@ -1735,10 +2440,30 @@ if ($imagens) {
         secao.classList.add('hidden');
       });
       
-      // Mostra o sistema de login
-      loginContainer.classList.remove('hidden');
-      loginContainer.classList.add('slide-in');
+      // Mostra o sistema de login com animação garantida
+      if (loginContainer) {
+        // torna visível
+        loginContainer.classList.remove('hidden');
+        // reseta estados de classe
+        loginContainer.classList.remove('slide-out');
+        loginContainer.classList.remove('slide-in');
+        // estado inicial fora da tela
+        loginContainer.style.transform = 'translateX(50%)';
+        loginContainer.style.opacity = '0';
+        // força reflow para permitir transição
+        void loginContainer.offsetWidth;
+        // estado final animado (usa a transition definida em .login-container)
+        loginContainer.style.transform = 'translateX(0)';
+        loginContainer.style.opacity = '1';
+        loginContainer.classList.add('slide-in');
+        // limpa estilos inline após a animação
+        setTimeout(() => {
+          loginContainer.style.transform = '';
+          loginContainer.style.opacity = '';
+        }, 500);
+      }
     }, 500);
+    }, 50); // Fecha o setTimeout do reset
   }
 
   // Função para voltar para a compra
@@ -1746,30 +2471,67 @@ if ($imagens) {
     const secoesCompra = document.querySelectorAll('.secao-compra');
     
     // Detecta qual layout está sendo usado
-    const layout0 = document.getElementById('loginCadastroContainerLayout0');
-    const layout1 = document.getElementById('loginCadastroContainerLayout1');
-    const loginContainer = layout0 || layout1;
+    const layoutInfo = detectarLayout();
+    const loginContainer = layoutInfo ? layoutInfo.container : null;
     
     const cadastroContainerLayout0 = document.getElementById('cadastroContainerLayout0');
     const cadastroContainerLayout1 = document.getElementById('cadastroContainerLayout1');
     const cadastroContainer = cadastroContainerLayout0 || cadastroContainerLayout1;
     
     // Esconde o cadastro se estiver visível
-    if (!cadastroContainer.classList.contains('hidden')) {
+    if (cadastroContainer && !cadastroContainer.classList.contains('hidden')) {
       cadastroContainer.classList.add('hidden');
+      cadastroContainer.classList.remove('form-fade-in');
     }
     
-    // Animação de slide in das seções de compra
-    loginContainer.classList.remove('slide-in');
+    // Esconde o formulário de login se estiver visível
+    const loginForm = document.getElementById('formLoginInline');
+    if (loginForm && loginForm.parentElement) {
+      setTimeout(() => {
+        loginForm.parentElement.classList.add('hidden');
+      }, 500);
+    }
+    
+    // Animação de slide out do container de login
+    if (loginContainer) {
+      loginContainer.classList.remove('slide-in');
+      loginContainer.classList.add('slide-out');
+    }
     
     setTimeout(() => {
-      loginContainer.classList.add('hidden');
+      // Deixa o container visível enquanto anima a saída, só oculta após concluir
+      if (loginContainer) {
+        loginContainer.classList.remove('hidden');
+        loginContainer.classList.remove('slide-in');
+        loginContainer.classList.add('slide-out');
+      }
       
-      // Mostra as seções de compra removendo a classe hidden e slide-out
+      // Mostra as seções de compra com ANIMAÇÃO de slide-in à esquerda
       secoesCompra.forEach(secao => {
         secao.classList.remove('hidden', 'slide-out');
+        // estado inicial para animar
+        secao.style.transform = 'translateX(-50%)';
+        secao.style.opacity = '0';
+        // gatilho de reflow para permitir a transição
+        void secao.offsetWidth;
+        // estado final (anima graças ao CSS de .secao-compra)
+        secao.style.transform = 'translateX(0)';
+        secao.style.opacity = '1';
       });
-    }, 500);
+      
+      // Após a duração da transição, aí sim oculta o container de login
+      setTimeout(() => {
+        if (loginContainer) {
+          loginContainer.classList.add('hidden');
+          loginContainer.classList.remove('slide-out');
+          loginContainer.style.transform = '';
+          loginContainer.style.opacity = '';
+        }
+      }, 500);
+      
+      // Limpa qualquer estado residual
+      acaoAposLogin = '';
+    }, 0);
   }
 
   // Função para mostrar o formulário de cadastro
@@ -1781,9 +2543,19 @@ if ($imagens) {
     const cadastroContainerLayout1 = document.getElementById('cadastroContainerLayout1');
     const cadastroContainer = cadastroContainerLayout0 || cadastroContainerLayout1;
     
-    loginForm.classList.add('hidden');
-    cadastroContainer.classList.remove('hidden');
-    cadastroContainer.classList.add('form-fade-in');
+    // Animação de fade out do formulário de login
+    loginForm.style.opacity = '0';
+    loginForm.style.transform = 'translateY(-10px)';
+    
+    setTimeout(() => {
+      loginForm.classList.add('hidden');
+      loginForm.style.opacity = '';
+      loginForm.style.transform = '';
+      
+      // Mostra o formulário de cadastro com animação
+      cadastroContainer.classList.remove('hidden');
+      cadastroContainer.classList.add('form-fade-in');
+    }, 200);
   }
 
   // Função para voltar para o login
@@ -1795,27 +2567,59 @@ if ($imagens) {
     const cadastroContainerLayout1 = document.getElementById('cadastroContainerLayout1');
     const cadastroContainer = cadastroContainerLayout0 || cadastroContainerLayout1;
     
-    cadastroContainer.classList.add('hidden');
-    loginForm.classList.remove('hidden');
+    // Animação de fade out do formulário de cadastro
+    cadastroContainer.style.opacity = '0';
+    cadastroContainer.style.transform = 'translateY(10px)';
+    
+    setTimeout(() => {
+      cadastroContainer.classList.add('hidden');
+      cadastroContainer.classList.remove('form-fade-in');
+      cadastroContainer.style.opacity = '';
+      cadastroContainer.style.transform = '';
+      
+      // Mostra o formulário de login com animação de slide left
+      loginForm.classList.remove('hidden');
+      loginForm.style.opacity = '0';
+      loginForm.style.transform = 'translateX(-50px)';
+      loginForm.style.transition = 'opacity 0.3s ease-in-out, transform 0.3s ease-in-out';
+      
+      setTimeout(() => {
+        loginForm.style.opacity = '1';
+        loginForm.style.transform = 'translateX(0)';
+      }, 50);
+    }, 200);
   }
 
   // Função para continuar com login
   function continuarComLogin() {
-    // Detecta qual layout está sendo usado
-    const layout0 = document.getElementById('loginCadastroContainerLayout0');
-    const layout1 = document.getElementById('loginCadastroContainerLayout1');
-    const isLayout0 = layout0 !== null;
-    const isLayout1 = layout1 !== null;
+    // Simplifica a detecção do layout - sempre usa Layout0 por padrão
+    let aceitarTermos = document.getElementById('aceitarTermosLayout0');
+    let mensagemErro = document.getElementById('mensagemErroLayout0');
     
-    // Usa o ID correto baseado no layout
-    const aceitarTermosId = isLayout0 ? 'aceitarTermosLayout0' : 'aceitarTermosLayout1';
-    const mensagemErroId = isLayout0 ? 'mensagemErroLayout0' : 'mensagemErroLayout1';
+    // Se não encontrar no Layout0, tenta Layout1
+    if (!aceitarTermos) {
+      const aceitarTermos1 = document.getElementById('aceitarTermosLayout1');
+      const mensagemErro1 = document.getElementById('mensagemErroLayout1');
+      if (aceitarTermos1) {
+        aceitarTermos = aceitarTermos1;
+        mensagemErro = mensagemErro1;
+      }
+    }
     
-    const aceitarTermos = document.getElementById(aceitarTermosId);
-    const mensagemErro = document.getElementById(mensagemErroId);
-    
-    if (!aceitarTermos.checked) {
-      mensagemErro.classList.remove('hidden');
+    if (!aceitarTermos || !aceitarTermos.checked) {
+      if (mensagemErro) {
+        mensagemErro.classList.remove('hidden');
+        // Rola para a mensagem e aplica animação de atenção
+        try { mensagemErro.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
+        mensagemErro.classList.remove('attention-shake');
+        // reflow para reiniciar animação
+        void mensagemErro.offsetWidth;
+        mensagemErro.classList.add('attention-shake');
+        mensagemErro.addEventListener('animationend', function handler(){
+          mensagemErro.classList.remove('attention-shake');
+          mensagemErro.removeEventListener('animationend', handler);
+        });
+      }
       return;
     }
     
@@ -1865,28 +2669,20 @@ if ($imagens) {
     }
   }
 
-  function alterarQuantidadePromocional(qtd, precoUnitario, adicionar = false) {
+  // Função para os botões de quantidade rápida
+  function quantidadeRapida(quantidade) {
+    const precoUnitario = <?php echo $campanhas[0]['preco']; ?>;
     const compraMinima = <?php echo $compra_minima; ?>;
     const compraMaxima = <?php echo $compra_maxima; ?>;
 
-    let novaQuantidade;
-    if (adicionar) {
-      // Se adicionar for true, soma à quantidade atual
-      const quantidadeAtual = parseInt(document.getElementById('quantidade_barra').value);
-      novaQuantidade = quantidadeAtual + qtd;
-    } else {
-      // Se adicionar for false, usa o valor direto
-      novaQuantidade = qtd;
-    }
+    // Definir quantidade diretamente
+    let novaQuantidade = parseInt(quantidade);
+    
     // Validar limites
     if (novaQuantidade < compraMinima) novaQuantidade = compraMinima;
-    if (novaQuantidade > compraMaxima) {
-      novaQuantidade = compraMaxima;
-      // Ajustar o preço proporcionalmente
-      precoUnitario = (precoUnitario * compraMaxima) / qtd;
-    }
+    if (novaQuantidade > compraMaxima) novaQuantidade = compraMaxima;
 
-    const valorTotal = precoUnitario;
+    const valorTotal = precoUnitario * novaQuantidade;
 
     document.getElementById('quantidade_barra').value = novaQuantidade;
     document.getElementById('quantidade').value = novaQuantidade;
@@ -1901,7 +2697,80 @@ if ($imagens) {
       mensagemMaximo.style.display = 'none';
     }
 
-    
+    // Adicionar efeito visual ao botão clicado
+    const botoes = document.querySelectorAll('.quantidade-rapida-btn');
+    botoes.forEach(btn => {
+      btn.classList.remove('bg-green-500', 'text-white', 'border-green-500', 'active');
+      btn.classList.add('bg-gray-100', 'dark:bg-[#3F3F46]', 'text-gray-700', 'dark:text-gray-300');
+    });
+
+    const botaoClicado = event.target;
+    botaoClicado.classList.remove('bg-gray-100', 'dark:bg-[#3F3F46]', 'text-gray-700', 'dark:text-gray-300');
+    botaoClicado.classList.add('bg-green-500', 'text-white', 'border-green-500', 'active');
+  }
+
+  function alterarQuantidadePromocional(qtd, precoPacote, adicionar = false, beneficioTipo = '', beneficioQuantidade = 0) {
+    const compraMinima = <?php echo $compra_minima; ?>;
+    const compraMaxima = <?php echo $compra_maxima; ?>;
+
+    // Define quantidade de cotas conforme pacote selecionado
+    let novaQuantidade;
+    if (adicionar) {
+      const quantidadeAtual = parseInt(document.getElementById('quantidade_barra').value || '0', 10);
+      novaQuantidade = quantidadeAtual + qtd;
+    } else {
+      novaQuantidade = qtd;
+    }
+
+    if (novaQuantidade < compraMinima) novaQuantidade = compraMinima;
+    if (novaQuantidade > compraMaxima) novaQuantidade = compraMaxima;
+
+    // Atualiza campos básicos
+    const inputQtdBarra = document.getElementById('quantidade_barra');
+    const inputQtd = document.getElementById('quantidade');
+    const inputValor = document.getElementById('valor_total');
+    const btnComprar = document.getElementById('btnComprar');
+    if (inputQtdBarra) inputQtdBarra.value = novaQuantidade;
+    if (inputQtd) inputQtd.value = novaQuantidade;
+    if (inputValor) inputValor.value = precoPacote;
+    if (btnComprar) btnComprar.innerHTML = 'Comprar por R$ ' + Number(precoPacote).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    // Garante inputs de benefício que o backend espera
+    let girosInput = document.getElementById('quantidade_giros_roleta');
+    if (!girosInput) {
+      girosInput = document.createElement('input');
+      girosInput.type = 'hidden';
+      girosInput.id = 'quantidade_giros_roleta';
+      girosInput.name = 'quantidade_giros_roleta';
+      document.getElementById('formComprar').appendChild(girosInput);
+    }
+    let raspadinhasInput = document.getElementById('quantidade_raspadinhas');
+    if (!raspadinhasInput) {
+      raspadinhasInput = document.createElement('input');
+      raspadinhasInput.type = 'hidden';
+      raspadinhasInput.id = 'quantidade_raspadinhas';
+      raspadinhasInput.name = 'quantidade_raspadinhas';
+      document.getElementById('formComprar').appendChild(raspadinhasInput);
+    }
+
+    // Zera ambos e aplica somente o benefício do pacote
+    girosInput.value = 0;
+    raspadinhasInput.value = 0;
+    const qtdBeneficio = parseInt(beneficioQuantidade || 0, 10);
+    if (beneficioTipo === 'roleta' && qtdBeneficio > 0) {
+      girosInput.value = qtdBeneficio;
+    } else if (beneficioTipo === 'raspadinha' && qtdBeneficio > 0) {
+      raspadinhasInput.value = qtdBeneficio;
+    }
+
+    // Mostrar/ocultar mensagem de máximo
+    const mensagemMaximo = document.querySelector('.text-red-500');
+    if (novaQuantidade >= compraMaxima) {
+      mensagemMaximo.style.display = 'block';
+    } else {
+      mensagemMaximo.style.display = 'none';
+    }
+
     // Redirecionar diretamente para o checkout
     if (clienteId) {
       // Se clienteId existir, já é um cliente logado, então podemos submeter diretamente
@@ -1912,6 +2781,103 @@ if ($imagens) {
       mostrarSistemaLogin('comprar');
     }
     
+  }
+
+  // Garante disponibilidade no escopo global (Layout 0 usa onclick inline)
+  if (typeof window !== 'undefined') {
+    window.alterarQuantidade = alterarQuantidade;
+    window.alterarQuantidadePromocional = alterarQuantidadePromocional;
+    window.quantidadeRapida = quantidadeRapida;
+  }
+
+  function selecionarPacoteRoleta(codigo, valor, quantidadeGiros) {
+    // Armazenar informações do pacote selecionado
+    window.pacoteRoletaSelecionado = {
+      codigo: codigo,
+      valor: valor,
+      quantidadeGiros: quantidadeGiros
+    };
+
+    // Atualizar o formulário com os dados do pacote
+    document.getElementById('valor_total').value = valor;
+    document.getElementById('quantidade').value = 1; // Quantidade sempre 1 para pacotes
+    document.getElementById('btnComprar').innerHTML = 'Comprar Pacote por R$ ' + valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    // Adicionar campo hidden para o código do pacote
+    let codigoInput = document.getElementById('codigo_pacote_roleta');
+    if (!codigoInput) {
+      codigoInput = document.createElement('input');
+      codigoInput.type = 'hidden';
+      codigoInput.id = 'codigo_pacote_roleta';
+      codigoInput.name = 'codigo_pacote_roleta';
+      document.getElementById('formComprar').appendChild(codigoInput);
+    }
+    codigoInput.value = codigo;
+
+    // Adicionar campo hidden para quantidade de giros
+    let girosInput = document.getElementById('quantidade_giros_roleta');
+    if (!girosInput) {
+      girosInput = document.createElement('input');
+      girosInput.type = 'hidden';
+      girosInput.id = 'quantidade_giros_roleta';
+      girosInput.name = 'quantidade_giros_roleta';
+      document.getElementById('formComprar').appendChild(girosInput);
+    }
+    girosInput.value = quantidadeGiros;
+
+    // Redirecionar diretamente para o checkout se estiver logado
+    if (clienteId) {
+      document.getElementById('formComprar').cliente_id.value = clienteId;
+      document.getElementById('formComprar').submit();
+    } else {
+      // Se não estiver logado, mostra o sistema de login inline
+      mostrarSistemaLogin('comprar');
+    }
+  }
+
+  function selecionarPacoteRaspadinha(codigo, valor, quantidadeRaspadinhas) {
+    // Armazenar informações do pacote selecionado
+    window.pacoteRaspadinhaSelecionado = {
+      codigo: codigo,
+      valor: valor,
+      quantidadeRaspadinhas: quantidadeRaspadinhas
+    };
+
+    // Atualizar o formulário com os dados do pacote
+    document.getElementById('valor_total').value = valor;
+    document.getElementById('quantidade').value = 1; // Quantidade sempre 1 para pacotes
+    document.getElementById('btnComprar').innerHTML = 'Comprar Pacote por R$ ' + valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    // Adicionar campo hidden para o código do pacote
+    let codigoInput = document.getElementById('codigo_pacote_raspadinha');
+    if (!codigoInput) {
+      codigoInput = document.createElement('input');
+      codigoInput.type = 'hidden';
+      codigoInput.id = 'codigo_pacote_raspadinha';
+      codigoInput.name = 'codigo_pacote_raspadinha';
+      document.getElementById('formComprar').appendChild(codigoInput);
+    }
+    codigoInput.value = codigo;
+
+    // Adicionar campo hidden para quantidade de raspadinhas
+    let raspadinhasInput = document.getElementById('quantidade_raspadinhas');
+    if (!raspadinhasInput) {
+      raspadinhasInput = document.createElement('input');
+      raspadinhasInput.type = 'hidden';
+      raspadinhasInput.id = 'quantidade_raspadinhas';
+      raspadinhasInput.name = 'quantidade_raspadinhas';
+      document.getElementById('formComprar').appendChild(raspadinhasInput);
+    }
+    raspadinhasInput.value = quantidadeRaspadinhas;
+
+    // Redirecionar diretamente para o checkout se estiver logado
+    if (clienteId) {
+      document.getElementById('formComprar').cliente_id.value = clienteId;
+      document.getElementById('formComprar').submit();
+    } else {
+      // Se não estiver logado, mostra o sistema de login inline
+      mostrarSistemaLogin('comprar');
+    }
   }
 
   function definirQuantidade(valor) {
@@ -1953,18 +2919,6 @@ if ($imagens) {
 
   // Função para inicializar o sistema de login
   function inicializarSistemaLogin() {
-    // Adiciona máscara para CPF
-    const cpfInputs = document.querySelectorAll('input[name="cpf"]');
-    cpfInputs.forEach(input => {
-      input.addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
-        value = value.replace(/(\d{3})(\d)/, '$1.$2');
-        value = value.replace(/(\d{3})(\d)/, '$1.$2');
-        value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-        e.target.value = value;
-      });
-    });
-
     // Adiciona máscara para telefone
     const telefoneInputs = document.querySelectorAll('input[name="telefone"]');
     telefoneInputs.forEach(input => {
@@ -2055,16 +3009,38 @@ if ($imagens) {
 
 
 
-  // Formulário de Login Inline (Layout 0)
+  // Formulário de Login Inline
   document.getElementById('formLoginInline').addEventListener('submit', function (e) {
     e.preventDefault();
     const formData = new FormData(this);
-    const mensagemErro = document.getElementById('mensagemErro');
-    const aceitarTermos = document.getElementById('aceitarTermos');
+    
+    // Simplifica a detecção do layout - sempre usa Layout0 por padrão
+    let aceitarTermos = document.getElementById('aceitarTermosLayout0');
+    let mensagemErro = document.getElementById('mensagemErroLayout0');
+    
+    // Se não encontrar no Layout0, tenta Layout1
+    if (!aceitarTermos) {
+      const aceitarTermos1 = document.getElementById('aceitarTermosLayout1');
+      const mensagemErro1 = document.getElementById('mensagemErroLayout1');
+      if (aceitarTermos1) {
+        aceitarTermos = aceitarTermos1;
+        mensagemErro = mensagemErro1;
+      }
+    }
 
     // Verifica se aceitou os termos
-    if (!aceitarTermos.checked) {
-      mensagemErro.classList.remove('hidden');
+    if (!aceitarTermos || !aceitarTermos.checked) {
+      if (mensagemErro) {
+        mensagemErro.classList.remove('hidden');
+        try { mensagemErro.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
+        mensagemErro.classList.remove('attention-shake');
+        void mensagemErro.offsetWidth;
+        mensagemErro.classList.add('attention-shake');
+        mensagemErro.addEventListener('animationend', function handler(){
+          mensagemErro.classList.remove('attention-shake');
+          mensagemErro.removeEventListener('animationend', handler);
+        });
+      }
       return;
     }
 
@@ -2087,12 +3063,9 @@ if ($imagens) {
           // Atualiza o clienteId após sucesso
           document.getElementById('cliente_id').value = data.cliente_id;
           
-          // Se for cliente, volta para a compra e submete
+          // Se for cliente, vai direto para o processamento de pagamento
           if (data.isCliente) {
-            voltarParaCompra();
-            setTimeout(() => {
-              document.getElementById('formComprar').submit();
-            }, 600);
+            document.getElementById('formComprar').submit();
           } else {
             alert('Usuários do sistema não podem comprar cotas.');
             voltarParaCompra();
@@ -2137,11 +3110,8 @@ if ($imagens) {
         if (data.success) {
           document.getElementById('cliente_id').value = data.cliente_id;
           
-          // Volta para a compra e submete
-          voltarParaCompra();
-          setTimeout(() => {
-            document.getElementById('formComprar').submit();
-          }, 600);
+          // Vai direto para o processamento de pagamento
+          document.getElementById('formComprar').submit();
         } else {
           alert(data.message || 'Ocorreu um erro ao processar sua solicitação. Tente novamente.');
         }
@@ -2157,25 +3127,26 @@ if ($imagens) {
       });
   });
 
-  // Event listener para o checkbox de termos (Layout 0)
+  // Event listener para o checkbox de termos
   document.addEventListener('DOMContentLoaded', function() {
-    // Detecta qual layout está sendo usado
-    const layout0 = document.getElementById('loginCadastroContainerLayout0');
-    const layout1 = document.getElementById('loginCadastroContainerLayout1');
-    const isLayout0 = layout0 !== null;
-    const isLayout1 = layout1 !== null;
+    // Adiciona listeners para ambos os checkboxes
+    const aceitarTermosLayout0 = document.getElementById('aceitarTermosLayout0');
+    const aceitarTermosLayout1 = document.getElementById('aceitarTermosLayout1');
+    const mensagemErroLayout0 = document.getElementById('mensagemErroLayout0');
+    const mensagemErroLayout1 = document.getElementById('mensagemErroLayout1');
     
-    // Usa o ID correto baseado no layout
-    const aceitarTermosId = isLayout0 ? 'aceitarTermosLayout0' : 'aceitarTermosLayout1';
-    const mensagemErroId = isLayout0 ? 'mensagemErroLayout0' : 'mensagemErroLayout1';
-    
-    const aceitarTermos = document.getElementById(aceitarTermosId);
-    const mensagemErro = document.getElementById(mensagemErroId);
-    
-    if (aceitarTermos && mensagemErro) {
-      aceitarTermos.addEventListener('change', function() {
+    if (aceitarTermosLayout0 && mensagemErroLayout0) {
+      aceitarTermosLayout0.addEventListener('change', function() {
         if (this.checked) {
-          mensagemErro.classList.add('hidden');
+          mensagemErroLayout0.classList.add('hidden');
+        }
+      });
+    }
+    
+    if (aceitarTermosLayout1 && mensagemErroLayout1) {
+      aceitarTermosLayout1.addEventListener('change', function() {
+        if (this.checked) {
+          mensagemErroLayout1.classList.add('hidden');
         }
       });
     }
@@ -2420,169 +3391,4 @@ if ($imagens) {
     startAutoplay();
   });
 </script>
-
-<?php if ($campanhas[0]["layout"] == 0): ?>
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const carousel = document.getElementById("carousel");
-      const indicators = document.querySelectorAll(".indicator");
-      if (!carousel || indicators.length <= 1) return;
-
-      let index = 0;
-      let intervalId = null;
-      let startX = 0;
-      let isDragging = false;
-      let dragThreshold = 50;
-
-      function updateCarousel() {
-        carousel.style.transform = `translateX(-${index * 100}%)`;
-        indicators.forEach((dot, i) => {
-          dot.classList.toggle("opacity-100", i === index);
-        });
-      }
-
-      function nextSlide() {
-        index = (index + 1) % indicators.length;
-        updateCarousel();
-      }
-
-      function prevSlide() {
-        index = (index - 1 + indicators.length) % indicators.length;
-        updateCarousel();
-      }
-
-      indicators.forEach(dot => {
-        dot.addEventListener("click", (e) => {
-          index = parseInt(e.target.dataset.index);
-          updateCarousel();
-          restartAutoplay();
-        });
-      });
-
-      function startAutoplay() {
-        stopAutoplay();
-        intervalId = setInterval(nextSlide, 5000);
-      }
-      function stopAutoplay() {
-        if (intervalId) clearInterval(intervalId);
-      }
-      function restartAutoplay() {
-        stopAutoplay();
-        startAutoplay();
-      }
-
-      // Mouse drag
-      carousel.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        startX = e.pageX;
-        stopAutoplay();
-      });
-      document.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-      });
-      document.addEventListener('mouseup', (e) => {
-        if (!isDragging) return;
-        let diff = e.pageX - startX;
-        if (diff > dragThreshold) {
-          prevSlide();
-        } else if (diff < -dragThreshold) {
-          nextSlide();
-        }
-        isDragging = false;
-        restartAutoplay();
-      });
-
-      // Touch drag
-      carousel.addEventListener('touchstart', (e) => {
-        isDragging = true;
-        startX = e.touches[0].clientX;
-        stopAutoplay();
-      });
-      carousel.addEventListener('touchend', (e) => {
-        if (!isDragging) return;
-        let diff = e.changedTouches[0].clientX - startX;
-        if (diff > dragThreshold) {
-          prevSlide();
-        } else if (diff < -dragThreshold) {
-          nextSlide();
-        }
-        isDragging = false;
-        restartAutoplay();
-      });
-
-      // Inicialização
-      updateCarousel();
-      startAutoplay();
-    });
-  </script>
-<?php endif; ?>
-
-<style>
-  /* Melhorias para o modo claro */
-  .dark .pacote-promocional {
-    background-color: #343b41 !important;
-  }
-  
-  .pacote-promocional {
-    background-color: #1BC863 !important;
-    color: white !important;
-  }
-  
-  /* Melhor contraste para textos no modo claro */
-  .dark .text-gray-600 {
-    color: #b8b9ad;
-  }
-  
-  /* Melhor contraste para bordas no modo claro */
-  .border-gray-300 {
-    border-color: #d1d5db;
-  }
-  
-  /* Melhor contraste para backgrounds no modo claro */
-  .bg-gray-100 {
-    background-color: #f3f4f6;
-  }
-  
-  /* Melhor contraste para inputs no modo claro */
-  .bg-gray-100.dark\:bg-gray-700 {
-    background-color: #f3f4f6;
-  }
-  
-  .dark .bg-gray-100.dark\:bg-gray-700 {
-    background-color: #374151;
-  }
-  
-  /* Melhor contraste para botões no modo claro */
-  .bg-gray-600 {
-    background-color: #4b5563;
-  }
-  
-  .dark .bg-gray-600 {
-    background-color: #374151;
-  }
-  
-  /* Melhor contraste para textos em botões */
-  .bg-gray-600 .text-white {
-    color: white;
-  }
-  
-  /* Melhor contraste para bordas de botões */
-  .border-\[#343b41\] {
-    border-color: #6b7280;
-  }
-  
-  .dark .border-\[#343b41\] {
-    border-color: #343b41;
-  }
-  
-  /* Melhor contraste para hover states */
-  .hover\:bg-\[#232a32\]:hover {
-    background-color: #4b5563;
-  }
-  
-  .dark .hover\:bg-\[#232a32\]:hover {
-    background-color: #232a32;
-  }
-</style>
-
 </html>

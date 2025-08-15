@@ -106,7 +106,7 @@ if (isset($_SESSION['usuario']['cliente_id']) || isset($_SESSION['usuario']['usu
         }
     </style>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 min-h-screen">
+<body class="bg-gray-50 dark:bg-[#18181B] min-h-screen">
     <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-md w-full space-y-8">
             <!-- Logo e Título -->
@@ -123,7 +123,7 @@ if (isset($_SESSION['usuario']['cliente_id']) || isset($_SESSION['usuario']['usu
             </div>
 
             <!-- Tabs -->
-            <div class="flex rounded-lg dark:bg-gray-800 bg-gray-100 p-1 mb-6">
+            <div class="flex rounded-lg dark:bg-[#27272A] bg-gray-100 p-1 mb-6">
                 <button id="tab-login" class="tab-btn active flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200">
                     <i class="fas fa-sign-in-alt mr-2"></i>Entrar
                 </button>
@@ -140,7 +140,7 @@ if (isset($_SESSION['usuario']['cliente_id']) || isset($_SESSION['usuario']['usu
                             <i class="fas fa-phone mr-2"></i>Telefone
                         </label>
                         <input id="login-telefone" name="telefone" type="tel" required
-                            class="form-input w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800  text-white dark:text-gray-900 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary focus:border-transparent"
+                            class="form-input w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-[#27272A]  text-white dark:text-gray-900 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary focus:border-transparent"
                             placeholder="Digite seu telefone">
                         <div id="login-telefone-error" class="error-message"></div>
                     </div>
@@ -164,7 +164,7 @@ if (isset($_SESSION['usuario']['cliente_id']) || isset($_SESSION['usuario']['usu
                             <i class="fas fa-phone mr-2"></i>Telefone
                         </label>
                         <input id="cadastro-telefone" name="telefone" type="tel" required
-                            class="form-input w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800  text-white dark:text-gray-900 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary focus:border-transparent"
+                            class="form-input w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-[#27272A]  text-white dark:text-gray-900 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary focus:border-transparent"
                             placeholder="Digite seu telefone">
                         <div id="cadastro-telefone-error" class="error-message"></div>
                     </div>
@@ -175,7 +175,7 @@ if (isset($_SESSION['usuario']['cliente_id']) || isset($_SESSION['usuario']['usu
                             <i class="fas fa-user mr-2"></i>Nome Completo
                         </label>
                         <input id="cadastro-nome" name="nome" type="text" <?php echo in_array('nome', $campos_obrigatorios) ? 'required' : ''; ?>
-                            class="form-input w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800  text-white dark:text-gray-900 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary focus:border-transparent"
+                            class="form-input w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-[#27272A]  text-white dark:text-gray-900 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary focus:border-transparent"
                             placeholder="Digite seu nome completo">
                         <div id="cadastro-nome-error" class="error-message"></div>
                     </div>
@@ -187,7 +187,7 @@ if (isset($_SESSION['usuario']['cliente_id']) || isset($_SESSION['usuario']['usu
                             <i class="fas fa-envelope mr-2"></i>E-mail
                         </label>
                         <input id="cadastro-email" name="email" type="email" <?php echo in_array('email', $campos_obrigatorios) ? 'required' : ''; ?>
-                            class="form-input w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800  text-white dark:text-gray-900 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary focus:border-transparent"
+                            class="form-input w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-[#27272A]  text-white dark:text-gray-900 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary focus:border-transparent"
                             placeholder="Digite seu e-mail">
                         <div id="cadastro-email-error" class="error-message"></div>
                     </div>
@@ -199,7 +199,7 @@ if (isset($_SESSION['usuario']['cliente_id']) || isset($_SESSION['usuario']['usu
                             <i class="fas fa-id-card mr-2"></i>CPF
                         </label>
                         <input id="cadastro-cpf" name="cpf" type="text" required
-                            class="form-input w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800  text-white dark:text-gray-900 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary focus:border-transparent"
+                            class="form-input w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-[#27272A]  text-white dark:text-gray-900 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary focus:border-transparent"
                             placeholder="Digite seu CPF">
                         <div id="cadastro-cpf-error" class="error-message"></div>
                     </div>

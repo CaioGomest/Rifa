@@ -7,7 +7,6 @@ require '../conexao.php';
 $erro = '';
 $sucesso = '';
 
-// Processar formulário de novo cliente
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['acao'] === 'novo_cliente') {
     $dados = [
         'nome' => trim($_POST['nome'] . ' ' . $_POST['sobrenome']),
@@ -23,7 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
     }
 }
 
-// Processar filtros
 $nome = isset($_GET['nome']) ? $_GET['nome'] : null;
 $telefone = isset($_GET['telefone']) ? $_GET['telefone'] : null;
 $cpf = isset($_GET['cpf']) ? $_GET['cpf'] : null;
@@ -32,10 +30,7 @@ $limite = 10;
 $pagina = isset($_GET['pagina']) ? (int) $_GET['pagina'] : 1;
 $pular = ($pagina - 1) * $limite;
 
-// $clientes = buscarClientes($conn, $filtros);
 
-
-// Buscar clientes
 $clientes = listaClientes($conn, null, $nome, $email, $telefone, $cpf, null, null, null, $limite, $pular);
 $clientes_total = listaClientes($conn, null, $nome, $email, $telefone, $cpf, null, null, null, $limite);
 $total_registros = count($clientes_total);
@@ -52,7 +47,7 @@ $total_paginas = ceil($total_registros / $limite);
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 
-<body class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-white">
+<body class="bg-gray-100 text-gray-800 dark:bg-[#18181B] dark:text-white">
     <div class="flex min-h-screen">
         <?php require("sidebar.php"); ?>
 
@@ -80,34 +75,34 @@ $total_paginas = ceil($total_registros / $limite);
                 </div>
 
                 <!-- Filtros -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 sm:p-6 mb-6">
+                <div class="bg-white dark:bg-[#27272A] rounded-lg shadow p-4 sm:p-6 mb-6">
                     <form method="GET" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Pesquisar por
                                 nome</label>
                             <input type="text" name="nome" value="<?php echo $_GET['nome'] ?? ''; ?>"
-                                class="w-full border rounded-md p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                class="w-full border rounded-md p-2 dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white"
                                 placeholder="Nome do cliente">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Pesquisar por
                                 telefone</label>
                             <input type="text" name="telefone" value="<?php echo $_GET['telefone'] ?? ''; ?>"
-                                class="w-full border rounded-md p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                class="w-full border rounded-md p-2 dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white"
                                 placeholder="(00) 00000-0000">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Pesquisar por
                                 CPF</label>
                             <input type="text" name="cpf" value="<?php echo $_GET['cpf'] ?? ''; ?>"
-                                class="w-full border rounded-md p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                class="w-full border rounded-md p-2 dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white"
                                 placeholder="000.000.000-00">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Pesquisar por
                                 email</label>
                             <input type="email" name="email" value="<?php echo $_GET['email'] ?? ''; ?>"
-                                class="w-full border rounded-md p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                class="w-full border rounded-md p-2 dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white"
                                 placeholder="email@exemplo.com">
                         </div>
                         <div class="sm:col-span-2 lg:col-span-4 flex justify-end">
@@ -126,10 +121,10 @@ $total_paginas = ceil($total_registros / $limite);
                 <!--</div>-->
 
                 <!-- Tabela de Clientes -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+                <div class="bg-white dark:bg-[#27272A] rounded-lg shadow overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="w-full">
-                            <thead class="bg-gray-50 dark:bg-gray-700">
+                            <thead class="bg-gray-50 dark:bg-[#3F3F46]">
                                 <tr>
                                     <th class="px-4 py-2 text-left text-gray-700 dark:text-gray-300">Avatar</th>
                                     <th class="px-4 py-2 text-left text-gray-700 dark:text-gray-300">Nome</th>
@@ -221,7 +216,7 @@ $total_paginas = ceil($total_registros / $limite);
                         // Primeira página
                         if ($pagina > 1) {
                             $query['pagina'] = 1;
-                            echo '<a href="?' . http_build_query($query) . '" class="px-3 py-1 rounded-md text-sm font-medium bg-white dark:bg-gray-700 text-gray-800 dark:text-white">1</a>';
+                            echo '<a href="?' . http_build_query($query) . '" class="px-3 py-1 rounded-md text-sm font-medium bg-white dark:bg-[#3F3F46] text-gray-800 dark:text-white">1</a>';
                             if ($start > 2) {
                                 echo '<span class="px-2">...</span>';
                             }
@@ -230,7 +225,7 @@ $total_paginas = ceil($total_registros / $limite);
                         // Páginas intermediárias
                         for ($i = $start; $i <= $end; $i++) {
                             $query['pagina'] = $i;
-                            echo '<a href="?' . http_build_query($query) . '" class="px-3 py-1 rounded-md text-sm font-medium ' . ($i == $pagina ? 'bg-purple-600 text-white' : 'bg-white dark:bg-gray-700 text-gray-800 dark:text-white') . '">' . $i . '</a>';
+                            echo '<a href="?' . http_build_query($query) . '" class="px-3 py-1 rounded-md text-sm font-medium ' . ($i == $pagina ? 'bg-purple-600 text-white' : 'bg-white dark:bg-[#3F3F46] text-gray-800 dark:text-white') . '">' . $i . '</a>';
                         }
 
                         // Última página (só se não estiver no intervalo)
@@ -239,7 +234,7 @@ $total_paginas = ceil($total_registros / $limite);
                                 echo '<span class="px-2">...</span>';
                             }
                             $query['pagina'] = $total_paginas;
-                            echo '<a href="?' . http_build_query($query) . '" class="px-3 py-1 rounded-md text-sm font-medium bg-white dark:bg-gray-700 text-gray-800 dark:text-white">' . $total_paginas . '</a>';
+                            echo '<a href="?' . http_build_query($query) . '" class="px-3 py-1 rounded-md text-sm font-medium bg-white dark:bg-[#3F3F46] text-gray-800 dark:text-white">' . $total_paginas . '</a>';
                         }
                         ?>
                     </nav>

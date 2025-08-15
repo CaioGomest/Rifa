@@ -7,20 +7,9 @@ header('Content-Type: application/json');
 
 $upload_dir = '../../uploads/campanhas/';
 
-if (isset($_REQUEST['caminho_imagem']))
-    $caminho_atual = isset($_POST['caminho_imagem']) ? $_POST['caminho_imagem'] : null;
-else
-    $caminho_atual = null;
-
-if (isset($_REQUEST['caminho_imagem_atual']))
-    $caminho_atual = isset($_POST['caminho_imagem_atual']) ? $_POST['caminho_imagem_atual'] : null;
-else
-    $caminho_atual = null;
-
-if (isset($_REQUEST['imagem_capa']))
-    $caminho_atual_capa = isset($_POST['imagem_capa']) ? $_POST['imagem_capa'] : null;
-else
-    $caminho_atual_capa = null;
+// caminhos atuais vindos do form; string vazia indica remoção
+$caminho_atual = isset($_POST['caminho_imagem_atual']) ? $_POST['caminho_imagem_atual'] : null;
+$caminho_atual_capa = isset($_POST['imagem_capa_atual']) ? $_POST['imagem_capa_atual'] : null;
 
 if ($caminho_atual !== null) {
     $caminho_escapado = mysqli_real_escape_string($conn, $caminho_atual);
@@ -93,6 +82,8 @@ $campanha_privada = isset($_POST['campanha_privada']) ? $_POST['campanha_privada
 $vencedor_sorteio = isset($_POST['vencedor_sorteio']) ? $_POST['vencedor_sorteio'] : null;
 
 $cotas_premiadas 			= isset($_POST['cotas_premiadas']) 				? $_POST['cotas_premiadas'] 			: null;
+$quantidade_cotas_premiadas = isset($_POST['quantidade_cotas_premiadas']) 	? $_POST['quantidade_cotas_premiadas'] 	: null;
+$premio_cotas_premiadas 	= isset($_POST['premio_cotas_premiadas']) 	? $_POST['premio_cotas_premiadas'] 	: null;
 $habilitar_cotas_em_dobro 	= isset($_POST['habilitar_cotas_em_dobro']) 	? $_POST['habilitar_cotas_em_dobro'] 	: null;
 $descricao_cotas_premiadas 	= isset($_POST['descricao_cotas_premiadas']) 	? $_POST['descricao_cotas_premiadas'] 	: null;
 $titulo_cotas_dobro         = isset($_POST['titulo_cotas_dobro'])          ? $_POST['titulo_cotas_dobro']          : null;
@@ -101,14 +92,22 @@ $subtitulo_cotas_dobro      = isset($_POST['subtitulo_cotas_dobro'])       ? $_P
 $mostrar_cotas_premiadas = isset($_POST['mostrar_cotas_premiadas']) ? $_POST['mostrar_cotas_premiadas'] : null;
 $status_cotas_premiadas = isset($_POST['status_cotas_premiadas']) ? $_POST['status_cotas_premiadas'] : null;
 
+// novos parâmetros para Roletas e Raspadinhas
+$habilitar_roleta = isset($_POST['habilitar_roleta']) ? $_POST['habilitar_roleta'] : null;
+$titulo_roleta = isset($_POST['titulo_roleta']) ? $_POST['titulo_roleta'] : null;
+$descricao_roleta = isset($_POST['descricao_roleta']) ? $_POST['descricao_roleta'] : null;
+$itens_roleta = isset($_POST['itens_roleta']) ? $_POST['itens_roleta'] : null;
+$habilitar_raspadinha = isset($_POST['habilitar_raspadinha']) ? $_POST['habilitar_raspadinha'] : null;
+$titulo_raspadinha = isset($_POST['titulo_raspadinha']) ? $_POST['titulo_raspadinha'] : null;
+$descricao_raspadinha = isset($_POST['descricao_raspadinha']) ? $_POST['descricao_raspadinha'] : null;
+$itens_raspadinha = isset($_POST['itens_raspadinha']) ? $_POST['itens_raspadinha'] : null;
+// Removidos: pacotes de roleta/raspadinha passaram a ser pacotes da campanha
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST')
     die(json_encode(['success' => false, 'message' => 'Método não permitido']));
 
 if (!$id)
     die(json_encode(['success' => false, 'message' => 'ID da campanha não fornecido']));
-
-
-
 
 // var_dump($preco);
 $editar = editaCampanha(
@@ -122,20 +121,15 @@ $editar = editaCampanha(
     $galeria_imagens,
     $status,
 
-
     $data_sorteio,
 
-
     $preco,
-
 
     $quantidade_numeros,
     $compra_minima,
     $compra_maxima,
     $numeros_pendentes,
     $numeros_pagos,
-
-
 
     $habilitar_pacote_padrao,
     $pacote_padrao,
@@ -161,7 +155,6 @@ $editar = editaCampanha(
 	$ativar_progresso_manual,
     $porcentagem_barra_progresso,
 
-
     $numero_sorteio,
     $tipo_sorteio,
     $campanha_destaque,
@@ -170,6 +163,7 @@ $editar = editaCampanha(
 
 	$habilitar_cotas_em_dobro,
     $cotas_premiadas,
+    $premio_cotas_premiadas,
     $descricao_cotas_premiadas,
     
     $selecionar_top_ganhadores,
@@ -182,13 +176,28 @@ $editar = editaCampanha(
     $subtitulo_cotas_dobro,
     
     $imagem_capa,
-    $layout
+    $layout,
+    
+    // Novos parâmetros para Roletas e Raspadinhas
+    $habilitar_roleta,
+    $titulo_roleta,
+    $descricao_roleta,
+    $itens_roleta,
+    $habilitar_raspadinha,
+    $titulo_raspadinha,
+    $descricao_raspadinha,
+    $itens_raspadinha
 );
-if ($editar)
-    echo json_encode([
-        'success' => true,
-        'message' => 'Campanha editada com sucesso',
-    ]);
-else
+
+// padronizando a resposta: se retornar string iniciando com "ERRO:" 
+if ($editar === true) {
+    echo json_encode(['success' => true, 'message' => 'Campanha editada com sucesso']);
+} else if (is_string($editar)) {
+    $isError = stripos($editar, 'ERRO:') === 0;
+    echo json_encode(['success' => !$isError, 'message' => $editar]);
+} else if ($editar === false) {
     echo json_encode(['success' => false, 'message' => 'Erro ao editar campanha']);
+} else {
+    echo json_encode(['success' => false, 'message' => 'Resposta inesperada do servidor']);
+}
 die();

@@ -1,6 +1,7 @@
     <?php
     require_once("header.php");
     require_once("../functions/functions_pedidos.php");
+    require_once("../functions/functions_sistema.php");
     require_once("../functions/functions_campanhas.php");
     require_once("../functions/functions_clientes.php");
     $pedido_id = isset($_GET['pedido_id']) ? $_GET['pedido_id'] : null;
@@ -50,7 +51,7 @@
         </style>
     </head>
 
-    <body class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-white">
+    <body class="bg-gray-100 text-gray-800 dark:bg-[#18181B] dark:text-white">
         <div class="flex min-h-screen">
             <?php require("sidebar.php"); ?>
 
@@ -74,13 +75,13 @@
                     </div>
 
                     <!-- Filtros -->
-                    <div id="secaoFiltros" class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 sm:p-6 filtros-container">
+                    <div id="secaoFiltros" class="bg-white dark:bg-[#27272A] rounded-lg shadow p-4 sm:p-6 filtros-container">
                         <form method="GET" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             <div>
                                 <label
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Campanha</label>
                                 <select name="campanha"
-                                    class="w-full border rounded-md p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                    class="w-full border rounded-md p-2 dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
                                     <option value="">Todas as campanhas</option>
                                     <?php foreach ($campanhas as $campanha): ?>
                                         <option value="<?php echo $campanha['id']; ?>" <?php echo isset($_GET['campanha']) && $_GET['campanha'] == $campanha['id'] ? 'selected' : ''; ?>>
@@ -93,7 +94,7 @@
                                 <label
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
                                 <select name="status"
-                                    class="w-full border rounded-md p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                    class="w-full border rounded-md p-2 dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
                                     <option value="">Todos</option>
                                     <option value="0" <?php echo isset($_GET['status']) && $_GET['status'] == '0' ? 'selected' : ''; ?>>Pendente</option>
                                     <option value="1" <?php echo isset($_GET['status']) && $_GET['status'] == '1' ? 'selected' : ''; ?>>Pago</option>
@@ -104,25 +105,25 @@
                                 <label
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Pedido</label>
                                 <input type="text" name="pedido_id" value="<?php echo $_GET['pedido_id'] ?? ''; ?>"
-                                    class="w-full border rounded-md p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                    class="w-full border rounded-md p-2 dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
                             </div>
                             <div>
                                 <label
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Cliente</label>
                                 <input name="nome_cliente" type="text" value="<?php echo isset($nome_cliente)?$nome_cliente:'';?>"
-                                    class="w-full border rounded-md p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                    class="w-full border rounded-md p-2 dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Data
                                     Início</label>
                                 <input type="date" name="data_inicio" value="<?php echo $_GET['data_inicio'] ?? ''; ?>"
-                                    class="w-full border rounded-md p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                    class="w-full border rounded-md p-2 dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Data
                                     Fim</label>
                                 <input type="date" name="data_fim" value="<?php echo $_GET['data_fim'] ?? ''; ?>"
-                                    class="w-full border rounded-md p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                    class="w-full border rounded-md p-2 dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
                             </div>
                             <div class="sm:col-span-2 lg:col-span-3 flex justify-end">
                                 <button type="submit"
@@ -134,11 +135,11 @@
                     </div>
 
                     <!-- Tabela de Pedidos -->
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+                    <div class="bg-white dark:bg-[#27272A] rounded-lg shadow overflow-hidden">
                         <div class="overflow-x-auto">
                             <div class="min-w-[800px]">
                                 <table class="w-full">
-                                    <thead class="bg-gray-50 dark:bg-gray-700">
+                                    <thead class="bg-gray-50 dark:bg-[#3F3F46]">
                                         <tr>
                                             <th
                                                 class="px-2 sm:px-4 py-2 text-left text-gray-700 dark:text-gray-300 text-sm sm:text-base">
@@ -217,9 +218,10 @@
                                                         <?php echo $pedido['quantidade']; ?>
                                                     </td>
                                                     <td class="px-2 sm:px-4 py-2 text-sm sm:text-base">
+                                                        <?php $largura_cota_btn = obterLarguraCotaPorCampanha($conn, $pedido['campanha_id']); ?>
                                                         <button
                                                             class="bg-blue-500 text-white px-2 py-1 rounded text-sm hover:bg-blue-600"
-                                                            onclick="verNumeros('<?php echo $pedido['numeros_pedido']; ?>')">
+                                                            onclick="verNumeros('<?php echo $pedido['numeros_pedido']; ?>', <?php echo (int)$largura_cota_btn; ?>)">
                                                             Ver números
                                                         </button>
                                                     </td>
@@ -283,7 +285,7 @@
                             // Primeira página
                             if ($pagina > 1) {
                                 $query['pagina'] = 1;
-                                echo '<a href="?' . http_build_query($query) . '" class="px-3 py-1 rounded-md text-sm font-medium bg-white dark:bg-gray-700 text-gray-800 dark:text-white">1</a>';
+                                echo '<a href="?' . http_build_query($query) . '" class="px-3 py-1 rounded-md text-sm font-medium bg-white dark:bg-[#3F3F46] text-gray-800 dark:text-white">1</a>';
                                 if ($start > 2) {
                                     echo '<span class="px-2">...</span>';
                                 }
@@ -292,7 +294,7 @@
                             // Páginas intermediárias
                             for ($i = $start; $i <= $end; $i++) {
                                 $query['pagina'] = $i;
-                                echo '<a href="?' . http_build_query($query) . '" class="px-3 py-1 rounded-md text-sm font-medium ' . ($i == $pagina ? 'bg-purple-600 text-white' : 'bg-white dark:bg-gray-700 text-gray-800 dark:text-white') . '">' . $i . '</a>';
+                                echo '<a href="?' . http_build_query($query) . '" class="px-3 py-1 rounded-md text-sm font-medium ' . ($i == $pagina ? 'bg-purple-600 text-white' : 'bg-white dark:bg-[#3F3F46] text-gray-800 dark:text-white') . '">' . $i . '</a>';
                             }
 
                             // Última página (só se não estiver no intervalo)
@@ -301,7 +303,7 @@
                                     echo '<span class="px-2">...</span>';
                                 }
                                 $query['pagina'] = $total_paginas;
-                                echo '<a href="?' . http_build_query($query) . '" class="px-3 py-1 rounded-md text-sm font-medium bg-white dark:bg-gray-700 text-gray-800 dark:text-white">' . $total_paginas . '</a>';
+                                echo '<a href="?' . http_build_query($query) . '" class="px-3 py-1 rounded-md text-sm font-medium bg-white dark:bg-[#3F3F46] text-gray-800 dark:text-white">' . $total_paginas . '</a>';
                             }
                             ?>
                         </nav>
@@ -317,7 +319,7 @@
         <!-- Modal para visualizar números -->
         <div id="numerosModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
             <div
-                class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 max-w-2xl w-full mx-2 sm:mx-4 max-h-[80vh] flex flex-col">
+                class="bg-white dark:bg-[#27272A] rounded-lg p-4 sm:p-6 max-w-2xl w-full mx-2 sm:mx-4 max-h-[80vh] flex flex-col">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-lg font-medium dark:text-white">Números do Pedido</h3>
                     <button onclick="fecharModal('numerosModal')"
@@ -339,15 +341,21 @@
                 secaoFiltros.classList.toggle('show');
             }
 
-            function verNumeros(numeros) {
+            function verNumeros(numeros, largura) {
                 const numerosArray = numeros.split(',');
                 const content = document.getElementById('numerosContent');
                 content.innerHTML = '';
 
+                const pad = (n) => {
+                    const num = parseInt(String(n).trim() || '0', 10);
+                    const w = Math.max(1, parseInt(largura, 10) || 1);
+                    return String(num).padStart(w, '0');
+                };
+
                 numerosArray.forEach(numero => {
                     const div = document.createElement('div');
-                    div.className = 'bg-gray-100 dark:bg-gray-700 p-2 text-center rounded dark:text-white text-sm sm:text-base';
-                    div.textContent = numero;
+                    div.className = 'bg-gray-100 dark:bg-[#3F3F46] p-2 text-center rounded dark:text-white text-sm sm:text-base';
+                    div.textContent = pad(numero);
                     content.appendChild(div);
                 });
 

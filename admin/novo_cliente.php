@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-white">
+<body class="bg-gray-100 text-gray-800 dark:bg-[#18181B] dark:text-white">
     <div class="flex min-h-screen">
         <?php require("sidebar.php"); ?>
 
@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <?php endif; ?>
 
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                <div class="bg-white dark:bg-[#27272A] rounded-lg shadow p-6">
                     <form action="clientes.php" method="POST" class="space-y-6">
                         <input type="hidden" name="acao" value="novo_cliente">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     Nome
                                 </label>
                                 <input type="text" name="nome" required
-                                       class="w-full border rounded-md p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                       class="w-full border rounded-md p-2 dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white"
                                        placeholder="Nome">
                             </div>
 
@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     Sobrenome
                                 </label>
                                 <input type="text" name="sobrenome" required
-                                       class="w-full border rounded-md p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                       class="w-full border rounded-md p-2 dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white"
                                        placeholder="Sobrenome">
                             </div>
                         </div>
@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 Email
                             </label>
                             <input type="email" name="email" required
-                                   class="w-full border rounded-md p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                   class="w-full border rounded-md p-2 dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white"
                                    placeholder="email@exemplo.com">
                         </div>
 
@@ -100,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 CPF
                             </label>
                             <input type="text" name="cpf" required
-                                   class="w-full border rounded-md p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                   class="w-full border rounded-md p-2 dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white"
                                    placeholder="000.000.000-00">
                         </div>
 
@@ -109,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 WhatsApp
                             </label>
                             <input type="tel" name="telefone" required
-                                   class="w-full border rounded-md p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                   class="w-full border rounded-md p-2 dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white"
                                    placeholder="(00) 00000-0000">
                         </div>
 

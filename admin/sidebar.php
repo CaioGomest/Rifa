@@ -29,7 +29,7 @@ if (!$usuario_tipo) {
 <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden"></div>
 
 <!-- Sidebar -->
-<aside id="sidebar" class="fixed lg:relative inset-y-0 left-0 w-64 bg-white dark:bg-gray-800 shadow-md flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-50 h-screen lg:h-auto">
+<aside id="sidebar" class="fixed lg:relative inset-y-0 left-0 w-64 bg-white dark:bg-[#27272A] shadow-md flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-50 h-screen lg:h-auto">
     <!-- Logo e Botão Fechar -->
 
     <div class="p-4 flex justify-between items-center border-b border-gray-200 dark:border-gray-700">

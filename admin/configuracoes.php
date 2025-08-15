@@ -3,7 +3,6 @@
 <?php
 require("header.php");
 
-// Processa o formulário se for POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Processa o upload da logo se houver
     $logo = isset($_FILES['logo']) ? $_FILES['logo'] : null;
@@ -169,7 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $infos = listaInformacoes($conn);
 ?>
 
-<body class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-white">
+<body class="bg-gray-100 text-gray-800 dark:bg-[#18181B] dark:text-white">
     <!-- Container principal -->
     <div class="flex flex-col md:flex-row min-h-screen">
         <?php require("sidebar.php"); ?>
@@ -262,7 +261,7 @@ $infos = listaInformacoes($conn);
             </style>
 
             <section class="w-full">
-                <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-md shadow">
+                <div class="bg-white dark:bg-[#27272A] p-4 md:p-6 rounded-md shadow">
                     <!-- Abas de navegação -->
                     <div class="overflow-x-auto">
                         <ul class="flex flex-nowrap space-x-4 mb-6 border-b border-gray-300 dark:border-gray-700 whitespace-nowrap">
@@ -305,25 +304,25 @@ $infos = listaInformacoes($conn);
                                 <div>
                                     <label for="titulo" class="block mb-2 font-medium">Título do site</label>
                                     <input type="text" id="titulo" name="titulo" 
-                                        class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                        class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                         value="<?php echo isset($infos['titulo']) ? htmlspecialchars($infos['titulo']) : ''; ?>">
                                 </div>
                                 <div>
                                     <label for="email" class="block mb-2 font-medium">E-mail</label>
                                     <input type="email" id="email" name="email"
-                                        class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                        class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                         value="<?php echo isset($infos['email']) ? htmlspecialchars($infos['email']) : ''; ?>">
                                 </div>
                                 <div>
                                     <label for="telefone" class="block mb-2 font-medium">Telefone</label>
                                     <input type="text" id="telefone" name="telefone"
-                                        class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                        class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                         value="<?php echo isset($infos['telefone']) ? htmlspecialchars($infos['telefone']) : ''; ?>">
                                 </div>
                                 <div>
                                     <label for="tema" class="block mb-2 font-medium">Tema</label>
                                     <select id="tema" name="tema"
-                                        class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                                        class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
                                         <option value="claro" <?php echo (isset($infos['tema']) && $infos['tema']   == 'claro ') ? 'selected' : ''; ?>>Claro</option>
                                         <option value="escuro" <?php echo (isset($infos['tema']) && $infos['tema'] == 'escuro') ? 'selected' : ''; ?>>Escuro </option>
                                     </select>   
@@ -394,12 +393,12 @@ $infos = listaInformacoes($conn);
                                 <div>
                                     <label for="termos_uso" class="block mb-2 font-medium">Termos de Uso</label>
                                     <textarea id="termos_uso" name="termos_uso" rows="4"
-                                        class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"><?php echo isset($infos['termos_uso']) ? $infos['termos_uso'] : ''; ?></textarea>
+                                        class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"><?php echo isset($infos['termos_uso']) ? $infos['termos_uso'] : ''; ?></textarea>
                                 </div>
                                 <div>
                                     <label for="politica_privacidade" class="block mb-2 font-medium">Política de Privacidade</label>
                                     <textarea id="politica_privacidade" name="politica_privacidade" rows="4"
-                                        class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"><?php echo isset($infos['politica_privacidade']) ? $infos['politica_privacidade'] : ''; ?></textarea>
+                                        class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"><?php echo isset($infos['politica_privacidade']) ? $infos['politica_privacidade'] : ''; ?></textarea>
                                 </div>
                             </div>
                         </div>
@@ -423,7 +422,7 @@ $infos = listaInformacoes($conn);
                                             <label for="link_fale_conosco" class="block mb-2 font-medium">Link Fale Conosco</label>
                                             <div class="flex items-center space-x-2">
                                                 <input type="text" name="link_fale_conosco" 
-                                                    class="flex-1 bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                                    class="flex-1 bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                                     value="<?php echo isset($infos['link_fale_conosco']) ? $infos['link_fale_conosco'] : ''; ?>">
                                             </div>
                                         </div>
@@ -455,7 +454,7 @@ $infos = listaInformacoes($conn);
                                         <label for="link_grupo" class="block mb-2 font-medium">Link do grupo</label>
                                         <div class="flex items-center space-x-2">
                                             <input type="text" name="link_grupo"
-                                                class="flex-1 bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                                class="flex-1 bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                                 value="<?php echo isset($infos['link_grupo']) ? $infos['link_grupo'] : ''; ?>">
                                         </div>
                                     </div>
@@ -470,7 +469,7 @@ $infos = listaInformacoes($conn);
                                         <label for="link_youtube" class="block mb-2 font-medium">YouTube</label>
                                         <div class="flex items-center space-x-2">
                                             <input type="url" id="link_youtube" name="link_youtube" placeholder="https://youtube.com/seu-canal"
-                                                class="flex-1 bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                                class="flex-1 bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                                 value="<?php echo isset($infos['link_youtube']) ? $infos['link_youtube'] : ''; ?>">
                                         </div>
                                     </div>
@@ -480,7 +479,7 @@ $infos = listaInformacoes($conn);
                                         <label for="link_facebook" class="block mb-2 font-medium">Facebook</label>
                                         <div class="flex items-center space-x-2">
                                             <input type="url" id="link_facebook" name="link_facebook" placeholder="https://facebook.com/sua-pagina"
-                                                class="flex-1 bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                                class="flex-1 bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                                 value="<?php echo isset($infos['link_facebook']) ? $infos['link_facebook'] : ''; ?>">
                                         </div>
                                     </div>
@@ -490,7 +489,7 @@ $infos = listaInformacoes($conn);
                                         <label for="link_instagram" class="block mb-2 font-medium">Instagram</label>
                                         <div class="flex items-center space-x-2">
                                             <input type="url" id="link_instagram" name="link_instagram" placeholder="https://instagram.com/seu-perfil"
-                                                class="flex-1 bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                                class="flex-1 bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                                 value="<?php echo isset($infos['link_instagram']) ? $infos['link_instagram'] : ''; ?>">
                                         </div>
                                     </div>
@@ -507,12 +506,12 @@ $infos = listaInformacoes($conn);
                                 <div>
                                     <label for="texto_rodape" class="block mb-2 font-medium">Texto do Rodapé</label>
                                     <textarea id="texto_rodape" name="texto_rodape" rows="3"
-                                        class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"><?php echo isset($infos['texto_rodape']) ? $infos['texto_rodape'] : ''; ?></textarea>
+                                        class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"><?php echo isset($infos['texto_rodape']) ? $infos['texto_rodape'] : ''; ?></textarea>
                                 </div>
                                 <div>
                                     <label for="copyright" class="block mb-2 font-medium">Copyright</label>
                                     <input type="text" id="copyright" name="copyright"
-                                        class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                        class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                         value="<?php echo isset($infos['copyright']) ? $infos['copyright'] : ''; ?>">
                                 </div>
                                 
@@ -546,7 +545,7 @@ $infos = listaInformacoes($conn);
                                     <div id="token_tiktok">
                                         <label for="token_tiktok" class="block mb-2 font-medium">Token TikTok</label>
                                         <input type="text" id="token_tiktok" name="token_tiktok"
-                                            class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                            class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                             value="<?php echo isset($infos['token_tiktok']) ? $infos['token_tiktok'] : ''; ?>">
                                     </div>
                                 </div>
@@ -572,7 +571,7 @@ $infos = listaInformacoes($conn);
                                     <div id="token_kawai">
                                         <label for="token_kawai" class="block mb-2 font-medium">Token Kawai</label>
                                         <input type="text" id="token_kawai" name="token_kawai"
-                                            class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                            class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                             value="<?php echo isset($infos['token_kawai']) ? $infos['token_kawai'] : ''; ?>">
                                     </div>
                                 </div>
@@ -597,7 +596,7 @@ $infos = listaInformacoes($conn);
                                 <div id="token_facebook">
                                     <label for="pixel_facebook" class="block mb-2 font-medium">Token do Facebook</label>
                                     <input type="text" id="token_facebook" name="pixel_facebook"
-                                        class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                        class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                         value="<?php echo isset($infos['pixel_facebook']) ? $infos['pixel_facebook'] : ''; ?>">
                                 </div>
                             </div>
@@ -622,7 +621,7 @@ $infos = listaInformacoes($conn);
                                     <div id="token_google_analytics">
                                         <label for="token_google_analytics" class="block mb-2 font-medium">Token do Google Analytics</label>
                                         <input type="text" id="token_google_analytics" name="token_google_analytics"
-                                            class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                            class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                             value="<?php echo isset($infos['token_google_analytics']) ? $infos['token_google_analytics'] : ''; ?>">
                                     </div>
                                 </div>
@@ -648,7 +647,7 @@ $infos = listaInformacoes($conn);
                                     <div>
                                         <label for="token_utmify" class="block mb-2 font-medium">Token do Utmify</label>
                                         <input type="text" id="token_utmify" name="token_utmify"
-                                            class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                            class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                             value="<?php echo isset($infos['token_utmify']) ? $infos['token_utmify'] : ''; ?>">
                                     </div>
                                 </div>
@@ -667,7 +666,7 @@ Pergunta1?/
 Resposta1/
 Pergunta2?/
 Resposta2/"
-                                        class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"><?php echo isset($infos['perguntas_frequentes']) ? $infos['perguntas_frequentes'] : ''; ?></textarea>
+                                        class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"><?php echo isset($infos['perguntas_frequentes']) ? $infos['perguntas_frequentes'] : ''; ?></textarea>
                                 </div>
                             </div>
                         </div>
@@ -679,7 +678,7 @@ Resposta2/"
                                 <div>
                                     <label for="termos_condicoes" class="block mb-2 font-medium">Termos e Condições</label>
                                     <textarea id="termos_condicoes" name="termos_condicoes" rows="15"
-                                        class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"><?php echo isset($infos['termos_condicoes']) ? $infos['termos_condicoes'] : ''; ?></textarea>
+                                        class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"><?php echo isset($infos['termos_condicoes']) ? $infos['termos_condicoes'] : ''; ?></textarea>
                                 </div>
                             </div>
                         </div>
@@ -705,7 +704,7 @@ Resposta2/"
                               <div>
                                   <label for="mercadopago_token_acesso" class="block mb-2 font-medium">Token Mercado Pago</label>
                                     <input type="text" id="mercadopago_token_acesso" name="mercadopago_token_acesso"
-                                        class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                        class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                         value="<?php echo isset($infos['mercadopago_token_acesso']) ? $infos['mercadopago_token_acesso'] : ''; ?>">
                                 </div>
                             </div>
@@ -728,7 +727,7 @@ Resposta2/"
                               <div>
                                     <label for="pay2m_client_key" class="block mb-2 font-medium">Client Key</label>
                                     <input type="text" id="pay2m_client_key" name="pay2m_client_key"
-                                        class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                        class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                         value="<?php echo isset($infos['pay2m_client_key']) ? $infos['pay2m_client_key'] : ''; ?>">
                                 </div>
                             </div>
@@ -736,7 +735,7 @@ Resposta2/"
                               <div>
                                     <label for="pay2m_client_secret" class="block mb-2 font-medium">Client Secret</label>
                                     <input type="text" id="pay2m_client_secret" name="pay2m_client_secret"
-                                        class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                        class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                         value="<?php echo isset($infos['pay2m_client_secret']) ? $infos['pay2m_client_secret'] : ''; ?>">
                                 </div>
                             </div>
@@ -760,7 +759,7 @@ Resposta2/"
                               <div>
                                   <label for="paggue_client_key" class="block mb-2 font-medium">Client Key</label>
                                     <input type="text" id="paggue_client_key" name="paggue_client_key"
-                                        class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                        class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                         value="<?php echo isset($infos['paggue_client_key']) ? $infos['paggue_client_key'] : ''; ?>">
                                 </div>
                             </div>
@@ -768,7 +767,7 @@ Resposta2/"
                               <div>
                                   <label for="paggue_client_secret" class="block mb-2 font-medium">Client Secret</label>
                                     <input type="text" id="paggue_client_secret" name="paggue_client_secret"
-                                        class="w-full bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                        class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                         value="<?php echo isset($infos['paggue_client_secret']) ? $infos['paggue_client_secret'] : ''; ?>">
                                 </div>
                             </div>

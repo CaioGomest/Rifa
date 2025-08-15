@@ -105,6 +105,7 @@ function criaCampanha(
 
 	$habilitar_cotas_em_dobro,
     $cotas_premiadas,
+    $premio_cotas_premiadas,
     $descricao_cotas_premiadas,
     
     $selecionar_top_ganhadores,
@@ -116,6 +117,17 @@ function criaCampanha(
     $titulo_cotas_dobro,
     $subtitulo_cotas_dobro,
     $layout,
+    
+    // Novos parâmetros para Roletas e Raspadinhas
+    $habilitar_roleta,
+    $titulo_roleta,
+    $descricao_roleta,
+    $itens_roleta,
+    $habilitar_raspadinha,
+    $titulo_raspadinha,
+    $descricao_raspadinha,
+    $itens_raspadinha,
+    
     ) {
 
     // Trata arrays convertendo para JSON string
@@ -127,6 +139,49 @@ function criaCampanha(
     
     if (is_array($galeria_imagens))
         $galeria_imagens = implode(',', $galeria_imagens);
+    
+    // Trata arrays/JSON para Roletas e Raspadinhas garantindo JSON válido
+    $jsonNormalize = function($value) {
+        if ($value === null) {
+            return '[]';
+        }
+        if (is_array($value)) {
+            return json_encode($value, JSON_UNESCAPED_UNICODE);
+        }
+        if (!is_string($value)) {
+            return '[]';
+        }
+        $trimmed = trim($value);
+        if ($trimmed === '' || strtolower($trimmed) === 'null') {
+            return '[]';
+        }
+        $decoded = json_decode($trimmed, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return '[]';
+        }
+        return json_encode($decoded, JSON_UNESCAPED_UNICODE);
+    };
+
+    if (is_array($itens_roleta))
+        $itens_roleta = json_encode($itens_roleta, JSON_UNESCAPED_UNICODE);
+    $itens_roleta = $jsonNormalize($itens_roleta);
+
+    if (is_array($itens_raspadinha))
+        $itens_raspadinha = json_encode($itens_raspadinha, JSON_UNESCAPED_UNICODE);
+    $itens_raspadinha = $jsonNormalize($itens_raspadinha);
+
+    // Também normaliza pacotes já existentes que são JSON
+    if (is_array($pacote_promocional))
+        $pacote_promocional = json_encode($pacote_promocional, JSON_UNESCAPED_UNICODE);
+    $pacote_promocional = $jsonNormalize($pacote_promocional);
+
+    if (is_array($pacotes_exclusivos))
+        $pacotes_exclusivos = json_encode($pacotes_exclusivos, JSON_UNESCAPED_UNICODE);
+    $pacotes_exclusivos = $jsonNormalize($pacotes_exclusivos);
+
+    // Garante que flags não sejam arrays (pode ocorrer se o mesmo name vier duplicado no form)
+    $habilitar_roleta = is_array($habilitar_roleta) ? (string)reset($habilitar_roleta) : (string)($habilitar_roleta ?? '0');
+    $habilitar_raspadinha = is_array($habilitar_raspadinha) ? (string)reset($habilitar_raspadinha) : (string)($habilitar_raspadinha ?? '0');
 
     $query = "INSERT INTO campanhas (
         autor_id,
@@ -180,6 +235,7 @@ function criaCampanha(
         vencedor_sorteio,
 		habilitar_cotas_em_dobro,
         cotas_premiadas,
+        premio_cotas_premiadas,
         descricao_cotas_premiadas,
         titulo_cotas_dobro,
         subtitulo_cotas_dobro,
@@ -190,7 +246,16 @@ function criaCampanha(
         mostrar_cotas_premiadas,
         status_cotas_premiadas,
 
-        layout
+        layout,
+        
+        habilitar_roleta,
+        titulo_roleta,
+        descricao_roleta,
+        itens_roleta,
+        habilitar_raspadinha,
+        titulo_raspadinha,
+        descricao_raspadinha,
+        itens_raspadinha
     ) VALUES (
         $autor_id,
 
@@ -236,6 +301,7 @@ function criaCampanha(
         '" . mysqli_real_escape_string($conn, $vencedor_sorteio) . "',
         '" . mysqli_real_escape_string($conn, $habilitar_cotas_em_dobro) . "',
         '" . mysqli_real_escape_string($conn, $cotas_premiadas) . "',
+        '" . mysqli_real_escape_string($conn, $premio_cotas_premiadas) . "',
         '" . mysqli_real_escape_string($conn, $descricao_cotas_premiadas) . "',
         '" . mysqli_real_escape_string($conn, $titulo_cotas_dobro) . "',
         '" . mysqli_real_escape_string($conn, $subtitulo_cotas_dobro) . "',
@@ -245,11 +311,20 @@ function criaCampanha(
 
         '" . mysqli_real_escape_string($conn, $mostrar_cotas_premiadas) . "',
         '" . mysqli_real_escape_string($conn, $status_cotas_premiadas) . "',
-        '" . mysqli_real_escape_string($conn, $layout) . "'
+        '" . mysqli_real_escape_string($conn, $layout) . "',
+
+        '" . mysqli_real_escape_string($conn, $habilitar_roleta) . "',
+        '" . mysqli_real_escape_string($conn, $titulo_roleta) . "',
+        '" . mysqli_real_escape_string($conn, $descricao_roleta) . "',
+        '" . mysqli_real_escape_string($conn, $itens_roleta) . "',
+        '" . mysqli_real_escape_string($conn, $habilitar_raspadinha) . "',
+        '" . mysqli_real_escape_string($conn, $titulo_raspadinha) . "',
+        '" . mysqli_real_escape_string($conn, $descricao_raspadinha) . "',
+        '" . mysqli_real_escape_string($conn, $itens_raspadinha) . "'
     )";
-    // echo "<br>";
-    // echo $query;
-    // echo "<br>";
+    echo "<br>";
+    echo $query;
+    echo "<br>";
     // die();
     $result = mysqli_query($conn, $query);
     return $result ? mysqli_insert_id($conn) : "ERRO: " . mysqli_error($conn);
@@ -315,6 +390,8 @@ function editaCampanha(
 
 	$habilitar_cotas_em_dobro,
     $cotas_premiadas,
+        
+    $premio_cotas_premiadas,
     $descricao_cotas_premiadas,
   
     $selecionar_top_ganhadores,
@@ -327,7 +404,17 @@ function editaCampanha(
     $subtitulo_cotas_dobro,
     
     $imagem_capa,
-    $layout
+    $layout,
+    
+    // Novos parâmetros para Roletas e Raspadinhas
+    $habilitar_roleta,
+    $titulo_roleta,
+    $descricao_roleta,
+    $itens_roleta,
+    $habilitar_raspadinha,
+    $titulo_raspadinha,
+    $descricao_raspadinha,
+    $itens_raspadinha
     
 ) {
     if (!is_numeric($id))
@@ -335,6 +422,29 @@ function editaCampanha(
 
     // Inicializa o array de campos
     $campos = array();
+
+    // Normaliza campos JSON para sempre gravar JSON válido
+    // Evita violar constraints do banco (JSON_VALID, NOT NULL etc.)
+    $jsonNormalize = function($value) {
+        if ($value === null) {
+            return null; // não atualiza o campo quando null
+        }
+        if (is_array($value)) {
+            return json_encode($value, JSON_UNESCAPED_UNICODE);
+        }
+        if (!is_string($value)) {
+            return '[]';
+        }
+        $trimmed = trim($value);
+        if ($trimmed === '' || strtolower($trimmed) === 'null') {
+            return '[]';
+        }
+        $decoded = json_decode($trimmed, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return '[]';
+        }
+        return json_encode($decoded, JSON_UNESCAPED_UNICODE);
+    };
 
     if($nome != null)
         $campos[] = "nome = '" . mysqli_real_escape_string($conn, $nome) . "'";
@@ -403,6 +513,20 @@ function editaCampanha(
     if($pacotes_exclusivos != null)
         $campos[] = "pacotes_exclusivos = '" . mysqli_real_escape_string($conn, $pacotes_exclusivos) . "'";
     
+    // Trata arrays para Roletas e Raspadinhas
+    if($itens_roleta !== null) {
+        $itens_roleta = $jsonNormalize($itens_roleta);
+        $campos[] = "itens_roleta = '" . mysqli_real_escape_string($conn, $itens_roleta) . "'";
+    }
+    
+    
+    if($itens_raspadinha !== null) {
+        $itens_raspadinha = $jsonNormalize($itens_raspadinha);
+        $campos[] = "itens_raspadinha = '" . mysqli_real_escape_string($conn, $itens_raspadinha) . "'";
+    }
+    
+    
+    
     
     if($habilitar_ranking != null)
         $campos[] = "habilitar_ranking = '" . mysqli_real_escape_string($conn, $habilitar_ranking) . "'";
@@ -441,6 +565,9 @@ function editaCampanha(
     
     if($cotas_premiadas !== null)
         $campos[] = "cotas_premiadas = '" . mysqli_real_escape_string($conn, $cotas_premiadas) . "'";
+
+    if($premio_cotas_premiadas !== null)
+        $campos[] = "premio_cotas_premiadas = '" . mysqli_real_escape_string($conn, $premio_cotas_premiadas) . "'";
     if($descricao_cotas_premiadas != null)
         $campos[] = "descricao_cotas_premiadas = '" . mysqli_real_escape_string($conn, $descricao_cotas_premiadas) . "'";
 
@@ -456,6 +583,35 @@ function editaCampanha(
 
     if($layout != null)
         $campos[] = "layout = '" . mysqli_real_escape_string($conn, $layout) . "'";
+
+    // Campos para Roletas e Raspadinhas
+    if($habilitar_roleta != null)
+        $campos[] = "habilitar_roleta = '" . mysqli_real_escape_string($conn, $habilitar_roleta) . "'";
+    if($titulo_roleta != null)
+        $campos[] = "titulo_roleta = '" . mysqli_real_escape_string($conn, $titulo_roleta) . "'";
+    if($descricao_roleta != null)
+        $campos[] = "descricao_roleta = '" . mysqli_real_escape_string($conn, $descricao_roleta) . "'";
+    if($habilitar_raspadinha != null)
+        $campos[] = "habilitar_raspadinha = '" . mysqli_real_escape_string($conn, $habilitar_raspadinha) . "'";
+    if($titulo_raspadinha != null)
+        $campos[] = "titulo_raspadinha = '" . mysqli_real_escape_string($conn, $titulo_raspadinha) . "'";
+    if($descricao_raspadinha != null)
+        $campos[] = "descricao_raspadinha = '" . mysqli_real_escape_string($conn, $descricao_raspadinha) . "'";
+
+    // Trata arrays para Itens da Roleta e Raspadinha
+    if($itens_roleta != null) {
+        if(is_array($itens_roleta)) {
+            $itens_roleta = json_encode($itens_roleta);
+        }
+        $campos[] = "itens_roleta = '" . mysqli_real_escape_string($conn, $itens_roleta) . "'";
+    }
+    
+    if($itens_raspadinha != null) {
+        if(is_array($itens_raspadinha)) {
+            $itens_raspadinha = json_encode($itens_raspadinha);
+        }
+        $campos[] = "itens_raspadinha = '" . mysqli_real_escape_string($conn, $itens_raspadinha) . "'";
+    }
 
     $query = "UPDATE campanhas SET " . implode(", ", $campos) . " WHERE id = " . (int)$id;
     

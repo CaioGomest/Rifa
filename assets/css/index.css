@@ -84,4 +84,74 @@
   .dark .fa-moon {
     animation: breathing 3s ease-in-out infinite;
   }
+
+  /* Estilos para os pacotes de roleta */
+  .pacote-roleta-card {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pacote-roleta-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.1), transparent);
+    transition: left 0.5s;
+  }
+
+  .pacote-roleta-card:hover::before {
+    left: 100%;
+  }
+
+  .quantidade-rapida-btn.active {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    border-color: #10b981;
+    transform: scale(1.05);
+  }
+
+  /* Animação para o badge "Mais Popular" */
+  @keyframes pulse-popular {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  .badge-popular {
+    animation: pulse-popular 2s ease-in-out infinite;
+  }
+
+  /* Responsividade melhorada para mobile */
+  @media (max-width: 768px) {
+    .pacote-roleta-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    
+    .quantidade-rapida-container {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .quantidade-rapida-btn {
+      width: 100%;
+      max-width: 200px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .pacote-roleta-header h3 {
+      font-size: 1.5rem;
+    }
+    
+    .pacote-roleta-card {
+      padding: 1rem;
+    }
+  }
   

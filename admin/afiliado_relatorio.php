@@ -85,7 +85,7 @@ foreach ($comissoes as $comissao) {
     <title>Relatório do Afiliado</title>
 </head>
 
-<body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white">
+<body class="bg-gray-100 text-gray-900 dark:bg-[#18181B] dark:text-white">
     <div class="flex h-screen">
         <?php require("sidebar.php"); ?>
 
@@ -105,19 +105,19 @@ foreach ($comissoes as $comissao) {
 
             <!-- Cards de Resumo -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                <div class="bg-white dark:bg-[#27272A] p-6 rounded-lg shadow-md">
                     <h3 class="text-lg font-semibold mb-2">Total de Pedidos</h3>
                     <p class="text-2xl font-bold"><?= number_format($afiliado['total_pedidos']) ?></p>
                 </div>
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                <div class="bg-white dark:bg-[#27272A] p-6 rounded-lg shadow-md">
                     <h3 class="text-lg font-semibold mb-2">Total de Vendas</h3>
                     <p class="text-2xl font-bold">R$ <?= number_format($total_vendas, 2, ',', '.') ?></p>
                 </div>
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                <div class="bg-white dark:bg-[#27272A] p-6 rounded-lg shadow-md">
                     <h3 class="text-lg font-semibold mb-2">Total de Comissões</h3>
                     <p class="text-2xl font-bold">R$ <?= number_format($total_comissoes, 2, ',', '.') ?></p>
                 </div>
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                <div class="bg-white dark:bg-[#27272A] p-6 rounded-lg shadow-md">
                     <h3 class="text-lg font-semibold mb-2">% Comissão Atual</h3>
                     <p class="text-2xl font-bold">
                         <?= isset($afiliado['porcentagem_comissao']) ? number_format($afiliado['porcentagem_comissao'], 2) . '%' : '-' ?>
@@ -130,7 +130,7 @@ foreach ($comissoes as $comissao) {
             
 
             <!-- Dados Bancários -->
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-6">
+            <div class="bg-white dark:bg-[#27272A] p-6 rounded-lg shadow-md mb-6">
                 <h2 class="text-lg font-semibold mb-4">Dados Bancários</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -145,10 +145,10 @@ foreach ($comissoes as $comissao) {
             </div>
 
             <!-- Histórico de Comissões -->
-            <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md overflow-x-auto mb-6">
+            <div class="bg-white dark:bg-[#27272A] p-4 rounded-lg shadow-md overflow-x-auto mb-6">
                 <h2 class="text-lg font-semibold mb-4 px-2">Histórico de Comissões</h2>
                 <table class="w-full">
-                    <thead class="bg-gray-50 dark:bg-gray-700">
+                    <thead class="bg-gray-50 dark:bg-[#3F3F46]">
                         <tr>
                             <th class="p-2 text-left">Data</th>
                             <th class="p-2 text-left">Pedido</th>
@@ -210,7 +210,7 @@ foreach ($comissoes as $comissao) {
             </div>
 
             <!-- Histórico de Pagamentos -->
-            <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md overflow-x-auto mb-6">
+            <div class="bg-white dark:bg-[#27272A] p-4 rounded-lg shadow-md overflow-x-auto mb-6">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-lg font-semibold">Histórico de Pagamentos</h2>
                     <button onclick="abrirModalPagamento()"
@@ -219,7 +219,7 @@ foreach ($comissoes as $comissao) {
                     </button>
                 </div>
                 <table class="w-full">
-                    <thead class="bg-gray-50 dark:bg-gray-700">
+                    <thead class="bg-gray-50 dark:bg-[#3F3F46]">
                         <tr>
                             <th class="p-2 text-left">Data</th>
                             <th class="p-2 text-right">Valor Pago</th>
@@ -281,7 +281,7 @@ foreach ($comissoes as $comissao) {
             <!-- Modal de Adicionar Pagamento -->
             <div id="modalPagamento" style="z-index: 50;" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden">
                 <div class="flex items-center justify-center min-h-screen">
-                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-md">
+                    <div class="bg-white dark:bg-[#27272A] p-6 rounded-lg shadow-xl w-full max-w-md">
                         <h3 class="text-lg font-semibold mb-4">Adicionar Pagamento</h3>
                         <form action="processar_pagamento.php" method="POST" enctype="multipart/form-data">
                             <input type="hidden" name="afiliado_id" value="<?= $usuario_id ?>">
@@ -289,25 +289,25 @@ foreach ($comissoes as $comissao) {
                             <div class="mb-4">
                                 <label class="block text-sm font-medium mb-2">Valor do Pagamento</label>
                                 <input type="number" name="valor_pago" step="0.01" required
-                                    class="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600">
+                                    class="w-full px-3 py-2 border rounded-md dark:bg-[#3F3F46] dark:border-gray-600">
                             </div>
 
                             <div class="mb-4">
                                 <label class="block text-sm font-medium mb-2">Data do Pagamento</label>
                                 <input type="datetime-local" name="data_pagamento" required
-                                    class="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600">
+                                    class="w-full px-3 py-2 border rounded-md dark:bg-[#3F3F46] dark:border-gray-600">
                             </div>
 
                             <div class="mb-4">
                                 <label class="block text-sm font-medium mb-2">Observações</label>
                                 <textarea name="observacoes" rows="3"
-                                    class="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600"></textarea>
+                                    class="w-full px-3 py-2 border rounded-md dark:bg-[#3F3F46] dark:border-gray-600"></textarea>
                             </div>
 
                             <div class="mb-4">
                                 <label class="block text-sm font-medium mb-2">Comprovante (opcional)</label>
                                 <input type="file" name="comprovante" accept="image/*"
-                                    class="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600">
+                                    class="w-full px-3 py-2 border rounded-md dark:bg-[#3F3F46] dark:border-gray-600">
                             </div>
 
                             <div class="flex justify-end gap-2">

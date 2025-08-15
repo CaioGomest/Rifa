@@ -193,7 +193,7 @@ function atualizarAfiliado($conn, $usuario_id, $dados_usuario)
     <title>Configurações do Afiliado</title>
 </head>
 
-<body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white min-h-screen">
+<body class="bg-gray-100 text-gray-900 dark:bg-[#18181B] dark:text-white min-h-screen">
     <div class="flex flex-col md:flex-row min-h-screen">
         <?php require("sidebar.php"); ?>
 
@@ -220,7 +220,7 @@ function atualizarAfiliado($conn, $usuario_id, $dados_usuario)
                 </script>
             <?php endif; ?>
 
-            <div class="bg-white dark:bg-gray-800 p-4 md:p-8 rounded-lg shadow-md w-full max-w-5xl mx-auto mb-8">
+            <div class="bg-white dark:bg-[#27272A] p-4 md:p-8 rounded-lg shadow-md w-full max-w-5xl mx-auto mb-8">
                 <form method="POST" enctype="multipart/form-data" class="space-y-8">
                     <!-- Avatar -->
                     <div class="mb-8">
@@ -257,7 +257,7 @@ function atualizarAfiliado($conn, $usuario_id, $dados_usuario)
                             <div class="w-full">
                                 <label class="block text-sm font-medium mb-2" for="usuario_nome">Nome</label>
                                 <input type="text" id="usuario_nome" name="usuario_nome"
-                                    class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                                    class="w-full p-3 border rounded-lg dark:bg-[#3F3F46] dark:border-gray-600 focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                                     value="<?= htmlspecialchars($afiliado['usuario_nome']) ?>" required>
                             </div>
 
@@ -265,7 +265,7 @@ function atualizarAfiliado($conn, $usuario_id, $dados_usuario)
                             <div class="w-full">
                                 <label class="block text-sm font-medium mb-2" for="usuario_sobrenome">Sobrenome</label>
                                 <input type="text" id="usuario_sobrenome" name="usuario_sobrenome"
-                                    class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                                    class="w-full p-3 border rounded-lg dark:bg-[#3F3F46] dark:border-gray-600 focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                                     value="<?= htmlspecialchars($afiliado['usuario_sobrenome']) ?>" required>
                             </div>
                         </div>
@@ -274,7 +274,7 @@ function atualizarAfiliado($conn, $usuario_id, $dados_usuario)
                         <div class="w-full">
                             <label class="block text-sm font-medium mb-2" for="usuario_email">E-mail</label>
                             <input type="email" id="usuario_email" name="usuario_email"
-                                class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                                class="w-full p-3 border rounded-lg dark:bg-[#3F3F46] dark:border-gray-600 focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                                 value="<?= htmlspecialchars($afiliado['usuario_email']) ?>" required>
                         </div>
                     </div>
@@ -290,7 +290,7 @@ function atualizarAfiliado($conn, $usuario_id, $dados_usuario)
                                 <div class="w-full">
                                     <label class="block text-sm font-medium mb-2" for="pix_tipo">Tipo da Chave</label>
                                     <select id="pix_tipo" name="pix_tipo"
-                                        class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-purple-600 focus:border-transparent">
+                                        class="w-full p-3 border rounded-lg dark:bg-[#3F3F46] dark:border-gray-600 focus:ring-2 focus:ring-purple-600 focus:border-transparent">
                                         <option value="">Selecione...</option>
                                         <option value="cpf" <?= $afiliado['pix_tipo'] == 'cpf' ? 'selected' : '' ?>>CPF
                                         </option>
@@ -305,7 +305,7 @@ function atualizarAfiliado($conn, $usuario_id, $dados_usuario)
                                 <div class="w-full">
                                     <label class="block text-sm font-medium mb-2" for="pix_chave">Chave PIX</label>
                                     <input type="text" id="pix_chave" name="pix_chave"
-                                        class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                                        class="w-full p-3 border rounded-lg dark:bg-[#3F3F46] dark:border-gray-600 focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                                         value="<?= htmlspecialchars($afiliado['pix_chave']) ?>">
                                 </div>
                             </div>
@@ -318,25 +318,25 @@ function atualizarAfiliado($conn, $usuario_id, $dados_usuario)
                                 <div class="w-full">
                                     <label class="block text-sm font-medium mb-2" for="banco_nome">Banco</label>
                                     <input type="text" id="banco_nome" name="banco_nome"
-                                        class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                                        class="w-full p-3 border rounded-lg dark:bg-[#3F3F46] dark:border-gray-600 focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                                         value="<?= htmlspecialchars($afiliado['banco_nome']) ?>">
                                 </div>
                                 <div class="w-full">
                                     <label class="block text-sm font-medium mb-2" for="banco_agencia">Agência</label>
                                     <input type="text" id="banco_agencia" name="banco_agencia"
-                                        class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                                        class="w-full p-3 border rounded-lg dark:bg-[#3F3F46] dark:border-gray-600 focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                                         value="<?= htmlspecialchars($afiliado['banco_agencia']) ?>">
                                 </div>
                                 <div class="w-full">
                                     <label class="block text-sm font-medium mb-2" for="banco_conta">Conta</label>
                                     <input type="text" id="banco_conta" name="banco_conta"
-                                        class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                                        class="w-full p-3 border rounded-lg dark:bg-[#3F3F46] dark:border-gray-600 focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                                         value="<?= htmlspecialchars($afiliado['banco_conta']) ?>">
                                 </div>
                                 <div class="w-full">
                                     <label class="block text-sm font-medium mb-2" for="banco_tipo">Tipo de Conta</label>
                                     <select id="banco_tipo" name="banco_tipo"
-                                        class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-purple-600 focus:border-transparent">
+                                        class="w-full p-3 border rounded-lg dark:bg-[#3F3F46] dark:border-gray-600 focus:ring-2 focus:ring-purple-600 focus:border-transparent">
                                         <option value="">Selecione...</option>
                                         <option value="corrente" <?= $afiliado['banco_tipo'] == 'corrente' ? 'selected' : '' ?>>Corrente</option>
                                         <option value="poupanca" <?= $afiliado['banco_tipo'] == 'poupanca' ? 'selected' : '' ?>>Poupança</option>
@@ -346,14 +346,14 @@ function atualizarAfiliado($conn, $usuario_id, $dados_usuario)
                                     <label class="block text-sm font-medium mb-2" for="banco_titular">Nome do
                                         Titular</label>
                                     <input type="text" id="banco_titular" name="banco_titular"
-                                        class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                                        class="w-full p-3 border rounded-lg dark:bg-[#3F3F46] dark:border-gray-600 focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                                         value="<?= htmlspecialchars($afiliado['banco_titular']) ?>">
                                 </div>
                                 <div class="w-full">
                                     <label class="block text-sm font-medium mb-2" for="banco_documento">CPF/CNPJ do
                                         Titular</label>
                                     <input type="text" id="banco_documento" name="banco_documento"
-                                        class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                                        class="w-full p-3 border rounded-lg dark:bg-[#3F3F46] dark:border-gray-600 focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                                         value="<?= htmlspecialchars($afiliado['banco_documento']) ?>">
                                 </div>
                             </div>
@@ -371,7 +371,7 @@ function atualizarAfiliado($conn, $usuario_id, $dados_usuario)
                                 ?>
                                 <div class="flex mb-4">
                                     <input type="text" id="<?= $id ?>"
-                                        class="w-full p-3 border rounded-l-lg bg-gray-100 dark:bg-gray-700 dark:border-gray-600 select-none focus:outline-none"
+                                        class="w-full p-3 border rounded-l-lg bg-gray-100 dark:bg-[#3F3F46] dark:border-gray-600 select-none focus:outline-none"
                                         value="<?= htmlspecialchars($link) ?>" readonly
                                         style="user-select: none; -webkit-user-select: none;">
                                     <button type="button" onclick="copiarCodigo('<?= $id ?>')"

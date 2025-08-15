@@ -21,7 +21,7 @@ if (!$pedido) {
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-white">
+<body class="bg-gray-100 text-gray-800 dark:bg-[#18181B] dark:text-white">
     <div class="flex h-screen">
         <?php require("sidebar.php"); ?>
 
@@ -33,7 +33,7 @@ if (!$pedido) {
                         <p class="text-gray-500 dark:text-gray-400">Criado em <?php echo date('d/m/Y H:i', strtotime($pedido['data_criacao'])); ?></p>
                     </div>
                     <div class="flex space-x-2">
-                        <button onclick="toggleTheme()" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700">
+                        <button onclick="toggleTheme()" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 dark:bg-[#27272A] dark:text-gray-200 dark:hover:bg-gray-700">
                             Alternar Tema
                         </button>
                         <button onclick="window.location.href='pedidos.php'" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
@@ -49,7 +49,7 @@ if (!$pedido) {
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Informações do Cliente -->
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                    <div class="bg-white dark:bg-[#27272A] rounded-lg shadow p-6">
                         <h2 class="text-lg font-medium mb-4">Informações do Cliente</h2>
                         <div class="space-y-3">
                             <div>
@@ -73,7 +73,7 @@ if (!$pedido) {
                     </div>
 
                     <!-- Informações do Pedido -->
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                    <div class="bg-white dark:bg-[#27272A] rounded-lg shadow p-6">
                         <h2 class="text-lg font-medium mb-4">Informações do Pedido</h2>
                         <div class="space-y-3">
                             <div>
@@ -100,22 +100,25 @@ if (!$pedido) {
                     </div>
 
                     <!-- Números do Pedido -->
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 md:col-span-2">
+                    <div class="bg-white dark:bg-[#27272A] rounded-lg shadow p-6 md:col-span-2">
                         <h2 class="text-lg font-medium mb-4">Números do Pedido</h2>
                         <div class="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-2">
                             <?php
+                            require_once('../functions/functions_sistema.php');
+                            $largura_cota = obterLarguraCotaPorCampanha($conn, $pedido['campanha_id']);
                             $numeros = explode(',', $pedido['numeros_pedido']);
                             foreach ($numeros as $numero):
+                                $numero_fmt = formatarCotaComLargura($numero, $largura_cota);
                             ?>
-                            <div class="bg-gray-100 dark:bg-gray-700 p-2 text-center rounded">
-                                <?php echo $numero; ?>
+                            <div class="bg-gray-100 dark:bg-[#3F3F46] p-2 text-center rounded">
+                                <?php echo $numero_fmt; ?>
                             </div>
                             <?php endforeach; ?>
                         </div>
                     </div>
 
                     <!-- Valores -->
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 md:col-span-2">
+                    <div class="bg-white dark:bg-[#27272A] rounded-lg shadow p-6 md:col-span-2">
                         <h2 class="text-lg font-medium mb-4">Valores</h2>
                         <div class="space-y-2">
                             <div class="flex justify-between">

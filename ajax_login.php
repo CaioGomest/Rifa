@@ -13,7 +13,7 @@ function validarTelefone($telefone) {
     return preg_match('/^\d{10,11}$/', $telefone);
 }
 
-// Recebe o telefone
+// Recebe apenas o telefone
 $telefone = preg_replace('/\D/', '', trim($_POST['telefone'] ?? ''));
 
 // Validação do telefone
@@ -62,19 +62,6 @@ if ($cliente) {
         $_SESSION["usuario"]['usuario_id'] = $cliente['id'];
         $_SESSION["usuario"]['usuario_tipo'] = $cliente['tipo'];
         $_SESSION["usuario"]['usuario_nome'] = $cliente['nome'];
-    } else {
-        // É um cliente
-        $_SESSION["usuario"]['cliente_id'] = $cliente['id'];
-        $_SESSION["usuario"]['cliente_tipo'] = 0;
-        $_SESSION["usuario"]['cliente_nome'] = $cliente['nome'];
-    }
-
-    // Verifica se é um usuário do sistema (tem tipo) ou cliente
-    if ($cliente['tipo'] !== null) {
-        // É um usuário do sistema (admin/afiliado)
-        $_SESSION["usuario"]['usuario_id'] = $cliente['id'];
-        $_SESSION["usuario"]['usuario_tipo'] = $cliente['tipo'];
-        $_SESSION["usuario"]['usuario_nome'] = $cliente['nome'];
         
         echo json_encode([
             'success' => true,
@@ -100,9 +87,10 @@ if ($cliente) {
     exit;
 }
 
+// Se não encontrou o usuário, retorna mensagem padrão para cadastro
 echo json_encode([
     'success' => false,
-    'message' => 'Cliente não encontrado. Por favor, cadastre-se primeiro.',
+    'message' => 'Número não cadastrado. Por favor, faça seu cadastro primeiro.',
     'need_register' => true
 ]);
 

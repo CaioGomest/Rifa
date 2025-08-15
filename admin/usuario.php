@@ -115,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html lang="pt-BR">
 
-<body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white">
+<body class="bg-gray-100 text-gray-900 dark:bg-[#18181B] dark:text-white">
 
     <div class="flex flex-col md:flex-row min-h-screen">
         <?php require("sidebar.php"); ?>
@@ -129,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
 
             <section class="w-full">
-                <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-md shadow-md max-w-2xl mx-auto">
+                <div class="bg-white dark:bg-[#27272A] p-4 md:p-6 rounded-md shadow-md max-w-2xl mx-auto">
                     <header class="flex justify-between items-center mb-6">
                         <h1 class="text-xl md:text-2xl font-bold"><?= $id ? 'Editar' : 'Novo' ?> usuário</h1>
                         <a href="usuarios.php" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
@@ -142,14 +142,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div>
                                 <label class="block text-sm font-medium mb-1" for="nome">Nome</label>
                                 <input type="text" id="nome" name="nome" 
-                                       class="w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 text-sm md:text-base"
+                                       class="w-full p-2 border rounded-md dark:bg-[#3F3F46] dark:border-gray-600 text-sm md:text-base"
                                        value="<?= isset($usuario) ? $usuario[0]['usuario_nome'] : '' ?>" required>
                             </div>
 
                             <div>
                                 <label class="block text-sm font-medium mb-1" for="sobrenome">Sobrenome</label>
                                 <input type="text" id="sobrenome" name="sobrenome" 
-                                       class="w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 text-sm md:text-base"
+                                       class="w-full p-2 border rounded-md dark:bg-[#3F3F46] dark:border-gray-600 text-sm md:text-base"
                                        value="<?= isset($usuario) ? $usuario[0]['usuario_sobrenome'] : '' ?>" required>
                             </div>
                         </div>
@@ -159,14 +159,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div>
                                 <label class="block text-sm font-medium mb-1" for="email">Email</label>
                                 <input type="email" id="email" name="email" 
-                                       class="w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 text-sm md:text-base"
+                                       class="w-full p-2 border rounded-md dark:bg-[#3F3F46] dark:border-gray-600 text-sm md:text-base"
                                        value="<?= isset($usuario) ? $usuario[0]['usuario_email'] : '' ?>" required>
                             </div>
 
                             <div>
                                 <label class="block text-sm font-medium mb-1" for="telefone">Telefone</label>
                                 <input type="text" id="telefone" name="telefone" 
-                                       class="w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 text-sm md:text-base"
+                                       class="w-full p-2 border rounded-md dark:bg-[#3F3F46] dark:border-gray-600 text-sm md:text-base"
                                        value="<?= isset($usuario) ? $usuario[0]['usuario_telefone'] : '' ?>" required>
                             </div>
                         </div>
@@ -174,7 +174,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div>
                             <label class="block text-sm font-medium mb-1" for="nova_senha">Nova Senha</label>
                             <input type="password" id="nova_senha" name="nova_senha" 
-                                   class="w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 text-sm md:text-base"
+                                   class="w-full p-2 border rounded-md dark:bg-[#3F3F46] dark:border-gray-600 text-sm md:text-base"
                                    <?= !$id ? 'required' : '' ?>>
                             <?php if ($id): ?>
                                 <p class="text-xs md:text-sm text-gray-500 mt-1">Deixe em branco para manter a senha atual</p>
@@ -186,7 +186,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div>
                                 <label class="block text-sm font-medium mb-1" for="tipo_usuario">Tipo do usuário</label>
                                 <select id="tipo_usuario" name="tipo_usuario" 
-                                        class="w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 text-sm md:text-base" required>
+                                        class="w-full p-2 border rounded-md dark:bg-[#3F3F46] dark:border-gray-600 text-sm md:text-base" required>
                                     <option value="1" <?= isset($usuario) && $usuario[0]['usuario_tipo'] == 1 ? 'selected' : '' ?>>Administrador</option>
                                     <option value="2" <?= isset($usuario) && $usuario[0]['usuario_tipo'] == 2 ? 'selected' : '' ?>>Afiliado</option>
                                 </select>
@@ -195,7 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div id="porcentagem-div" style="display: none;">
                                 <label class="block text-sm font-medium mb-1" for="porcentagem_comissao">Porcentagem de Comissão (%)</label>
                                 <input type="number" id="porcentagem_comissao" name="porcentagem_comissao" 
-                                       class="w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 text-sm md:text-base"
+                                       class="w-full p-2 border rounded-md dark:bg-[#3F3F46] dark:border-gray-600 text-sm md:text-base"
                                        value="<?= isset($afiliados) && !empty($afiliados[0]['porcentagem_comissao']) ? $afiliados[0]['porcentagem_comissao'] : '0' ?>"
                                        min="0" max="100" step="0.01">
                             </div>

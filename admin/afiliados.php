@@ -193,7 +193,7 @@ function getStatusClass($status)
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white">
+<body class="bg-gray-100 text-gray-900 dark:bg-[#18181B] dark:text-white">
     <div class="flex h-screen">
         <?php require("sidebar.php"); ?>
 
@@ -228,19 +228,19 @@ function getStatusClass($status)
 
             <!-- Cards de Resumo -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                <div class="bg-white dark:bg-[#27272A] p-6 rounded-lg shadow-md">
                     <h3 class="text-lg font-semibold mb-2">Total de Pedidos</h3>
                     <p class="text-2xl font-bold"><?= number_format($afiliado['total_pedidos']) ?></p>
                 </div>
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                <div class="bg-white dark:bg-[#27272A] p-6 rounded-lg shadow-md">
                     <h3 class="text-lg font-semibold mb-2">Total de Vendas</h3>
                     <p class="text-2xl font-bold">R$ <?= number_format($total_vendas, 2, ',', '.') ?></p>
                 </div>
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                <div class="bg-white dark:bg-[#27272A] p-6 rounded-lg shadow-md">
                     <h3 class="text-lg font-semibold mb-2">Total de Comissões</h3>
                     <p class="text-2xl font-bold">R$ <?= number_format($total_comissoes, 2, ',', '.') ?></p>
                 </div>
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                <div class="bg-white dark:bg-[#27272A] p-6 rounded-lg shadow-md">
                     <h3 class="text-lg font-semibold mb-2">% Comissão Atual</h3>
                     <p class="text-2xl font-bold"><?= number_format($afiliado['porcentagem_comissao'], 2) ?>%</p>
                 </div>
@@ -297,22 +297,22 @@ function getStatusClass($status)
             </div>
 
             <!-- Filtros -->
-            <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md mb-6">
+            <div class="bg-white dark:bg-[#27272A] p-4 rounded-lg shadow-md mb-6">
                 <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div>
                         <label class="block text-sm font-medium mb-1">Data Início</label>
                         <input type="date" name="data_inicio" value="<?= escaparString($filtro_data_inicio) ?>"
-                            class="w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600">
+                            class="w-full p-2 border rounded-md dark:bg-[#3F3F46] dark:border-gray-600">
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1">Data Fim</label>
                         <input type="date" name="data_fim" value="<?= escaparString($filtro_data_fim) ?>"
-                            class="w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600">
+                            class="w-full p-2 border rounded-md dark:bg-[#3F3F46] dark:border-gray-600">
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1">Status</label>
                         <select name="status"
-                            class="w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600">
+                            class="w-full p-2 border rounded-md dark:bg-[#3F3F46] dark:border-gray-600">
                             <option value="">Todos</option>
                             <option value="1" <?= ($filtro_status === 1) ? 'selected' : ''; ?>>Pendente</option>
                             <option value="2" <?= ($filtro_status === 2) ? 'selected' : ''; ?>>Pago</option>
@@ -334,10 +334,10 @@ function getStatusClass($status)
             </div>
 
             <!-- Histórico de Comissões -->
-            <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md overflow-x-auto mb-6">
+            <div class="bg-white dark:bg-[#27272A] p-4 rounded-lg shadow-md overflow-x-auto mb-6">
                 <h2 class="text-lg font-semibold mb-4 px-2">Histórico de Pedidos</h2>
                 <table class="w-full">
-                    <thead class="bg-gray-50 dark:bg-gray-700">
+                    <thead class="bg-gray-50 dark:bg-[#3F3F46]">
                         <tr>
                             <th class="p-2 text-left">Data</th>
                             <th class="p-2 text-left">Pedido</th>
@@ -380,7 +380,7 @@ function getStatusClass($status)
             </div>
 
             <!-- Histórico de Pagamentos -->
-            <!-- <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md overflow-x-auto mb-6">
+            <!-- <div class="bg-white dark:bg-[#27272A] p-4 rounded-lg shadow-md overflow-x-auto mb-6">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-lg font-semibold">Histórico de Pagamentos</h2>
                     <?php if ($afiliado['total_comissoes'] > 0): ?>
@@ -391,7 +391,7 @@ function getStatusClass($status)
                     <?php endif; ?>
                 </div>
                 <table class="w-full">
-                    <thead class="bg-gray-50 dark:bg-gray-700">
+                    <thead class="bg-gray-50 dark:bg-[#3F3F46]">
                         <tr>
                             <th class="p-2 text-left">Data</th>
                             <th class="p-2 text-right">Valor Pago</th>

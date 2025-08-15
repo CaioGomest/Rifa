@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 
-<body class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-white min-h-screen">
+<body class="bg-gray-100 text-gray-800 dark:bg-[#18181B] dark:text-white min-h-screen">
     <div class="flex flex-col lg:flex-row min-h-screen">
         <?php require("sidebar.php"); ?>
 
@@ -112,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php endif; ?>
 
                 <!-- Formulário -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6 lg:p-8">
+                <div class="bg-white dark:bg-[#27272A] rounded-lg shadow-lg p-4 sm:p-6 lg:p-8">
                     <div class="flex flex-row justify-between items-center gap-4 mb-6">
                         <h1 class="text-2xl sm:text-3xl font-bold"><?php echo isset($_GET['id']) ? 'Editar' : 'Novo'; ?> Cliente</h1>
                         <a href="clientes.php" class="w-auto bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600 text-center">
@@ -128,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </label>
                                 <input type="text" name="nome" required
                                        value="<?php echo isset($nome) ? htmlspecialchars($nome) : ''; ?>"
-                                       class="w-full border rounded-lg p-3 dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:ring-2 focus:ring-purple-500 transition-all"
+                                       class="w-full border rounded-lg p-3 dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white focus:ring-2 focus:ring-purple-500 transition-all"
                                        placeholder="Nome">
                             </div>
                             <div class="col-span-1">
@@ -137,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </label>
                                 <input type="text" name="sobrenome"
                                        value="<?php echo isset($sobrenome) ? htmlspecialchars($sobrenome) : ''; ?>"
-                                       class="w-full border rounded-lg p-3 dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:ring-2 focus:ring-purple-500 transition-all"
+                                       class="w-full border rounded-lg p-3 dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white focus:ring-2 focus:ring-purple-500 transition-all"
                                        placeholder="Sobrenome">
                             </div>
 
@@ -149,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 
                                 <input type="email" name="email"
                                        value="<?php echo isset($cliente['email']) ? htmlspecialchars($cliente['email']) : ''; ?>"
-                                       class="w-full border rounded-lg p-3 dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:ring-2 focus:ring-purple-500 transition-all"
+                                       class="w-full border rounded-lg p-3 dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white focus:ring-2 focus:ring-purple-500 transition-all"
                                        placeholder="email@exemplo.com">
                             </div>
                             <div class="col-span-1">
@@ -158,7 +158,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </label>
                                 <input type="text" name="telefone" required
                                        value="<?php echo isset($cliente['telefone']) ? htmlspecialchars($cliente['telefone']) : ''; ?>"
-                                       class="w-full border rounded-lg p-3 dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:ring-2 focus:ring-purple-500 transition-all"
+                                       class="w-full border rounded-lg p-3 dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white focus:ring-2 focus:ring-purple-500 transition-all"
                                        placeholder="(00) 00000-0000">
                             </div>
 
@@ -169,7 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </label>
                                 <input type="text" name="cpf"
                                        value="<?php echo isset($cliente['cpf']) ? htmlspecialchars($cliente['cpf']) : ''; ?>"
-                                       class="w-full border rounded-lg p-3 dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:ring-2 focus:ring-purple-500 transition-all"
+                                       class="w-full border rounded-lg p-3 dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white focus:ring-2 focus:ring-purple-500 transition-all"
                                        placeholder="000.000.000-00">
                             </div>
                         </div>

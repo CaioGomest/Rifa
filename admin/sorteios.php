@@ -15,7 +15,7 @@ require_once("../functions/functions_clientes.php");
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 
-<body class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-white">
+<body class="bg-gray-100 text-gray-800 dark:bg-[#18181B] dark:text-white">
     <div class="flex min-h-screen">
         <?php require("sidebar.php"); ?>
 
@@ -26,14 +26,14 @@ require_once("../functions/functions_clientes.php");
                 </div>
 
                 <!-- Formulário de Sorteio -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 sm:p-6 mb-6">
+                <div class="bg-white dark:bg-[#27272A] rounded-lg shadow p-4 sm:p-6 mb-6">
                     <form id="formSorteio" method="POST" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 Período de Data
                             </label>
                             <input type="date" name="data_inicio" id="data_inicio" 
-                                   class="w-full border rounded-md p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                   class="w-full border rounded-md p-2 dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
                         </div>
                         
                         <div>
@@ -41,7 +41,7 @@ require_once("../functions/functions_clientes.php");
                                 Quantidade de Sorteados
                             </label>
                             <input type="number" name="qtd_sortear" id="qtd_sortear" min="1"
-                                   class="w-full border rounded-md p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                   class="w-full border rounded-md p-2 dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
                         </div>
                         
                         <div>
@@ -49,7 +49,7 @@ require_once("../functions/functions_clientes.php");
                                 Tipo de Sorteio
                             </label>
                             <select name="tipo" id="tipo" 
-                                    class="w-full border rounded-md p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                    class="w-full border rounded-md p-2 dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
                                 <option value="">SELECIONE</option>
                                 <option value="por_pedido">Por Pedido</option>
                                 <option value="soma_pedidos">Soma dos Pedidos</option>
@@ -64,7 +64,7 @@ require_once("../functions/functions_clientes.php");
                                 Quantidade Mínima de Cotas
                             </label>
                             <input type="number" name="qtd_cotas" id="qtd_cotas" min="0"
-                                   class="w-full border rounded-md p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                   class="w-full border rounded-md p-2 dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
                         </div>
 
                         <div class="sm:col-span-2 lg:col-span-4 flex justify-end">
@@ -98,13 +98,13 @@ require_once("../functions/functions_clientes.php");
                 </div>
 
                 <!-- Resultado do Sorteio -->
-                <div id="resultadoSorteio" class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden" style="display: none;">
+                <div id="resultadoSorteio" class="bg-white dark:bg-[#27272A] rounded-lg shadow overflow-hidden" style="display: none;">
                     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
                         <h2 class="text-xl font-semibold">Resultado do Sorteio</h2>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full">
-                            <thead class="bg-gray-50 dark:bg-gray-700">
+                            <thead class="bg-gray-50 dark:bg-[#3F3F46]">
                                 <tr>
                                     <th class="px-4 py-2 text-left text-gray-700 dark:text-gray-300">Nome</th>
                                     <th class="px-4 py-2 text-left text-gray-700 dark:text-gray-300">Telefone</th>

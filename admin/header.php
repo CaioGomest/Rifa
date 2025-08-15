@@ -40,7 +40,7 @@ $affiliate_pages = [
     'configuracoes_afiliado.php'
 ];
 
-// Obter o nome do arquivo atual
+// pega o nome do arquivo atual
 $current_page = basename($_SERVER['PHP_SELF']);
 
 // Verificar permissões
@@ -134,10 +134,10 @@ $isDarkMode = $config['tema'] == 'escuro';
     <link rel="stylesheet" href="../assets/css/index.css">
 </head>
 
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+<body class="bg-gray-100 dark:bg-[#18181B] text-gray-900 dark:text-gray-100">
    
     <!-- Header -->
-    <div class="bg-white dark:bg-gray-800 shadow-md p-4 mb-2  flex justify-between items-center">
+    <div class="bg-white dark:bg-[#27272A] shadow-md p-4 mb-2  flex justify-between items-center">
         <div class="flex items-center">
             <!-- Espaço para o botão do menu em mobile -->
             <div class="w-8 lg:hidden"></div>

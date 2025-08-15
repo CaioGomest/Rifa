@@ -90,11 +90,34 @@ $isDarkMode = $config['tema'] == 'escuro';
             <?php endif; ?>
           </div>
         </a>
-        <button id="sidebarButton" class="text-green-500 hover:text-green-800 ">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-          </svg>
-        </button>
+        <div class="flex items-center space-x-3">
+          <?php
+          $nomeUsuario = '';
+          if (!empty($_SESSION)) {
+            $nomeUsuario = $_SESSION["usuario"]["cliente_nome"] ?? $_SESSION["usuario"]["usuario_nome"] ?? '';
+          }
+          ?>
+          <?php if (!empty($nomeUsuario)) { ?>
+            <div class="flex items-center space-x-2">
+              <span class="hidden sm:inline text-sm font-semibold text-green-500">Olá, <?php echo strtoupper($nomeUsuario); ?></span>
+              <?php
+              $inicial = function_exists('mb_substr') ? mb_substr($nomeUsuario, 0, 1, 'UTF-8') : substr($nomeUsuario, 0, 1);
+              $inicial = strtoupper($inicial);
+              ?>
+              <div class="w-8 h-8 rounded-full bg-gray-700 text-white dark:bg-gray-200 dark:text-gray-800 flex items-center justify-center text-sm font-bold">
+                <?php echo $inicial; ?>
+              </div>
+            </div>
+          <?php } else { ?>
+            <i class="fas fa-user text-green-500 text-xl"></i>
+          <?php } ?>
+
+          <button id="sidebarButton" class="text-green-500 hover:text-green-800">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" d="M4 6h16M4 12h16m-7 6h7" />
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -102,7 +125,7 @@ $isDarkMode = $config['tema'] == 'escuro';
 
 <!-- Sidebar -->
 <div id="sidebar"
-  class="fixed right-0 top-0 w-64 h-full bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-white transform translate-x-full transition-transform duration-300 z-50">
+  class="fixed right-0 top-0 w-64 h-full bg-gray-200 dark:bg-[#27272A] text-gray-800 dark:text-white transform translate-x-full transition-transform duration-300 z-50">
   <!-- Cabeçalho da Sidebar -->
   <div class="p-4 flex justify-between items-center border-b border-gray-700 dark:border-gray-300">
     <h2 class="text-2xl font-bold">Menu</h2>

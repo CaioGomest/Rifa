@@ -199,7 +199,7 @@ canvas a{
     opacity: 0 !important;
 }
 </style>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+<body class="bg-gray-100 dark:bg-[#18181B] text-gray-900 dark:text-gray-100">
     <div class="flex h-screen">
         <?php require("sidebar.php") ?>
 
@@ -208,11 +208,11 @@ canvas a{
                 <h2 class="text-2xl font-bold">Dashboard</h2>
             </div>
 
-            <div class="mb-6 bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow">
+            <div class="mb-6 bg-white dark:bg-[#27272A] p-4 sm:p-6 rounded-lg shadow">
                 <form id="filtroForm" class="flex flex-col sm:flex-row items-start sm:items-end space-y-4 sm:space-y-0 sm:space-x-6">
                     <div class="w-full sm:w-1/4">
                         <label class="block text-sm font-medium mb-2">Período</label>
-                        <select name="filtro" id="filtroSelect" class="cursor-pointer w-full h-10 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-800 focus:ring-2 focus:ring-blue-500">
+                        <select name="filtro" id="filtroSelect" class="cursor-pointer w-full h-10 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-[#27272A] focus:ring-2 focus:ring-blue-500">
                             <option value="hoje" <?php echo $filtro == 'hoje' ? 'selected' : ''; ?>>Hoje</option>
                             <option value="ontem" <?php echo $filtro == 'ontem' ? 'selected' : ''; ?>>Ontem</option>
                             <option value="7dias" <?php echo $filtro == '7dias' ? 'selected' : ''; ?>>Últimos 7 dias</option>
@@ -226,12 +226,12 @@ canvas a{
                         <div class="w-full sm:w-1/3">
                             <label class="block text-sm font-medium mb-2">Data Início</label>
                             <input type="date" name="data_inicio" value="<?php echo $dataInicio; ?>" 
-                                   class="w-full h-10 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 focus:ring-2 focus:ring-blue-500">
+                                   class="w-full h-10 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-[#18181B] focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div class="w-full sm:w-1/3">
                             <label class="block text-sm font-medium mb-2">Data Fim</label>
                             <input type="date" name="data_fim" value="<?php echo $dataFim; ?>" 
-                                   class="w-full h-10 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 focus:ring-2 focus:ring-blue-500">
+                                   class="w-full h-10 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-[#18181B] focus:ring-2 focus:ring-blue-500">
                         </div>
                     </div>
 
@@ -244,23 +244,23 @@ canvas a{
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6 mb-6">
-                <div class="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow transition-transform hover:scale-105">
+                <div class="bg-white dark:bg-[#27272A] p-4 sm:p-6 rounded-lg shadow transition-transform hover:scale-105">
                     <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Faturamento Total</h3>
                     <p class="text-xl sm:text-2xl font-bold whitespace-nowrap overflow-hidden text-ellipsis">R$ <?php echo number_format($total_faturamento, 2, ',', '.'); ?></p>
                 </div>
-                <div class="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow transition-transform hover:scale-105">
+                <div class="bg-white dark:bg-[#27272A] p-4 sm:p-6 rounded-lg shadow transition-transform hover:scale-105">
                     <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Pedidos Aprovados</h3>
                     <p class="text-xl sm:text-2xl font-bold whitespace-nowrap"><?php echo count(array_filter($pedidos, function($pedido) { return $pedido['status'] == 1; })); ?></p>
                 </div>
-                <div class="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow transition-transform hover:scale-105">
+                <div class="bg-white dark:bg-[#27272A] p-4 sm:p-6 rounded-lg shadow transition-transform hover:scale-105">
                     <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Ticket Médio</h3>
                     <p class="text-xl sm:text-2xl font-bold whitespace-nowrap overflow-hidden text-ellipsis">R$ <?php echo count($pedidos) > 0 ? number_format($total_faturamento / count($pedidos), 2, ',', '.') : '0,00'; ?></p>
                 </div>
-                <div class="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow transition-transform hover:scale-105">
+                <div class="bg-white dark:bg-[#27272A] p-4 sm:p-6 rounded-lg shadow transition-transform hover:scale-105">
                     <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Pedidos Pendentes</h3>
                     <p class="text-xl sm:text-2xl font-bold whitespace-nowrap"><?php echo count(array_filter($pedidos, function($pedido) { return $pedido['status'] == 0; })); ?></p>
                 </div>
-                <div class="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow transition-transform hover:scale-105">
+                <div class="bg-white dark:bg-[#27272A] p-4 sm:p-6 rounded-lg shadow transition-transform hover:scale-105">
                     <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Valor Pendente</h3>
                     <p class="text-xl sm:text-2xl font-bold whitespace-nowrap overflow-hidden text-ellipsis">R$ <?php 
                         $valor_pendente = array_reduce($pedidos, function($total, $pedido) {
@@ -272,19 +272,19 @@ canvas a{
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-                <div class="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow">
+                <div class="bg-white dark:bg-[#27272A] p-4 sm:p-6 rounded-lg shadow">
                     <h3 class="text-lg font-medium mb-4">Faturamento Diário</h3>
                     <div id="chartFaturamento" class="chart-container"></div>
                 </div>
-                <div class="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow">
+                <div class="bg-white dark:bg-[#27272A] p-4 sm:p-6 rounded-lg shadow">
                     <h3 class="text-lg font-medium mb-4">Faturamento por Hora</h3>
                     <div id="chartFaturamentoHora" class="chart-container"></div>
                 </div>
-                <div class="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow">
+                <div class="bg-white dark:bg-[#27272A] p-4 sm:p-6 rounded-lg shadow">
                     <h3 class="text-lg font-medium mb-4">Clientes</h3>
                     <div id="chartClientes" class="chart-container"></div>
                 </div>
-                <div class="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow">
+                <div class="bg-white dark:bg-[#27272A] p-4 sm:p-6 rounded-lg shadow">
                     <h3 class="text-lg font-medium mb-4">Pedidos</h3>
                     <div id="chartPedidos" class="chart-container"></div>
                 </div>
@@ -307,8 +307,13 @@ canvas a{
                     // Atualizar cor de fundo
                     chart.set("background", am5.Rectangle.new(chart.root, {
                         fill: am5.color(isDark ? "#1F2937" : "#FFFFFF"),
-                        fillOpacity: 1
+                        fillOpacity: 0
                     }));
+
+                    chart.plotContainer.get("background").setAll({
+                        fill: am5.color(isDark ? "#1F2937" : "#FFFFFF"),
+                        fillOpacity: 0
+                    });
 
                     // Atualizar cores dos eixos
                     chart.xAxes.each(function(axis) {
@@ -387,7 +392,7 @@ canvas a{
                             wheelY: "zoomX",
                             background: am5.Rectangle.new(root, {
                                 fill: am5.color(isDark ? "#1F2937" : "#FFFFFF"),
-                                fillOpacity: 1
+                                fillOpacity: 0
                             })
                         })
                     );
@@ -447,7 +452,11 @@ canvas a{
                     // Aplicar cores do tema à grade
                     chart.get("background").setAll({
                         fill: am5.color(isDark ? "#1F2937" : "#FFFFFF"),
-                        fillOpacity: 1
+                        fillOpacity: 0
+                    });
+                    chart.plotContainer.get("background").setAll({
+                        fill: am5.color(isDark ? "#1F2937" : "#FFFFFF"),
+                        fillOpacity: 0
                     });
 
                     // Set data

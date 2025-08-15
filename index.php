@@ -82,7 +82,7 @@ if ($config['habilitar_api_facebook'] == '1'): ?>
   </style>
 </head>
 
-<body class="bg-gray-100 text-black dark:bg-gray-900 dark:text-white transition-all">
+<body class="bg-gray-100 text-black dark:bg-[#18181B] dark:text-white transition-all">
   <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm hidden z-40"></div>
   <main class="container mx-auto px-0 py-8">
     <!-- Destaques -->
@@ -90,22 +90,28 @@ if ($config['habilitar_api_facebook'] == '1'): ?>
     <section class=" w-full md:w-4/5 lg:w-3/5 mx-auto relative -top-12">
 
       <?php if (!empty($destaque)): ?>
-        <div class="dark:bg-gray-800 bg-white rounded-t-lg shadow-lg p-2">
+        <div class="dark:bg-[#27272A] bg-white rounded-t-lg shadow-lg p-2">
           <a href="campanha.php?id=<?php echo $destaque['id']; ?>">
-            <h2 class="bg-gray-200 dark:bg-gray-700 p-2 rounded-lg text-lg font-semibold mb-4">
+            <h2 class="bg-gray-200 dark:bg-[#3F3F46] p-2 rounded-lg text-lg font-semibold mb-4">
               <span class="flex">
                 <img src="assets/css/estrela.svg" alt="estrela" style="fill: #22C55A;margin-right:5px;">
                 Destaques
               </span>
             </h2>
 
-            <div class="hover-effect bg-gray-300 dark:bg-gray-700 rounded-lg overflow-hidden shadow borda-animada">
+            <div class="hover-effect bg-gray-300 dark:bg-[#3F3F46] rounded-lg overflow-hidden shadow borda-animada">
               <div class="p-4 ">
                 <div class="bg-gray-400 dark:bg-gray-600 rounded-lg flex items-center justify-center">
-                  <?php if (!empty($destaque['caminho_imagem'])): ?>
-                    <img src="<?php echo $destaque['caminho_imagem']; ?>" alt="<?php echo $destaque['nome']; ?>" class="img-campanha-16-9">
+                  <?php 
+                    $imgDestaque = !empty($destaque['imagem_capa']) ? $destaque['imagem_capa'] : ($destaque['caminho_imagem'] ?? '');
+                    if (!empty($imgDestaque)):
+                  ?>
+                    <img src="<?php echo $imgDestaque; ?>" alt="<?php echo $destaque['nome']; ?>" class="img-campanha-16-9">
                   <?php else: ?>
-                    <span class="dark:text-white text-black text-2xl">Imagem não disponível</span>
+                    <?php $letraD = function_exists('mb_substr') ? mb_strtoupper(mb_substr(trim($destaque['nome'] ?? ''), 0, 1, 'UTF-8'), 'UTF-8') : strtoupper(substr(trim($destaque['nome'] ?? ''), 0, 1)); ?>
+                    <div class="img-campanha-16-9 flex items-center justify-center">
+                      <span class="text-6xl font-bold text-white"><?php echo $letraD ?: 'R'; ?></span>
+                    </div>
                   <?php endif; ?>
                 </div>
                 <div class="mt-4">
@@ -144,16 +150,18 @@ if ($config['habilitar_api_facebook'] == '1'): ?>
         </div>
 
         <?php if (!empty($campanhas)): ?>
-          <div class="dark:bg-gray-800 bg-white rounded-b-lg shadow-lg p-2 pt-0">
+          <div class="dark:bg-[#27272A] bg-white rounded-b-lg shadow-lg p-2 pt-0">
             <?php foreach ($campanhas as $campanha): ?>
               <a href="campanha.php?id=<?php echo $campanha['id']; ?>">
-                <div class="cursor-pointer hover-effect flex items-center bg-gray-300 dark:bg-gray-700 rounded-lg p-4 mb-4 borda-animada">
+                <div class="cursor-pointer hover-effect flex items-center bg-gray-300 dark:bg-[#3F3F46] rounded-lg p-4 mb-4 borda-animada">
                   <div class="w-20 h-20 rounded-full bg-gray-400 dark:bg-gray-600 flex items-center justify-center">
-                    <?php if (!empty($campanha['caminho_imagem'])): ?>
-                      <img src="<?php echo $campanha['caminho_imagem']; ?>" alt="<?php echo $campanha['nome']; ?>"
+                    <?php $imgLista = !empty($campanha['imagem_capa']) ? $campanha['imagem_capa'] : ($campanha['caminho_imagem'] ?? ''); ?>
+                    <?php if (!empty($imgLista)): ?>
+                      <img src="<?php echo $imgLista; ?>" alt="<?php echo $campanha['nome']; ?>"
                         class="w-full h-full object-cover rounded-full">
                     <?php else: ?>
-                      <span class="dark:text-white text-black text-sm">Sem imagem</span>
+                      <?php $letra = function_exists('mb_substr') ? mb_strtoupper(mb_substr(trim($campanha['nome'] ?? ''), 0, 1, 'UTF-8'), 'UTF-8') : strtoupper(substr(trim($campanha['nome'] ?? ''), 0, 1)); ?>
+                      <span class="text-xl font-bold text-white"><?php echo $letra ?: 'R'; ?></span>
                     <?php endif; ?>
                   </div>
                   <div class="ml-4">
@@ -168,9 +176,9 @@ if ($config['habilitar_api_facebook'] == '1'): ?>
         <?php endif; ?>
 
       <?php else: ?>
-        <div class="dark:bg-gray-800 bg-white rounded-lg shadow-lg p-8 text-center">
+        <div class="dark:bg-[#27272A] bg-white rounded-lg shadow-lg p-8 text-center">
           <div class="flex flex-col items-center justify-center space-y-4">
-            <div class="w-20 h-20 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center">
+            <div class="w-20 h-20 bg-gray-200 dark:bg-[#3F3F46] rounded-full flex items-center justify-center">
               <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -187,10 +195,10 @@ if ($config['habilitar_api_facebook'] == '1'): ?>
 
       <!-- Compartilhar e Grupo -->
       <?php if ($config['habilitar_fale_conosco'] == '1'): ?>
-        <div class="dark:bg-gray-800 bg-white rounded-lg shadow-lg p-2 mt-10">
+        <div class="dark:bg-[#27272A] bg-white rounded-lg shadow-lg p-2 mt-10">
           <div class="flex justify-center">
             <a href="<?= $config['link_fale_conosco'] ?>" target="_blank"
-                              class="flex-1 sm:flex-none bg-gray-300 dark:bg-gray-700 text-white py-1.5 rounded-lg flex items-center justify-center gap-1 sm:gap-2 p-4">
+                              class="flex-1 sm:flex-none bg-gray-300 dark:bg-[#3F3F46] text-white py-1.5 rounded-lg flex items-center justify-center gap-1 sm:gap-2 p-4">
               <div class="icone font-lg bg-dark rounded p-2 bg-opacity-10"></div>
               <i class="fas fa-share text-xs sm:text-sm"></i>
               <span class="text-[11px] sm:text-sm whitespace-nowrap">Dúvidas? Fale conosco</span>
@@ -210,8 +218,8 @@ if ($config['habilitar_api_facebook'] == '1'): ?>
       if (!empty($perguntas)){
         ?>
         <!-- Perguntas Frequentes -->
-        <div class="dark:bg-gray-800 bg-white rounded-b-lg shadow-lg p-2 mt-10">
-          <h2 class="bg-gray-300 dark:bg-gray-700 p-2 rounded-lg text-black dark:text-white text-lg mb-4">🙋🏼 Perguntas
+        <div class="dark:bg-[#27272A] bg-white rounded-b-lg shadow-lg p-2 mt-10">
+          <h2 class="bg-gray-300 dark:bg-[#3F3F46] p-2 rounded-lg text-black dark:text-white text-lg mb-4">🙋🏼 Perguntas
             frequentes</h2>
           <div class="space-y-4">
             <?php
@@ -227,7 +235,7 @@ if ($config['habilitar_api_facebook'] == '1'): ?>
             }
             foreach ($faq as $item):
               ?>
-                              <div class="cursor-pointer hover-effect bg-gray-300 dark:bg-gray-700 rounded-lg p-4">
+                              <div class="cursor-pointer hover-effect bg-gray-300 dark:bg-[#3F3F46] rounded-lg p-4">
                 <h3 class="text-lg font-bold dark:text-white text-black mb-2"><?php echo $item['pergunta']; ?></h3>
                 <p class="dark:text-white text-black"><?php echo $item['resposta']; ?></p>
               </div>

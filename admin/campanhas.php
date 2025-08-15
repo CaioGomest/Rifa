@@ -86,7 +86,7 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
     </style>
 </head>
 
-<body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white">
+<body class="bg-gray-100 text-gray-900 dark:bg-[#18181B] dark:text-white">
 
     <!-- Container principal -->
     <div class="flex h-screen">
@@ -111,10 +111,10 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
             </header>
 
             <section>
-                <div class="bg-white dark:bg-gray-800 p-4 rounded-md shadow-md">
+                <div class="bg-white dark:bg-[#27272A] p-4 rounded-md shadow-md">
                     <div class="flex items-center justify-between mb-4">
                         <select id="tipo_campanha" name="status" onchange="filtrarCampanhas()"
-                            class="cursor-pointer bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white p-2 rounded-md">
+                            class="cursor-pointer bg-gray-50 dark:bg-[#3F3F46] text-gray-800 dark:text-white p-2 rounded-md">
                             <option class="cursor-pointer" value="-1">Todas</option>
                             <option class="cursor-pointer" value="1" <?php echo $status == 1 ? 'selected' : ''; ?>>Ativas
                             </option>
@@ -126,7 +126,7 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
                     <div class="overflow-x-auto">
                         <div class="min-w-[800px]">
                             <table class="w-full text-left">
-                                <thead class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-100">
+                                <thead class="bg-gray-200 dark:bg-[#3F3F46] text-gray-800 dark:text-gray-100">
                                     <tr>
                                         <th class="p-2 text-gray-800 dark:text-gray-100">Campanha</th>
                                         <th class="p-2 text-gray-800 dark:text-gray-100">Progresso</th>
@@ -148,7 +148,7 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
 
                                             foreach ($pedidos_campanha as $pedido)
                                                 $valor_total += $pedido['valor_total'];
-                                            
+
                                             $numeros_disponiveis = count_obterNumerosDisponiveis($conn, $campanha['id']);
                                             $pedidos = listaPedidos($conn, NULL, NULL, $campanha['id'], NULL, NULL, 1);
                                             $soma_todos_numeros_vendidos = 0;
@@ -161,14 +161,16 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
                                             <tr
                                                 class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
                                                 <td class="p-2 text-gray-800 dark:text-gray-300">
-                                                    <?= htmlspecialchars($campanha['nome']) ?></td>
+                                                    <?= htmlspecialchars($campanha['nome']) ?>
+                                                </td>
                                                 <td class="p-2 text-gray-800 dark:text-gray-300">
                                                     <?= number_format($porcentagem_vendida, 2) ?>%
                                                 </td>
                                                 <td class="p-2 inline-table text-gray-800 dark:text-gray-300">R$
-                                                    <?= number_format($valor_total, 2, ',', '.') ?></td>
+                                                    <?= number_format($valor_total, 2, ',', '.') ?>
+                                                </td>
                                                 <td class="p-2">
-                                                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                                                    <div class="w-full bg-gray-200 dark:bg-[#3F3F46] rounded-full h-2.5">
 
                                                         <div class="bg-green-500 h-2.5 rounded-full"
                                                             style="width: <?= $porcentagem_vendida ?>%;"></div>
@@ -221,52 +223,57 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
     <div id="modalEdicao"
         class="z-50 fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center overflow-y-auto py-6">
         <div
-            class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl w-11/12 max-w-lg max-h-[90vh] overflow-y-auto m-auto">
+            class="bg-white dark:bg-[#27272A] p-6 rounded-lg shadow-xl w-11/12 max-w-lg max-h-[90vh] overflow-y-auto m-auto">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xl font-bold">Editar Campanha</h2>
                 <button onclick="fecharModalEdicao()" class="text-gray-500 hover:text-gray-700">✕</button>
             </div>
             <div class="space-y-4">
                 <button onclick="abrirModalCampo('dados')"
-                    class="w-full text-left p-3 bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
+                    class="w-full text-left p-3 bg-gray-100 dark:bg-[#3F3F46] rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
                     📝 Dados Gerais
                 </button>
                 <button onclick="abrirModalCampo('imagens')"
-                    class="w-full text-left p-3 bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
+                    class="w-full text-left p-3 bg-gray-100 dark:bg-[#3F3F46] rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
                     🖼️ Imagens
                 </button>
                 <button onclick="abrirModalCampo('consultar_cota')"
-                    class="w-full text-left p-3 bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
+                    class="w-full text-left p-3 bg-gray-100 dark:bg-[#3F3F46] rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
                     🔍 Consultar Cota
                 </button>
                 <button onclick="abrirModalCampo('desconto')"
-                    class="w-full text-left p-3 bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
+                    class="w-full text-left p-3 bg-gray-100 dark:bg-[#3F3F46] rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
                     💰 Desconto
                 </button>
                 <button onclick="abrirModalCampo('ranking')"
-                    class="w-full text-left p-3 bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
+                    class="w-full text-left p-3 bg-gray-100 dark:bg-[#3F3F46] rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
                     🏆 Top Compradores
                 </button>
                 <button onclick="abrirModalCampo('barra')"
-                    class="w-full text-left p-3 bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
+                    class="w-full text-left p-3 bg-gray-100 dark:bg-[#3F3F46] rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
                     📊 Barra de Progresso
                 </button>
                 <button onclick="abrirModalCampo('ganhadores')"
-                    class="w-full text-left p-3 bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
+                    class="w-full text-left p-3 bg-gray-100 dark:bg-[#3F3F46] rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
                     🎯 Ganhadores
                 </button>
                 <button onclick="abrirModalCampo('cotas_premiadas')"
-                    class="w-full text-left p-3 bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
+                    class="w-full text-left p-3 bg-gray-100 dark:bg-[#3F3F46] rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
                     🎌 Cotas Premiadas
                 </button>
                 <button onclick="abrirModalCampo('cotas_dobro')"
-                    class="w-full text-left p-3 bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
+                    class="w-full text-left p-3 bg-gray-100 dark:bg-[#3F3F46] rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
                     🔄 Cotas em Dobro
                 </button>
                 <button onclick="abrirModalCampo('sorteios')"
-                    class="w-full text-left p-3 bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
+                    class="w-full text-left p-3 bg-gray-100 dark:bg-[#3F3F46] rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
                     🎲 Sorteios
                 </button>
+                <button onclick="abrirModalCampo('roletas_raspadinhas')"
+                    class="w-full text-left p-3 bg-gray-100 dark:bg-[#3F3F46] rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
+                    🎰 Roletas e Raspadinhas
+                </button>
+
             </div>
         </div>
     </div>
@@ -274,8 +281,9 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
     <!-- Modal de Campo -->
     <div id="modalCampo"
         class="z-50 fixed inset-0 bg-black bg-opacity-80 hidden items-center justify-center overflow-y-auto py-6">
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl max-h-[90vh] m-auto flex flex-col w-full max-w-6xl">
-            
+        <div
+            class="bg-white dark:bg-[#27272A] p-6 rounded-lg shadow-xl max-h-[90vh] m-auto flex flex-col w-full max-w-6xl">
+
             <div class="flex justify-between items-center mb-4">
                 <h2 id="modalCampoTitulo" class="text-xl font-bold">Editar Campo</h2>
                 <button onclick="fecharModalCampo()" class="text-gray-500 hover:text-gray-700">✕</button>
@@ -361,22 +369,22 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
                 <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-medium mb-1">Nome</label>
-                        <input type="text" id="nome" value="${campanhaAtual.nome}" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <input type="text" id="nome" value="${campanhaAtual.nome}" class="w-full p-2 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1">Subtítulo</label>
-                        <input type="text" id="subtitulo" value="${campanhaAtual.subtitulo}" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <input type="text" id="subtitulo" value="${campanhaAtual.subtitulo}" class="w-full p-2 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1">Descrição</label>
-                        <textarea id="descricao" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">${campanhaAtual.descricao}</textarea>
+                        <textarea id="descricao" class="w-full p-2 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">${campanhaAtual.descricao}</textarea>
                     </div>
                    <div>
                         <label class="block text-sm font-medium mb-1">Preço</label>
                         <div class="relative">
                             <span class="absolute left-2 top-2 text-gray-500">$</span>
                             <input type="text" id="preco" name="preco" value="${campanhaAtual.preco ? campanhaAtual.preco : ''}" 
-                                class="w-full p-2 pl-8 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                class="w-full p-2 pl-8 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white"
                                 oninput="formatPrice(this)
                                 onclick="formatPrice(this)
                                 ">
@@ -385,14 +393,14 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
 
                     <div>
                         <label class="block text-sm font-medium mb-1">Tipo de Sorteio</label>
-                        <select id="tipo_sorteio" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <select id="tipo_sorteio" class="w-full p-2 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
                             <option value="1" ${campanhaAtual.tipo_sorteio == 1 ? 'selected' : ''}>Sorteio</option>
                             <option value="2" ${campanhaAtual.tipo_sorteio == 2 ? 'selected' : ''}>Rifa</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1">Layout</label>
-                        <select id="layout" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <select id="layout" class="w-full p-2 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
                             <option value="0" ${campanhaAtual.layout == 0 ? 'selected' : ''}>Rincon</option>
                             <option value="1" ${campanhaAtual.layout == 1 ? 'selected' : ''}>Buzeira</option>
                         </select>
@@ -400,19 +408,19 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
 
                     <div>
                         <label class="block text-sm font-medium mb-1">Quantidade de Números</label>
-                        <input type="number" id="quantidade_numeros" value="${campanhaAtual.quantidade_numeros}" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <input type="number" id="quantidade_numeros" value="${campanhaAtual.quantidade_numeros}" class="w-full p-2 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1">Compra Mínima</label>
-                        <input type="number" id="compra_minima" value="${campanhaAtual.compra_minima}" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <input type="number" id="compra_minima" value="${campanhaAtual.compra_minima}" class="w-full p-2 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1">Compra Máxima</label>
-                        <input type="number" id="compra_maxima" value="${campanhaAtual.compra_maxima}" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <input type="number" id="compra_maxima" value="${campanhaAtual.compra_maxima}" class="w-full p-2 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1">Status</label>
-                        <select id="status" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <select id="status" class="w-full p-2 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
                             <option value="0" ${campanhaAtual.status == 0 ? 'selected' : ''}>Inativo</option>
                             <option value="1" ${campanhaAtual.status == 1 ? 'selected' : ''}>Ativo</option>
                         </select>
@@ -449,26 +457,64 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
                     </div>
                     <div id="div_quantidade_ranking">
                         <label class="block text-sm font-medium mb-1">Quantidade no Ranking (1 a 10)</label>
-                        <input type="number" id="quantidade_ranking" value="${campanhaAtual.quantidade_ranking}" min="1" max="10" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <input type="number" id="quantidade_ranking" value="${campanhaAtual.quantidade_ranking}" min="1" max="10" class="w-full p-2 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
                     </div>
                     <button onclick="salvarCampo('dados')" class="w-full bg-purple-600 text-white p-2 rounded hover:bg-purple-700">Salvar</button>
                 </div>
             `;
                 break;
+            // case 'roletas_raspadinhas':
+            // A criação/edição de UI deste grupo está definida mais adiante neste mesmo switch
+            // (case que seta `titulo` e `conteudo.innerHTML`). O envio dos dados acontece na
+            // função `salvarCampo('roletas_raspadinhas')`. Mantido sem manipulação aqui para
+            // evitar escopo incorreto da variável `dados`.
+            // break;
 
             case 'imagens':
                 titulo.textContent = 'Editar Imagens';
                 conteudo.innerHTML = `
                 <div class="space-y-6">
 
-                   
+                    <!-- Imagem de Capa (listagem/index) -->
+                    <div>
+                        <label class="block mb-2 font-medium">Imagem de capa (listagem)</label>
+                        <div class="flex flex-col space-y-4">
+                            <div class="flex items-center justify-center w-full">
+                                <label for="imagem_capa" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-[#3F3F46] hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600" onclick="document.getElementById('remover_imagem_capa').value='0'">
+                                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                        <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                                        </svg>
+                                        <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Clique para enviar</span> ou arraste e solte</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400">PNG, JPG ou GIF (MAX. 2MB)</p>
+                                    </div>
+                                <input type="file" name="imagem_capa" id="imagem_capa" accept="image/*" class="hidden" onchange="previewImagem(this, 'preview-capa')" />
+                                </label>
+                            </div>
+                            ${campanhaAtual.imagem_capa ? `
+                                <div class="relative inline-block w-fit group imagemAtual">
+                                    <img src="../${campanhaAtual.imagem_capa}" alt="Imagem de capa" class="max-w-[200px] rounded-lg shadow-md">
+                                    <button type="button" onclick="removerImagemCapa(this)" class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            ` : ''}
+                            <div id="preview-capa" class="hidden mt-4">
+                                <img src="" alt="Preview" class="max-w-[200px] rounded-lg shadow-md">
+                            </div>
+                            <input type="hidden" id="imagem_capa_atual" value="${campanhaAtual.imagem_capa || ''}">
+                            <input type="hidden" id="remover_imagem_capa" value="0">
+                        </div>
+                    </div>
 
                     <!-- Imagem Principal -->
                     <div>
                         <label class="block mb-2 font-medium">Imagem principal</label>
                         <div class="flex flex-col space-y-4">
                             <div class="flex items-center justify-center w-full">
-                                <label for="imagem_principal" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                                <label for="imagem_principal" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-[#3F3F46] hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600" onclick="document.getElementById('remover_imagem_principal').value='0'">
                                     <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                         <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
@@ -480,8 +526,8 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
                                     </label>
                             </div>
                             ${campanhaAtual.caminho_imagem ? `
-                                <div class="relative group">
-                                    <img src="../${campanhaAtual.caminho_imagem}" alt="Imagem atual" class="imagemAtual max-w-[200px] rounded-lg shadow-md">
+                                <div class="relative inline-block w-fit group imagemAtual">
+                                    <img src="../${campanhaAtual.caminho_imagem}" alt="Imagem atual" class="max-w-[200px] rounded-lg shadow-md">
                                     <button type="button" onclick="removerImagemPrincipal(this)" class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -492,6 +538,8 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
                             <div id="preview-principal" class="hidden mt-4">
                                 <img src="" alt="Preview" class="max-w-[200px] rounded-lg shadow-md">
                             </div>
+                            <input type="hidden" id="caminho_imagem_atual" value="${campanhaAtual.caminho_imagem || ''}">
+                            <input type="hidden" id="remover_imagem_principal" value="0">
                         </div>
                     </div>
 
@@ -499,7 +547,7 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
                     <div>
                         <label class="block mb-2 font-medium">Galeria de imagens</label>
                         <div class="flex items-center justify-center w-full mb-4">
-                            <label for="galeria" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                                <label for="galeria" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-[#3F3F46] hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                                 <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                     <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
@@ -515,7 +563,7 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
                             ${campanhaAtual.galeria_imagens ? campanhaAtual.galeria_imagens.split(',').map((img, index) => `
                                 <div class="relative group">
                                     <img src="../${img}" alt="Imagem da galeria" class="w-full h-40 object-cover rounded-lg shadow-md">
-                                    <button type="button" caio onclick="removerImagemGaleria(this, ${index})" class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                    <button type="button" onclick="removerImagemGaleria(this, '${img}')" class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                                         </svg>
@@ -536,7 +584,7 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
                 conteudo.innerHTML = `
                 <div class="space-y-4">
                 <!-- Cabeçalho com imagem e título -->
-                    <div class="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100 p-4 rounded-lg mb-6">
+                    <div class="bg-gray-100 dark:bg-[#27272A] text-gray-800 dark:text-gray-100 p-4 rounded-lg mb-6">
                         <div class="flex flex-col items-center">
                             <div class="w-full max-w-md mb-4">
                                 <img src="../${campanhaAtual.caminho_imagem}" alt="${campanhaAtual.nome}" class="w-full h-auto rounded-lg shadow-lg">
@@ -548,7 +596,7 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
                     <div>
                         <label class="block text-sm font-medium mb-1">Número da Cota</label>
                         <div class="flex space-x-2">
-                            <input type="number" id="numero_cota" class="flex-1 p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Digite o número da cota">
+                            <input type="number" id="numero_cota" class="flex-1 p-2 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white" placeholder="Digite o número da cota">
                             <button onclick="consultarCota()" class="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-500">
                                 Consultar
                             </button>
@@ -713,7 +761,7 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
 
                     <div id="div_filtro_periodo_top_ganhadores" class="hidden">
                         <label class="block text-sm font-medium mb-1">Filtro de Período</label>
-                        <select id="filtro_periodo_top_ganhadores" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <select id="filtro_periodo_top_ganhadores" class="w-full p-2 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
                             <option value="hoje" ${filtroSalvo.filtro === 'hoje' ? 'selected' : ''}>Hoje</option>
                             <option value="ontem" ${filtroSalvo.filtro === 'ontem' ? 'selected' : ''}>Ontem</option>
                             <option value="ultimo_mes" ${filtroSalvo.filtro === 'ultimo_mes' ? 'selected' : ''}>Último Mês</option>
@@ -723,11 +771,11 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
                         <div id="div_datas_personalizadas" class="hidden mt-4 space-y-4">
                             <div>
                                 <label class="block text-sm font-medium mb-1">Data Inicial</label>
-                                <input type="date" id="data_inicial_personalizada" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white" value="${filtroSalvo.filtro === 'personalizado' ? filtroSalvo.valor.split(' até ')[0] : ''}">
+                                <input type="date" id="data_inicial_personalizada" class="w-full p-2 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white" value="${filtroSalvo.filtro === 'personalizado' ? filtroSalvo.valor.split(' até ')[0] : ''}">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium mb-1">Data Final</label>
-                                <input type="date" id="data_final_personalizada" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white" value="${filtroSalvo.filtro === 'personalizado' ? filtroSalvo.valor.split(' até ')[1] : ''}">
+                                <input type="date" id="data_final_personalizada" class="w-full p-2 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white" value="${filtroSalvo.filtro === 'personalizado' ? filtroSalvo.valor.split(' até ')[1] : ''}">
                             </div>
                         </div>
                     </div>
@@ -806,7 +854,7 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
                             <div class="flex items-center space-x-2">
                                 <input type="text" id="porcentagem_barra_progresso"
                                     name="porcentagem_barra_progresso"
-                                    class="w-24 bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                    class="w-24 bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
                                     value="${campanhaAtual.porcentagem_barra_progresso ? Number(campanhaAtual.porcentagem_barra_progresso).toFixed(1) : '0.0'}"
                                     oninput="this.value = this.value.replace(/[^0-9.]/g, ''); if(this.value > 100) this.value = '100.0'; if(parseFloat(this.value) < 0) this.value = '0.0';">
                                 <span class="text-gray-500">%</span>
@@ -829,15 +877,15 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
                 <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-medium mb-1">Vencedor do Sorteio</label>
-                        <input type="text" id="vencedor_sorteio" value="${campanhaAtual.vencedor_sorteio || ''}" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <input type="text" id="vencedor_sorteio" value="${campanhaAtual.vencedor_sorteio || ''}" class="w-full p-2 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1">Bilhete do Sorteio</label>
-                        <input type="text" id="numero_sorteio" value="${campanhaAtual.numero_sorteio || ''}" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <input type="text" id="numero_sorteio" value="${campanhaAtual.numero_sorteio || ''}" class="w-full p-2 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1">Data do Sorteio</label>
-                        <input type="datetime-local" id="data_sorteio" value="${campanhaAtual.data_sorteio || ''}" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <input type="datetime-local" id="data_sorteio" value="${campanhaAtual.data_sorteio || ''}" class="w-full p-2 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
                     </div>
                     <button onclick="salvarCampo('ganhadores')" class="w-full bg-purple-600 text-white p-2 rounded hover:bg-purple-700">Salvar</button>
                 </div>
@@ -865,21 +913,39 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1">Status das Cotas Premiadas</label>
-                        <select id="status_cotas_premiadas" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <select id="status_cotas_premiadas" class="w-full p-2 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
                             <option value="bloqueado" ${campanhaAtual.status_cotas_premiadas === 'bloqueado' ? 'selected' : ''}>Bloqueado</option>
                             <option value="disponivel" ${campanhaAtual.status_cotas_premiadas === 'disponivel' ? 'selected' : ''}>Disponível</option>
                             ${opcaoImediato}
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-1">Cotas Premiadas</label>
-                        <input type="text" id="cotas_premiadas" value="${campanhaAtual.cotas_premiadas || ''}" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white" oninput="validarCotasPremiadas(this)">
-                        <p class="text-sm text-gray-500 mt-1">Digite as cotas separadas por vírgula, sem espaços. Exemplo: 12345,54321,78965</p>
+                        <label class="block text-sm font-medium mb-1">Quantidade de Cotas Premiadas</label>
+                        <input type="number" id="quantidade_cotas_premiadas" min="1" value="${campanhaAtual.quantidade_cotas_premiadas || 0}" class="w-full p-2 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
+                        <p class="text-sm text-gray-500 mt-1">Quantidade de cotas que serão selecionadas automaticamente</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Prêmio para este Grupo</label>
+                        <input type="text" id="premio_cotas_premiadas" value="${campanhaAtual.premio_cotas_premiadas || ''}" class="w-full p-2 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white" placeholder="Ex: R$ 500 ou AUDI A3">
+                        <p class="text-sm text-gray-500 mt-1">Prêmio que será associado às cotas deste grupo</p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1">Descrição das Cotas Premiadas</label>
-                        <textarea id="descricao_cotas_premiadas" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white" rows="4">${campanhaAtual.descricao_cotas_premiadas || ''}</textarea>
+                        <textarea id="descricao_cotas_premiadas" class="w-full p-2 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white" rows="4">${campanhaAtual.descricao_cotas_premiadas || ''}</textarea>
                     </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Grupos de Cotas Premiadas</label>
+                        <div id="grupos_premios" class="mt-3 space-y-2">
+                            ${gerarHTMLGruposPremios(campanhaAtual.premio_cotas_premiadas)}
+                        </div>
+                        <p class="text-sm text-gray-500 mt-1">
+                            Total de cotas premiadas: ${campanhaAtual.cotas_premiadas ? campanhaAtual.cotas_premiadas.split(',').length : 0}
+                        </p>
+                        <p class="text-sm text-gray-500">Cotas selecionadas automaticamente pelo sistema</p>
+                    </div>
+                    <button onclick="gerarCotasPremiadas()" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 mb-2">Gerar Cotas Premiadas</button>
+                    <button onclick="limparCotasPremiadas()" class="w-full bg-red-600 text-white p-2 rounded hover:bg-red-700 mb-2">Limpar Todas as Cotas</button>
+                    <button onclick="corrigirGruposPremiados()" class="w-full bg-yellow-600 text-white p-2 rounded hover:bg-yellow-700 mb-2">Corrigir Grupos Corrompidos</button>
                     <button onclick="salvarCampo('cotas_premiadas')" class="w-full bg-purple-600 text-white p-2 rounded hover:bg-purple-700">Salvar</button>
                 </div>
             `;
@@ -903,13 +969,13 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
                         <div>
                             <label class="block text-sm font-medium mb-1">Título do Alerta</label>
                             <input type="text" id="titulo_cotas_dobro" value="${campanhaAtual.titulo_cotas_dobro || ''}" 
-                                class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                class="w-full p-2 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white"
                                 placeholder="Ex: COTAS EM DOBRO ATIVADAS!">
                         </div>
                         <div>
                             <label class="block text-sm font-medium mb-1">Subtítulo do Alerta</label>
                             <input type="text" id="subtitulo_cotas_dobro" value="${campanhaAtual.subtitulo_cotas_dobro || ''}" 
-                                class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                class="w-full p-2 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white"
                                 placeholder="Ex: Aproveite! Todas as cotas estão valendo em dobro.">
                         </div>
                     </div>
@@ -930,7 +996,7 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
                 conteudo.innerHTML = `
                 <div class="space-y-4 max-w-full">
                     <!-- Cabeçalho com imagem e título -->
-                    <div class="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100 p-4 rounded-lg mb-6">
+                    <div class="bg-gray-100 dark:bg-[#27272A] text-gray-800 dark:text-gray-100 p-4 rounded-lg mb-6">
                         <div class="flex flex-col items-center">
                             <div class="w-full max-w-md mb-4">
                                 <img src="../${campanhaAtual.caminho_imagem}" alt="${campanhaAtual.nome}" class="w-full h-auto rounded-lg shadow-lg">
@@ -941,34 +1007,34 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
                     </div>
 
                     <!-- Grid de formulário -->
-                    <form id="formSorteio" method="POST" class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100 p-4 rounded-lg">
+                    <form id="formSorteio" method="POST" class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-gray-100 dark:bg-[#27272A] text-gray-800 dark:text-gray-100 p-4 rounded-lg">
                         <div>
                             <label class="block text-sm font-medium text-black dark:text-gray-300 mb-1">
                                 Data Inicial
                             </label>
                             <input type="datetime-local" name="data_inicio" id="data_inicio" 
-                                   class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                   class="w-full p-2 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-black dark:text-gray-300 mb-1">
                                 Data Final
                             </label>
                             <input type="datetime-local" name="data_final" id="data_final" 
-                                   class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                   class="w-full p-2 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-black dark:text-gray-300 mb-1">
                                 Quantidade de Sorteados
                             </label>
                             <input type="number" name="qtd_sortear" id="qtd_sortear" min="1"
-                                   class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                   class="w-full p-2 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-black dark:text-gray-300 mb-1">
                                 Tipo de Sorteio
                             </label>
                             <select name="tipo" id="tipo" 
-                                    class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                    class="w-full p-2 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
                                 <option value="">SELECIONE</option>
                                 <option value="por_pedido">Por Pedido</option>
                                 <option value="soma_pedidos">Soma dos Pedidos</option>
@@ -982,7 +1048,7 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
                                 Quantidade Mínima de Cotas
                             </label>
                             <input type="number" name="qtd_cotas" id="qtd_cotas" min="0"
-                                   class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                   class="w-full p-2 border rounded dark:bg-[#3F3F46] dark:border-gray-600 dark:text-white">
                         </div>
                         <div class="md:col-span-4 flex justify-center mt-4">
                             <button type="button" id="btnSortear"
@@ -1014,13 +1080,13 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
                     </div>
 
                     <!-- Resultado do Sorteio -->
-                    <div id="resultadoSorteio" class="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100" style="display: none;">
+                    <div id="resultadoSorteio" class="bg-gray-100 dark:bg-[#27272A] text-gray-800 dark:text-gray-100" style="display: none;">
                         <div class="p-4 border-b border-gray-300 dark:border-gray-700">
                             <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">Resultado do Sorteio</h2>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full">
-                                <thead class="bg-gray-200 dark:bg-gray-700">
+                                <thead class="bg-gray-200 dark:bg-[#3F3F46]">
                                     <tr>
                                         <th class="px-4 py-3 text-left text-gray-800 dark:text-gray-100">Nome</th>
                                         <th class="px-4 py-3 text-left text-gray-800 dark:text-gray-100">Telefone</th>
@@ -1139,6 +1205,124 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
                     });
                 }, 100);
                 break;
+
+            case 'roletas_raspadinhas':
+                titulo.textContent = 'Editar Roletas e Raspadinhas';
+                conteudo.innerHTML = `
+                <div class="space-y-6">
+                    <!-- Configuração da Roleta -->
+                    <div class="bg-white dark:bg-[#27272A] p-4 rounded-lg border">
+                        <h3 class="text-lg font-semibold mb-4">🎰 Configuração da Roleta</h3>
+                        <div class="mb-4">
+                            <label for="habilitar_roleta" class="block mb-2 font-medium">Habilitar Roleta</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="habilitar_roleta" name="habilitar_roleta" value="1"
+                                    ${campanhaAtual.habilitar_roleta == 1 ? 'checked' : ''}>
+                                <div class="toggle-switch-background">
+                                    <div class="toggle-switch-handle"></div>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div id="config_roleta" class="space-y-4" style="display: ${campanhaAtual.habilitar_roleta == 1 ? 'block' : 'none'}">
+                            <div>
+                                <label for="titulo_roleta" class="block mb-2 font-medium">Título da Roleta</label>
+                                <input type="text" id="titulo_roleta" name="titulo_roleta"
+                                    class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                    value="${campanhaAtual.titulo_roleta || '🎰 Roleta da Sorte'}"
+                                    placeholder="Ex: 🎰 Roleta da Sorte">
+                            </div>
+                            
+                            <div>
+                                <label for="descricao_roleta" class="block mb-2 font-medium">Descrição da Roleta</label>
+                                <textarea id="descricao_roleta" name="descricao_roleta"
+                                    class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                    placeholder="Ex: Gire a roleta e ganhe prêmios incríveis!">${campanhaAtual.descricao_roleta || ''}</textarea>
+                            </div>
+                            
+                            <div>
+                                <label for="itens_roleta" class="block mb-2 font-medium">Itens da Roleta</label>
+                                <div id="itens_roleta_container" class="space-y-3">
+                                    ${gerarHTMLItensRoleta(campanhaAtual.itens_roleta)}
+                                </div>
+                                <button type="button" onclick="adicionarItemRoleta()"
+                                    class="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+                                    Adicionar Item da Roleta
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                   
+
+                    <!-- Configuração da Raspadinha -->
+                    <div class="bg-white dark:bg-[#27272A] p-4 rounded-lg border">
+                        <h3 class="text-lg font-semibold mb-4">🎫 Configuração da Raspadinha</h3>
+                        <div class="mb-4">
+                            <label for="habilitar_raspadinha" class="block mb-2 font-medium">Habilitar Raspadinha</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="habilitar_raspadinha" name="habilitar_raspadinha" value="1"
+                                    ${campanhaAtual.habilitar_raspadinha == 1 ? 'checked' : ''}>
+                                <div class="toggle-switch-background">
+                                    <div class="toggle-switch-handle"></div>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div id="config_raspadinha" class="space-y-4" style="display: ${campanhaAtual.habilitar_raspadinha == 1 ? 'block' : 'none'}">
+                            <div>
+                                <label for="titulo_raspadinha" class="block mb-2 font-medium">Título da Raspadinha</label>
+                                <input type="text" id="titulo_raspadinha" name="titulo_raspadinha"
+                                    class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                    value="${campanhaAtual.titulo_raspadinha || '🎫 Raspadinha da Sorte'}"
+                                    placeholder="Ex: 🎫 Raspadinha da Sorte">
+                            </div>
+                            
+                            <div>
+                                <label for="descricao_raspadinha" class="block mb-2 font-medium">Descrição da Raspadinha</label>
+                                <textarea id="descricao_raspadinha" name="descricao_raspadinha"
+                                    class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                                    placeholder="Ex: Raspe e descubra prêmios incríveis!">${campanhaAtual.descricao_raspadinha || ''}</textarea>
+                            </div>
+                            
+                            <div>
+                                <label for="itens_raspadinha" class="block mb-2 font-medium">Itens da Raspadinha</label>
+                                <div id="itens_raspadinha_container" class="space-y-3">
+                                    ${gerarHTMLItensRaspadinha(campanhaAtual.itens_raspadinha)}
+                                </div>
+                                <button type="button" onclick="adicionarItemRaspadinha()"
+                                    class="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+                                    Adicionar Item da Raspadinha
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="salvarCampo('roletas_raspadinhas')" class="w-full bg-purple-600 text-white p-2 rounded hover:bg-purple-700">Salvar</button>
+                </div>
+                `;
+
+                // Adicionar eventos para mostrar/esconder campos
+                setTimeout(() => {
+                    const elHabRoleta = document.getElementById('habilitar_roleta');
+                    if (elHabRoleta) {
+                        elHabRoleta.addEventListener('change', function () {
+                            const cfg = document.getElementById('config_roleta');
+                            if (cfg) cfg.style.display = this.checked ? 'block' : 'none';
+                        });
+                    }
+
+                    // Removido: controle de habilitar pacotes de roleta
+
+                    const elHabRasp = document.getElementById('habilitar_raspadinha');
+                    if (elHabRasp) {
+                        elHabRasp.addEventListener('change', function () {
+                            const cfgR = document.getElementById('config_raspadinha');
+                            if (cfgR) cfgR.style.display = this.checked ? 'block' : 'none';
+                        });
+                    }
+                }, 100);
+                break;
         }
 
         modal.classList.remove('hidden');
@@ -1210,12 +1394,16 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
                     const valorBilhete = container.querySelector('input[name="valor_bilhete_normal[]"]').value;
                     const quantidadeNumeros = container.querySelector('input[name="quantidade_desconto_normal[]"]').value;
                     const valorPacote = container.querySelector('input[name="valor_desconto_normal[]"]').value;
+                    const beneficioTipo = (container.querySelector('select[name="beneficio_tipo_normal[]"]') || {}).value || '';
+                    const beneficioQtd = (container.querySelector('input[name="beneficio_quantidade_normal[]"]') || {}).value || 0;
 
                     if (valorBilhete && quantidadeNumeros && valorPacote) {
                         pacotesNormais.push({
                             valor_bilhete: parseFloat(valorBilhete),
                             quantidade_numeros: parseInt(quantidadeNumeros),
                             valor_pacote: parseFloat(valorPacote),
+                            beneficio_tipo: beneficioTipo,
+                            beneficio_quantidade: parseInt(beneficioQtd) || 0,
                         });
                     }
                 });
@@ -1229,13 +1417,17 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
                     const quantidadeNumeros = container.querySelector('input[name="quantidade_desconto_exclusivo[]"]').value;
                     const valorPacote = container.querySelector('input[name="valor_desconto_exclusivo[]"]').value;
                     const codigoPacote = container.querySelector('input[name="codigo_desconto_exclusivo[]"]').value || gerarCodigoAleatorio();
+                    const beneficioTipo = (container.querySelector('select[name="beneficio_tipo_exclusivo[]"]') || {}).value || '';
+                    const beneficioQtd = (container.querySelector('input[name="beneficio_quantidade_exclusivo[]"]') || {}).value || 0;
 
                     if (valorBilhete && quantidadeNumeros && valorPacote) {
                         pacotesExclusivos.push({
                             valor_bilhete: parseFloat(valorBilhete),
                             quantidade_numeros: parseInt(quantidadeNumeros),
                             valor_pacote: parseFloat(valorPacote),
-                            codigo_pacote: codigoPacote
+                            codigo_pacote: codigoPacote,
+                            beneficio_tipo: beneficioTipo,
+                            beneficio_quantidade: parseInt(beneficioQtd) || 0,
                         });
                     }
                 });
@@ -1256,7 +1448,7 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
                 break;
 
             case 'cotas_premiadas':
-                dados.append('cotas_premiadas', document.getElementById('cotas_premiadas').value);
+                dados.append('quantidade_cotas_premiadas', document.getElementById('quantidade_cotas_premiadas').value);
                 dados.append('descricao_cotas_premiadas', document.getElementById('descricao_cotas_premiadas').value);
                 dados.append('mostrar_cotas_premiadas', document.getElementById('mostrar_cotas_premiadas').checked ? 1 : 0);
                 dados.append('status_cotas_premiadas', document.getElementById('status_cotas_premiadas').value);
@@ -1270,16 +1462,69 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
                 }
                 break;
 
+            case 'roletas_raspadinhas':
+                dados.append('habilitar_roleta', document.getElementById('habilitar_roleta').checked ? 1 : 0);
+                dados.append('titulo_roleta', document.getElementById('titulo_roleta').value);
+                dados.append('descricao_roleta', document.getElementById('descricao_roleta').value);
+
+                // Coletar dados dos itens da roleta
+                const itensRoleta = [];
+                const containersItensRoleta = document.querySelectorAll('#itens_roleta_container > div');
+
+                containersItensRoleta.forEach(container => {
+                    const nome = container.querySelector('input[name="nome_item_roleta[]"]').value;
+                    const status = container.querySelector('select[name="status_item_roleta[]"]').value;
+
+                    if (nome) {
+                        itensRoleta.push({
+                            nome: nome,
+                            status: status
+                        });
+                    }
+                });
+
+                dados.append('itens_roleta', JSON.stringify(itensRoleta));
+
+                // Removido: coleta/envio de pacotes de roleta
+                dados.append('habilitar_raspadinha', document.getElementById('habilitar_raspadinha').checked ? 1 : 0);
+                dados.append('titulo_raspadinha', document.getElementById('titulo_raspadinha').value);
+                dados.append('descricao_raspadinha', document.getElementById('descricao_raspadinha').value);
+
+                // Coletar dados dos itens da raspadinha
+                const itensRaspadinha = [];
+                const containersItensRaspadinha = document.querySelectorAll('#itens_raspadinha_container > div');
+
+                containersItensRaspadinha.forEach(container => {
+                    const nome = container.querySelector('input[name="nome_item_raspadinha[]"]').value;
+                    const status = container.querySelector('select[name="status_item_raspadinha[]"]').value;
+
+                    if (nome) {
+                        itensRaspadinha.push({
+                            nome: nome,
+                            status: status
+                        });
+                    }
+                });
+
+                dados.append('itens_raspadinha', JSON.stringify(itensRaspadinha));
+                break;
+
             case 'imagens':
                 const imagemPrincipalInput = document.getElementById('imagem_principal');
                 const imagemPrincipalFile = imagemPrincipalInput.files[0];  // Pega o primeiro arquivo da imagem principal
 
                 const galeriaFiles = document.getElementById('galeria').files;
                 const galeriaAtual = document.getElementById('galeria_imagens_atual').value;
+                const caminhoImagemAtual = document.getElementById('caminho_imagem_atual') ? document.getElementById('caminho_imagem_atual').value : '';
+                const imagemCapaAtual = document.getElementById('imagem_capa_atual') ? document.getElementById('imagem_capa_atual').value : '';
+                const removerPrincipal = document.getElementById('remover_imagem_principal') ? document.getElementById('remover_imagem_principal').value : '0';
+                const removerCapa = document.getElementById('remover_imagem_capa') ? document.getElementById('remover_imagem_capa').value : '0';
 
                 dados.append('id', campanhaAtual.id);
                 dados.append('tipo', 'imagens');
                 dados.append('galeria_imagens_atual', galeriaAtual);
+                dados.append('caminho_imagem_atual', removerPrincipal === '1' ? '' : caminhoImagemAtual);
+                dados.append('imagem_capa_atual', removerCapa === '1' ? '' : imagemCapaAtual);
 
                 // Adiciona a imagem principal como um arquivo binário
                 if (imagemPrincipalFile) {
@@ -1289,6 +1534,12 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
                 // Adiciona as imagens da galeria
                 for (let i = 0; i < galeriaFiles.length; i++) {
                     dados.append('galeria[]', galeriaFiles[i]);
+                }
+
+                // Capa
+                const imagemCapaInput = document.getElementById('imagem_capa');
+                if (imagemCapaInput && imagemCapaInput.files && imagemCapaInput.files[0]) {
+                    dados.append('imagem_capa', imagemCapaInput.files[0]);
                 }
                 break;
 
@@ -1340,7 +1591,10 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
         for (let i = 0; i < 8; i++) {
             codigo += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
         }
-        input.value = codigo;
+        if (input) {
+            input.value = codigo;
+        }
+        return codigo;
     }
 
     function calcularValorPacote(input) {
@@ -1365,30 +1619,38 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
     function adicionarDescontoPromocional(tipo) {
         const container = tipo === 'normal' ? document.getElementById('descontos-container') : document.getElementById('descontos-exclusivos-container');
         const novoDesconto = document.createElement('div');
-        novoDesconto.className = 'bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200';
+        novoDesconto.className = 'bg-white dark:bg-[#27272A] p-4 rounded-lg border border-gray-200';
         novoDesconto.innerHTML = `
-        <div class="grid space-y-3">
-            <div class="gap-3">
-                <div>
-                    <label class="text-sm text-gray-600 dark:text-gray-400">Valor do Bilhete</label>
-                    <input type="number" step="0.01" name="valor_bilhete_${tipo}[]" 
-                        class="mt-1 w-full bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600"
-                        onkeyup="calcularValorPacote(this)">
-                </div>
-                <div>
-                    <label class="text-sm text-gray-600 dark:text-gray-400">Quantidade de números</label>
-                    <input type="number" name="quantidade_desconto_${tipo}[]" 
-                        class="mt-1 w-full bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600"
-                        onkeyup="calcularValorPacote(this)">
-                </div>
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div>
+                <label class="text-sm text-gray-600 dark:text-gray-400">Valor do Bilhete</label>
+                <input type="number" step="0.01" name="valor_bilhete_${tipo}[]" 
+                    class="mt-1 w-full bg-gray-50 dark:bg-[#3F3F46] text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600"
+                    onkeyup="calcularValorPacote(this)">
             </div>
-            <div class="gap-3">
-                <div>
-                    <label class="text-sm text-gray-600 dark:text-gray-400">Valor do Pacote</label>
-                    <input type="number" step="0.01" name="valor_desconto_${tipo}[]" 
-                        class="mt-1 w-full bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600"
-                        readonly>
-                </div>
+            <div>
+                <label class="text-sm text-gray-600 dark:text-gray-400">Quantidade de números</label>
+                <input type="number" name="quantidade_desconto_${tipo}[]" 
+                    class="mt-1 w-full bg-gray-50 dark:bg-[#3F3F46] text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600"
+                    onkeyup="calcularValorPacote(this)">
+            </div>
+            <div>
+                <label class="text-sm text-gray-600 dark:text-gray-400">Valor do Pacote</label>
+                <input type="number" step="0.01" name="valor_desconto_${tipo}[]" 
+                    class="mt-1 w-full bg-gray-50 dark:bg-[#3F3F46] text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600"
+                    readonly>
+            </div>
+            <div>
+                <label class="text-sm text-gray-600 dark:text-gray-400">Benefício</label>
+                <select name="beneficio_tipo_${tipo}[]" class="mt-1 w-full bg-gray-50 dark:bg-[#3F3F46] text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600">
+                    <option value="">Nenhum</option>
+                    <option value="roleta">Roleta</option>
+                    <option value="raspadinha">Raspadinha</option>
+                </select>
+            </div>
+            <div>
+                <label class="text-sm text-gray-600 dark:text-gray-400">Qtd. Benefício</label>
+                <input type="number" min="0" name="beneficio_quantidade_${tipo}[]" class="mt-1 w-full bg-gray-50 dark:bg-[#3F3F46] text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600">
             </div>
         </div>
         <button type="button" class="mt-3 text-red-500 hover:text-red-700 text-sm"
@@ -1402,20 +1664,20 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
     function adicionarDescontoExclusivo(tipo) {
         const container = tipo === 'normal' ? document.getElementById('descontos-container') : document.getElementById('descontos-exclusivos-container');
         const novoDesconto = document.createElement('div');
-        novoDesconto.className = 'bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200';
+        novoDesconto.className = 'bg-white dark:bg-[#27272A] p-4 rounded-lg border border-gray-200';
         novoDesconto.innerHTML = `
-        <div class="grid space-y-3">
+        <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
             <div class="gap-3">
                 <div>
                     <label class="text-sm text-gray-600 dark:text-gray-400">Valor do Bilhete</label>
                     <input type="number" step="0.01" name="valor_bilhete_${tipo}[]" 
-                        class="mt-1 w-full bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600"
+                        class="mt-1 w-full bg-gray-50 dark:bg-[#3F3F46] text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600"
                         onkeyup="calcularValorPacote(this)">
                 </div>
                 <div>
                     <label class="text-sm text-gray-600 dark:text-gray-400">Quantidade de números</label>
                     <input type="number" name="quantidade_desconto_${tipo}[]" 
-                        class="mt-1 w-full bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600"
+                        class="mt-1 w-full bg-gray-50 dark:bg-[#3F3F46] text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600"
                         onkeyup="calcularValorPacote(this)">
                 </div>
             </div>
@@ -1423,7 +1685,7 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
                 <div>
                     <label class="text-sm text-gray-600 dark:text-gray-400">Valor do Pacote</label>
                     <input type="number" step="0.01" name="valor_desconto_${tipo}[]" 
-                        class="mt-1 w-full bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600"
+                        class="mt-1 w-full bg-gray-50 dark:bg-[#3F3F46] text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600"
                         readonly>
                 </div>
             </div>
@@ -1431,9 +1693,21 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
                 <div>
                     <label class="text-sm text-gray-600 dark:text-gray-400">Código do Pacote</label>
                     <input type="text" name="codigo_desconto_${tipo}[]" 
-                        class="mt-1 w-full bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600"
+                        class="mt-1 w-full bg-gray-50 dark:bg-[#3F3F46] text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600"
                         ">
                 </div>
+            </div>
+            <div>
+                <label class="text-sm text-gray-600 dark:text-gray-400">Benefício</label>
+                <select name="beneficio_tipo_${tipo}[]" class="mt-1 w-full bg-gray-50 dark:bg-[#3F3F46] text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600">
+                    <option value="">Nenhum</option>
+                    <option value="roleta">Roleta</option>
+                    <option value="raspadinha">Raspadinha</option>
+                </select>
+            </div>
+            <div>
+                <label class="text-sm text-gray-600 dark:text-gray-400">Qtd. Benefício</label>
+                <input type="number" min="0" name="beneficio_quantidade_${tipo}[]" class="mt-1 w-full bg-gray-50 dark:bg-[#3F3F46] text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600">
             </div>
         </div>
         <button type="button" class="mt-3 text-red-500 hover:text-red-700 text-sm"
@@ -1455,22 +1729,22 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
     function adicionarPacoteExistentePromocional(pacote, tipo) {
         const container = tipo === 'normal' ? document.getElementById('descontos-container') : document.getElementById('descontos-exclusivos-container');
         const novoDesconto = document.createElement('div');
-        novoDesconto.className = 'bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200';
+        novoDesconto.className = 'bg-white dark:bg-[#27272A] p-4 rounded-lg border border-gray-200';
         novoDesconto.innerHTML = `
-        <div class="grid space-y-3">
+        <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
             <div class="gap-3">
                 <div>
                     <label class="text-sm text-gray-600 dark:text-gray-400">Valor do Bilhete</label>
                     <input type="number" step="0.01" name="valor_bilhete_${tipo}[]" 
                         value="${pacote.valor_bilhete || ''}"
-                        class="mt-1 w-full bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600"
+                        class="mt-1 w-full bg-gray-50 dark:bg-[#3F3F46] text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600"
                         onkeyup="calcularValorPacote(this)">
                 </div>
                 <div>
                     <label class="text-sm text-gray-600 dark:text-gray-400">Quantidade de números</label>
                     <input type="number" name="quantidade_desconto_${tipo}[]" 
                         value="${pacote.quantidade_numeros || ''}"
-                        class="mt-1 w-full bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600"
+                        class="mt-1 w-full bg-gray-50 dark:bg-[#3F3F46] text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600"
                         onkeyup="calcularValorPacote(this)">
                 </div>
             </div>
@@ -1479,9 +1753,28 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
                     <label class="text-sm text-gray-600 dark:text-gray-400">Valor do Pacote</label>
                     <input type="number" step="0.01" name="valor_desconto_${tipo}[]" 
                         value="${pacote.valor_pacote || ''}"
-                        class="mt-1 w-full bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600"
+                        class="mt-1 w-full bg-gray-50 dark:bg-[#3F3F46] text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600"
                         readonly>
                 </div>
+            </div>
+            <div>
+                <label class="text-sm text-gray-600 dark:text-gray-400">Código do Pacote</label>
+                <input type="text" name="codigo_desconto_${tipo}[]" 
+                    value="${pacote.codigo_pacote || ''}"
+                    class="mt-1 w-full bg-gray-50 dark:bg-[#3F3F46] text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600">
+            </div>
+            <div>
+                <label class="text-sm text-gray-600 dark:text-gray-400">Benefício</label>
+                <select name="beneficio_tipo_${tipo}[]" class="mt-1 w-full bg-gray-50 dark:bg-[#3F3F46] text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600">
+                    <option value="" ${!pacote.beneficio_tipo ? 'selected' : ''}>Nenhum</option>
+                    <option value="roleta" ${pacote.beneficio_tipo === 'roleta' ? 'selected' : ''}>Roleta</option>
+                    <option value="raspadinha" ${pacote.beneficio_tipo === 'raspadinha' ? 'selected' : ''}>Raspadinha</option>
+                </select>
+            </div>
+            <div>
+                <label class="text-sm text-gray-600 dark:text-gray-400">Qtd. Benefício</label>
+                <input type="number" min="0" name="beneficio_quantidade_${tipo}[]" value="${pacote.beneficio_quantidade || 0}"
+                    class="mt-1 w-full bg-gray-50 dark:bg-[#3F3F46] text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600">
             </div>
         </div>
         <button type="button" class="mt-3 text-red-500 hover:text-red-700 text-sm"
@@ -1495,7 +1788,7 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
     function adicionarPacoteExistenteExclusivo(pacote, tipo) {
         const container = tipo === 'normal' ? document.getElementById('descontos-container') : document.getElementById('descontos-exclusivos-container');
         const novoDesconto = document.createElement('div');
-        novoDesconto.className = 'bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200';
+        novoDesconto.className = 'bg-white dark:bg-[#27272A] p-4 rounded-lg border border-gray-200';
         novoDesconto.innerHTML = `
         <div class="grid space-y-3">
             <div class="gap-3">
@@ -1503,14 +1796,14 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
                     <label class="text-sm text-gray-600 dark:text-gray-400">Valor do Bilhete</label>
                     <input type="number" step="0.01" name="valor_bilhete_${tipo}[]" 
                         value="${pacote.valor_bilhete || ''}"
-                        class="mt-1 w-full bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600"
+                        class="mt-1 w-full bg-gray-50 dark:bg-[#3F3F46] text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600"
                         onkeyup="calcularValorPacote(this)">
                 </div>
                 <div>
                     <label class="text-sm text-gray-600 dark:text-gray-400">Quantidade de números</label>
                     <input type="number" name="quantidade_desconto_${tipo}[]" 
                         value="${pacote.quantidade_numeros || ''}"
-                        class="mt-1 w-full bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600"
+                        class="mt-1 w-full bg-gray-50 dark:bg-[#3F3F46] text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600"
                         onkeyup="calcularValorPacote(this)">
                 </div>
             </div>
@@ -1519,14 +1812,14 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
                     <label class="text-sm text-gray-600 dark:text-gray-400">Valor do Pacote</label>
                     <input type="number" step="0.01" name="valor_desconto_${tipo}[]" 
                         value="${pacote.valor_pacote || ''}"
-                        class="mt-1 w-full bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600"
+                        class="mt-1 w-full bg-gray-50 dark:bg-[#3F3F46] text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600"
                         readonly>
                 </div>
                 <div>
                     <label class="text-sm text-gray-600 dark:text-gray-400">Código do Pacote</label>
                     <input type="text" name="codigo_desconto_${tipo}[]" 
                         value="${pacote.codigo_pacote || ''}"
-                        class="mt-1 w-full bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600"
+                        class="mt-1 w-full bg-gray-50 dark:bg-[#3F3F46] text-gray-800 dark:text-white p-2 rounded border border-gray-300 dark:border-gray-600"
                         >
                 </div>
             </div>
@@ -1702,13 +1995,538 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
     }
 
     function validarCotasPremiadas(input) {
-  if (/\s/.test(input.value)) {
-    input.value = input.value.replace(/\s+/g, ''); // opcional: remove depois do alerta
-  }
-}
+        if (/\s/.test(input.value)) {
+            input.value = input.value.replace(/\s+/g, ''); // opcional: remove depois do alerta
+        }
+    }
 
+    function gerarHTMLGruposPremios(premiosJson) {
+        if (!premiosJson) return '';
 
+        try {
+            const grupos = JSON.parse(premiosJson);
+            if (!Array.isArray(grupos)) {
+                console.warn('premiosJson não é um array válido:', premiosJson);
+                return '';
+            }
 
+            return grupos.map((grupo, index) => {
+                // Validar estrutura do grupo
+                if (!grupo || typeof grupo !== 'object' || !Array.isArray(grupo.cotas) || !grupo.premio) {
+                    console.warn('Grupo inválido encontrado:', grupo);
+                    return '';
+                }
+
+                return `
+                <div class="bg-blue-50 dark:bg-blue-900 p-3 rounded border">
+                    <div class="font-medium text-blue-800 dark:text-blue-200 mb-2">
+                        Grupo ${index + 1}: ${grupo.premio}
+                    </div>
+                    <div class="flex flex-wrap gap-1">
+                            ${(() => {
+                                const largura = String(campanhaAtual.quantidade_numeros || 1).length;
+                                const pad = (n) => String(parseInt(String(n).trim()||'0',10)).padStart(largura, '0');
+                                return grupo.cotas.map(cota => `<span class="inline-block bg-blue-600 text-white px-2 py-1 rounded text-sm">${pad(cota)}</span>`).join('');
+                            })()}
+                    </div>
+                    <div class="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                        ${grupo.cotas.length} cotas neste grupo
+                    </div>
+                </div>
+            `;
+            }).join('');
+        } catch (e) {
+            console.error('Erro ao processar grupos de prêmios:', e, 'JSON:', premiosJson);
+            return '';
+        }
+    }
+
+    function gerarCotasPremiadas() {
+        const quantidade = document.getElementById('quantidade_cotas_premiadas').value;
+        const premio = document.getElementById('premio_cotas_premiadas').value;
+        const campanhaId = campanhaAtual.id;
+
+        if (!quantidade || quantidade < 1) {
+            alert('Por favor, insira uma quantidade válida maior que 0.');
+            return;
+        }
+
+        if (!premio || premio.trim() === '') {
+            alert('Por favor, insira um prêmio para este grupo de cotas.');
+            return;
+        }
+
+        // Mostrar loading
+        const btnGerar = document.querySelector('button[onclick="gerarCotasPremiadas()"]');
+        const textoOriginal = btnGerar.textContent;
+        btnGerar.textContent = 'Gerando...';
+        btnGerar.disabled = true;
+
+        // Fazer requisição para gerar cotas premiadas
+        fetch('ajax/gerar_cotas_premiadas.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: `campanha_id=${campanhaId}&quantidade=${quantidade}&premio=${encodeURIComponent(premio)}`
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Atualizar o contador de cotas
+                    const contadorElement = document.querySelector('#grupos_premios').nextElementSibling;
+                    if (contadorElement) {
+                        contadorElement.innerHTML = `Total de cotas premiadas: ${data.total_cotas}`;
+                    }
+
+                    // Atualizar a visualização dos grupos de prêmios
+                        const gruposElement = document.getElementById('grupos_premios');
+                    if (gruposElement && data.grupos_premios) {
+                        gruposElement.innerHTML = data.grupos_premios.map((grupo, index) => `
+                    <div class="bg-blue-50 dark:bg-blue-900 p-3 rounded border">
+                        <div class="font-medium text-blue-800 dark:text-blue-200 mb-2">
+                            Grupo ${index + 1}: ${grupo.premio}
+                        </div>
+                        <div class="flex flex-wrap gap-1">
+                            ${(() => {
+                                const largura = String(campanhaAtual.quantidade_numeros || 1).length;
+                                const pad = (n) => String(parseInt(String(n).trim()||'0',10)).padStart(largura, '0');
+                                return grupo.cotas.map(cota => `<span class="inline-block bg-blue-600 text-white px-2 py-1 rounded text-sm">${pad(cota)}</span>`).join('');
+                            })()}
+                        </div>
+                        <div class="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                            ${grupo.cotas.length} cotas neste grupo
+                        </div>
+                    </div>
+                `).join('');
+                    }
+
+                    // Atualizar o valor no campo hidden para salvar
+                    if (document.getElementById('cotas_premiadas_hidden')) {
+                        document.getElementById('cotas_premiadas_hidden').value = data.cotas.join(',');
+                    }
+
+                    // Mostrar mensagem com informações detalhadas
+                    let mensagem = `Cotas premiadas geradas com sucesso!\n\n`;
+                    mensagem += `Novas cotas adicionadas: ${data.novas_cotas.length}\n`;
+                    mensagem += `Total de cotas premiadas: ${data.total_cotas}\n`;
+                    mensagem += `Prêmio associado: ${data.premio}\n`;
+                    if (data.novas_cotas.length > 0) {
+                        mensagem += `\nNovas cotas: ${data.novas_cotas.join(', ')}`;
+                    }
+
+                    alert(mensagem);
+                } else {
+                    alert('Erro ao gerar cotas premiadas: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('Erro ao gerar cotas premiadas: ' + error.message);
+            })
+            .finally(() => {
+                // Restaurar botão
+                btnGerar.textContent = textoOriginal;
+                btnGerar.disabled = false;
+            });
+    }
+
+    function limparCotasPremiadas() {
+        const campanhaId = campanhaAtual.id;
+
+        if (!confirm('Tem certeza que deseja limpar todas as cotas premiadas? Esta ação não pode ser desfeita.')) {
+            return;
+        }
+
+        // Mostrar loading
+        const btnLimpar = document.querySelector('button[onclick="limparCotasPremiadas()"]');
+        const textoOriginal = btnLimpar.textContent;
+        btnLimpar.textContent = 'Limpando...';
+        btnLimpar.disabled = true;
+
+        // Fazer requisição para limpar cotas premiadas
+        fetch('ajax/limpar_cotas_premiadas.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: `campanha_id=${campanhaId}`
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Atualizar o contador de cotas
+                    const contadorElement = document.querySelector('#grupos_premios').nextElementSibling;
+                    if (contadorElement) {
+                        contadorElement.innerHTML = 'Total de cotas premiadas: 0';
+                    }
+
+                    // Limpar a visualização dos grupos de prêmios
+                    const gruposElement = document.getElementById('grupos_premios');
+                    if (gruposElement) {
+                        gruposElement.innerHTML = '';
+                    }
+
+                    // Atualizar o valor no campo hidden para salvar
+                    if (document.getElementById('cotas_premiadas_hidden')) {
+                        document.getElementById('cotas_premiadas_hidden').value = '';
+                    }
+
+                    alert('Todas as cotas premiadas foram removidas com sucesso!');
+                } else {
+                    alert('Erro ao limpar cotas premiadas: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('Erro ao limpar cotas premiadas: ' + error.message);
+            })
+            .finally(() => {
+                // Restaurar botão
+                btnLimpar.textContent = textoOriginal;
+                btnLimpar.disabled = false;
+            });
+    }
+
+    function corrigirGruposPremiados() {
+        const campanhaId = campanhaAtual.id;
+
+        if (!confirm('Esta função irá tentar corrigir grupos corrompidos. Deseja continuar?')) {
+            return;
+        }
+
+        // Mostrar loading
+        const btnCorrigir = document.querySelector('button[onclick="corrigirGruposPremiados()"]');
+        const textoOriginal = btnCorrigir.textContent;
+        btnCorrigir.textContent = 'Corrigindo...';
+        btnCorrigir.disabled = true;
+
+        // Fazer requisição para corrigir grupos
+        fetch('ajax/corrigir_grupos_premiados.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: `campanha_id=${campanhaId}`
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Atualizar a visualização dos grupos
+                    const gruposElement = document.getElementById('grupos_premios');
+                    if (gruposElement && data.grupos_premios) {
+                        gruposElement.innerHTML = data.grupos_premios.map((grupo, index) => `
+                    <div class="bg-blue-50 dark:bg-blue-900 p-3 rounded border">
+                        <div class="font-medium text-blue-800 dark:text-blue-200 mb-2">
+                            Grupo ${index + 1}: ${grupo.premio}
+                        </div>
+                        <div class="flex flex-wrap gap-1">
+                            ${grupo.cotas.map(cota =>
+                            `<span class="inline-block bg-blue-600 text-white px-2 py-1 rounded text-sm">${cota}</span>`
+                        ).join('')}
+                        </div>
+                        <div class="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                            ${grupo.cotas.length} cotas neste grupo
+                        </div>
+                    </div>
+                `).join('');
+                    }
+
+                    // Atualizar o contador
+                    const contadorElement = document.querySelector('#grupos_premios').nextElementSibling;
+                    if (contadorElement) {
+                        contadorElement.innerHTML = `Total de cotas premiadas: ${data.total_cotas}`;
+                    }
+
+                    alert('Grupos corrigidos com sucesso!');
+                } else {
+                    alert('Erro ao corrigir grupos: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('Erro ao corrigir grupos: ' + error.message);
+            })
+            .finally(() => {
+                // Restaurar botão
+                btnCorrigir.textContent = textoOriginal;
+                btnCorrigir.disabled = false;
+            });
+    }
+
+    // Funções para gerenciar pacotes de roleta
+    function gerarHTMLPacotesRoleta(pacotesJson) {
+        if (!pacotesJson) return '';
+
+        try {
+            const pacotes = JSON.parse(pacotesJson);
+            if (!Array.isArray(pacotes)) {
+                return '';
+            }
+
+            return pacotes.map((pacote, index) => `
+            <div class="bg-white dark:bg-[#27272A] p-4 rounded-lg shadow">
+                <div class="grid grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                            Valor do Pacote
+                        </label>
+                        <input type="number" step="0.01" name="valor_pacote_roleta[]" 
+                            value="${pacote.valor_pacote || ''}"
+                            class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                            Quantidade de Giros
+                        </label>
+                        <input type="number" name="quantidade_giros_roleta[]" 
+                            value="${pacote.quantidade_giros || ''}"
+                            class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                            Código do Pacote
+                        </label>
+                        <input type="text" name="codigo_pacote_roleta[]" 
+                            value="${pacote.codigo_pacote || ''}"
+                            class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                            Destaque
+                        </label>
+                        <select name="destaque_pacote_roleta[]" 
+                            class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                            <option value="0" ${pacote.destaque == '0' ? 'selected' : ''}>Normal</option>
+                            <option value="1" ${pacote.destaque == '1' ? 'selected' : ''}>Mais Popular</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="button" class="mt-2 text-red-600 hover:text-red-800 text-sm" onclick="removerPacoteRoleta(this)">
+                    Remover Pacote
+                </button>
+            </div>
+        `).join('');
+        } catch (e) {
+            console.error('Erro ao processar pacotes de roleta:', e);
+            return '';
+        }
+    }
+
+    function adicionarPacoteRoleta() {
+        // Removido: pacotes_roleta_container
+        const novoPacote = document.createElement('div');
+        novoPacote.className = 'bg-white dark:bg-[#27272A] p-4 rounded-lg shadow';
+        novoPacote.innerHTML = `
+        <div class="grid grid-cols-4 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                    Valor do Pacote
+                </label>
+                <input type="number" step="0.01" name="valor_pacote_roleta[]" 
+                    class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                    Quantidade de Giros
+                </label>
+                <input type="number" name="quantidade_giros_roleta[]" 
+                    class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                    Código do Pacote
+                </label>
+                <input type="text" name="codigo_pacote_roleta[]" 
+                    class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                    Destaque
+                </label>
+                <select name="destaque_pacote_roleta[]" 
+                    class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                    <option value="0">Normal</option>
+                    <option value="1">Mais Popular</option>
+                </select>
+            </div>
+        </div>
+        <button type="button" class="mt-2 text-red-600 hover:text-red-800 text-sm" onclick="removerPacoteRoleta(this)">
+            Remover Pacote
+        </button>
+    `;
+        container.appendChild(novoPacote);
+    }
+
+    function removerPacoteRoleta(button) {
+        const pacoteElement = button.closest('.bg-white.dark\\:bg-gray-800');
+        if (pacoteElement) {
+            pacoteElement.remove();
+        }
+    }
+
+    // Funções para gerenciar itens da raspadinha
+    function gerarHTMLItensRaspadinha(itensJson) {
+        if (!itensJson) return '';
+
+        try {
+            const itens = JSON.parse(itensJson);
+            if (!Array.isArray(itens)) {
+                return '';
+            }
+
+            return itens.map((item, index) => `
+            <div class="bg-white dark:bg-[#27272A] p-4 rounded-lg shadow border">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                            Nome do Item
+                        </label>
+                        <input type="text" name="nome_item_raspadinha[]" 
+                            value="${item.nome || ''}"
+                            class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                            placeholder="Ex: R$ 100,00">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                            Status
+                        </label>
+                        <select name="status_item_raspadinha[]" 
+                            class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                            <option value="disponivel" ${item.status == 'disponivel' ? 'selected' : ''}>Disponível</option>
+                            <option value="bloqueado" ${item.status == 'bloqueado' ? 'selected' : ''}>Bloqueado</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="button" class="mt-2 text-red-600 hover:text-red-800 text-sm" onclick="removerItemRaspadinha(this)">
+                    Remover Item
+                </button>
+            </div>
+        `).join('');
+        } catch (e) {
+            console.error('Erro ao processar itens da raspadinha:', e);
+            return '';
+        }
+    }
+
+    function adicionarItemRaspadinha() {
+        const container = document.getElementById('itens_raspadinha_container');
+        const novoItem = document.createElement('div');
+        novoItem.className = 'bg-white dark:bg-[#27272A] p-4 rounded-lg shadow border';
+        novoItem.innerHTML = `
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                    Nome do Item
+                </label>
+                <input type="text" name="nome_item_raspadinha[]" 
+                    class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                    placeholder="Ex: R$ 100,00">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                    Status
+                </label>
+                <select name="status_item_raspadinha[]" 
+                    class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                    <option value="disponivel">Disponível</option>
+                    <option value="bloqueado">Bloqueado</option>
+                </select>
+            </div>
+        </div>
+        <button type="button" class="mt-2 text-red-600 hover:text-red-800 text-sm" onclick="removerItemRaspadinha(this)">
+            Remover Item
+        </button>
+    `;
+        container.appendChild(novoItem);
+    }
+
+    function removerItemRaspadinha(button) {
+        const itemElement = button.closest('.bg-white.dark\\:bg-gray-800');
+        if (itemElement) {
+            itemElement.remove();
+        }
+    }
+
+    // Funções para gerenciar itens da roleta
+    function gerarHTMLItensRoleta(itensJson) {
+        if (!itensJson) return '';
+
+        try {
+            const itens = JSON.parse(itensJson);
+            if (!Array.isArray(itens)) {
+                return '';
+            }
+
+            return itens.map((item, index) => `
+            <div class="bg-white dark:bg-[#27272A] p-4 rounded-lg shadow border">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                            Nome do Item
+                        </label>
+                        <input type="text" name="nome_item_roleta[]" 
+                            value="${item.nome || ''}"
+                            class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                            placeholder="Ex: R$ 50,00">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                            Status
+                        </label>
+                        <select name="status_item_roleta[]" 
+                            class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                            <option value="disponivel" ${item.status == 'disponivel' ? 'selected' : ''}>Disponível</option>
+                            <option value="bloqueado" ${item.status == 'bloqueado' ? 'selected' : ''}>Bloqueado</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="button" class="mt-2 text-red-600 hover:text-red-800 text-sm" onclick="removerItemRoleta(this)">
+                    Remover Item
+                </button>
+            </div>
+        `).join('');
+        } catch (e) {
+            console.error('Erro ao processar itens da roleta:', e);
+            return '';
+        }
+    }
+
+    function adicionarItemRoleta() {
+        const container = document.getElementById('itens_roleta_container');
+        const novoItem = document.createElement('div');
+        novoItem.className = 'bg-white dark:bg-[#27272A] p-4 rounded-lg shadow border';
+        novoItem.innerHTML = `
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                    Nome do Item
+                </label>
+                <input type="text" name="nome_item_roleta[]" 
+                    class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600"
+                    placeholder="Ex: R$ 50,00">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                    Status
+                </label>
+                <select name="status_item_roleta[]" 
+                    class="w-full bg-gray-50 text-gray-800 dark:bg-[#3F3F46] dark:text-white p-2 rounded-md border border-gray-300 dark:border-gray-600">
+                    <option value="disponivel">Disponível</option>
+                    <option value="bloqueado">Bloqueado</option>
+                </select>
+            </div>
+        </div>
+        <button type="button" class="mt-2 text-red-600 hover:text-red-800 text-sm" onclick="removerItemRoleta(this)">
+            Remover Item
+        </button>
+    `;
+        container.appendChild(novoItem);
+    }
+
+    function removerItemRoleta(button) {
+        const itemElement = button.closest('.bg-white.dark\\:bg-gray-800');
+        if (itemElement) {
+            itemElement.remove();
+        }
+    }
 
 </script>
 <script src="js/funcoes_imagens.js"></script>

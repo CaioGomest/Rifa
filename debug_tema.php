@@ -30,13 +30,13 @@ $isDarkMode = $config['tema'] == 'escuro';
         }
     </script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen">
+<body class="bg-gray-100 dark:bg-[#18181B] text-gray-900 dark:text-gray-100 min-h-screen">
     <div class="container mx-auto px-4 py-8">
         <h1 class="text-3xl font-bold mb-8 text-center">Debug do Tema</h1>
         
         <div class="max-w-4xl mx-auto space-y-6">
             <!-- Informações do banco -->
-                    <div class="bg-white dark:bg-gray-800  p-6 rounded-lg shadow-md">
+                    <div class="bg-white dark:bg-[#27272A]  p-6 rounded-lg shadow-md">
           <h2 class="text-xl font-semibold mb-4">Informações do Banco</h2>
                 <p><strong>Valor no banco:</strong> <?php echo $config['tema']; ?></p>
                 <p><strong>isDarkMode:</strong> <?php echo $isDarkMode ? 'true' : 'false'; ?></p>
@@ -44,7 +44,7 @@ $isDarkMode = $config['tema'] == 'escuro';
             </div>
 
             <!-- Teste de mapeamento -->
-                    <div class="bg-white dark:bg-gray-800  p-6 rounded-lg shadow-md">
+                    <div class="bg-white dark:bg-[#27272A]  p-6 rounded-lg shadow-md">
           <h2 class="text-xl font-semibold mb-4">Teste de Mapeamento</h2>
                 <div id="mappingTest">
                     <p><strong>Mapeamento:</strong></p>
@@ -56,7 +56,7 @@ $isDarkMode = $config['tema'] == 'escuro';
             </div>
 
             <!-- Controles -->
-                    <div class="bg-white dark:bg-gray-800  p-6 rounded-lg shadow-md">
+                    <div class="bg-white dark:bg-[#27272A]  p-6 rounded-lg shadow-md">
           <h2 class="text-xl font-semibold mb-4">Controles</h2>
                 <div class="flex space-x-4">
                     <button onclick="testMapping()" class="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white px-4 py-2 rounded">
@@ -69,9 +69,9 @@ $isDarkMode = $config['tema'] == 'escuro';
             </div>
 
             <!-- Logs -->
-                    <div class="bg-white dark:bg-gray-800  p-6 rounded-lg shadow-md">
+                    <div class="bg-white dark:bg-[#27272A]  p-6 rounded-lg shadow-md">
           <h2 class="text-xl font-semibold mb-4">Logs</h2>
-                <div id="logs" class="bg-gray-100 dark:bg-gray-700 p-4 rounded text-sm font-mono max-h-64 overflow-y-auto">
+                <div id="logs" class="bg-gray-100 dark:bg-[#3F3F46] p-4 rounded text-sm font-mono max-h-64 overflow-y-auto">
                     <p>Logs aparecerão aqui...</p>
                 </div>
             </div>

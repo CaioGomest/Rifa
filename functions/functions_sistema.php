@@ -134,3 +134,74 @@ function inserirHistoricoSorteio($conn, $dados)
     return mysqli_stmt_execute($stmt);
 }
 
+// Utilidades de formatação de cotas (exibição)
+// Calcula a largura (nº de dígitos) a partir da quantidade total de números da campanha
+function calcularLarguraCotaPorQuantidade($quantidade_total)
+{
+    $quantidade_total = intval($quantidade_total);
+    if ($quantidade_total < 1) {
+        $quantidade_total = 1;
+    }
+    return strlen((string) $quantidade_total);
+}
+
+// Obtém a largura (nº de dígitos) para uma campanha específica
+function obterLarguraCotaPorCampanha($conn, $campanha_id)
+{
+    $campanha_id = intval($campanha_id);
+    if ($campanha_id <= 0) {
+        return 1;
+    }
+
+    $sql = "SELECT quantidade_numeros FROM campanhas WHERE id = ? LIMIT 1";
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) {
+        return 1;
+    }
+    mysqli_stmt_bind_param($stmt, 'i', $campanha_id);
+    if (!mysqli_stmt_execute($stmt)) {
+        return 1;
+    }
+    $result = mysqli_stmt_get_result($stmt);
+    $row = $result ? mysqli_fetch_assoc($result) : null;
+    $quantidade_total = $row && isset($row['quantidade_numeros']) ? intval($row['quantidade_numeros']) : 0;
+    return calcularLarguraCotaPorQuantidade($quantidade_total);
+}
+
+// Formata um número de cota com zeros à esquerda respeitando a largura
+function formatarCotaComLargura($numero, $largura)
+{
+    $largura = max(1, intval($largura));
+    $numero_limpo = trim((string) $numero);
+    if ($numero_limpo === '') {
+        return '';
+    }
+    $numero_int = intval($numero_limpo);
+    return str_pad((string) $numero_int, $largura, '0', STR_PAD_LEFT);
+}
+
+// Formata um array de cotas com a mesma largura
+function formatarArrayCotasComLargura($cotas, $largura)
+{
+    if (!is_array($cotas)) {
+        return [];
+    }
+    $resultado = [];
+    foreach ($cotas as $cota) {
+        $resultado[] = formatarCotaComLargura($cota, $largura);
+    }
+    return $resultado;
+}
+
+// Formata uma string CSV de cotas com a mesma largura
+function formatarCsvCotasComLargura($csv, $largura)
+{
+    $itens = array_filter(array_map('trim', explode(',', (string) $csv)), function ($v) {
+        return $v !== '';
+    });
+    $itens_formatados = [];
+    foreach ($itens as $cota) {
+        $itens_formatados[] = formatarCotaComLargura($cota, $largura);
+    }
+    return implode(',', $itens_formatados);
+}

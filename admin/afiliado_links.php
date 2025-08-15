@@ -47,7 +47,7 @@ $link_afiliado = $_SERVER['HTTP_HOST'] . '?id=' . $afiliado['campanha_id'] . '&r
     <title>Links do Afiliado</title>
 </head>
 
-<body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white min-h-screen">
+<body class="bg-gray-100 text-gray-900 dark:bg-[#18181B] dark:text-white min-h-screen">
     <div class="flex flex-col md:flex-row min-h-screen">
         <?php require("sidebar.php"); ?>
 
@@ -58,7 +58,7 @@ $link_afiliado = $_SERVER['HTTP_HOST'] . '?id=' . $afiliado['campanha_id'] . '&r
 
           
 
-            <div class="bg-white dark:bg-gray-800 p-4 md:p-8 rounded-lg shadow-md w-full max-w-5xl mx-auto mb-8">
+            <div class="bg-white dark:bg-[#27272A] p-4 md:p-8 rounded-lg shadow-md w-full max-w-5xl mx-auto mb-8">
                 <form method="POST" enctype="multipart/form-data" class="space-y-8">
                  
                     <!-- Código de Afiliado (Somente Leitura) -->
@@ -70,7 +70,7 @@ $link_afiliado = $_SERVER['HTTP_HOST'] . '?id=' . $afiliado['campanha_id'] . '&r
                                 ?>
                                 <div class="flex mb-4">
                                     <input type="text" id="<?= $id ?>"
-                                        class="w-full p-3 border rounded-l-lg bg-gray-100 dark:bg-gray-700 dark:border-gray-600 select-none focus:outline-none"
+                                        class="w-full p-3 border rounded-l-lg bg-gray-100 dark:bg-[#3F3F46] dark:border-gray-600 select-none focus:outline-none"
                                         value="<?= htmlspecialchars($link) ?>" readonly
                                         style="user-select: none; -webkit-user-select: none;">
                                     <button type="button" onclick="copiarCodigo('<?= $id ?>')"
