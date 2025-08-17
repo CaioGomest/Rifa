@@ -335,86 +335,86 @@ function editaCampanha(
     $conn,
     $id,
    
-    $nome,
-    $subtitulo,
-    $descricao,
-    $caminho_imagem,
-    $galeria_imagens,
-    $status,
+    $nome = null,
+    $subtitulo = null,
+    $descricao = null,
+    $caminho_imagem = null,
+    $galeria_imagens = null,
+    $status = null,
     
     
-    $data_sorteio,
-    
-   
-    $preco,
-    
-    
-    $quantidade_numeros,
-    $compra_minima,
-    $compra_maxima,
-    $numeros_pendentes,
-    $numeros_pagos,
-    
-    
-    
-    $habilitar_pacote_padrao,
-    $pacote_padrao,
-    
-    $habilitar_adicao_rapida,
-    $adicao_rapida,
-    
-    $habilitar_pacote_promocional,
-    $pacote_promocional,
-    
-    $habilitar_desconto_acumulativo,
-    
-    $habilita_pacote_promocional_exclusivo,
-    $pacotes_exclusivos,
+    $data_sorteio = null,
     
    
-    $habilitar_ranking,
-    $mensagem_ranking,
-    $exibir_ranking,
-    $quantidade_ranking,
-
-    $habilitar_barra_progresso,
-	$ativar_progresso_manual,
-    $porcentagem_barra_progresso,
+    $preco = null,
     
     
-    $numero_sorteio,
-    $tipo_sorteio,
-    $campanha_destaque,
-    $campanha_privada,
-    $vencedor_sorteio,
+    $quantidade_numeros = null,
+    $compra_minima = null,
+    $compra_maxima = null,
+    $numeros_pendentes = null,
+    $numeros_pagos = null,
+    
+    
+    
+        $habilitar_pacote_padrao = null,
+    $pacote_padrao = null,
+    
+    $habilitar_adicao_rapida = null,
+    $adicao_rapida = null,
+    
+    $habilitar_pacote_promocional = null,
+    $pacote_promocional = null,
+    
+    $habilitar_desconto_acumulativo = null,
+    
+    $habilita_pacote_promocional_exclusivo = null,
+    $pacotes_exclusivos = null,
+    
+   
+    $habilitar_ranking = null,
+    $mensagem_ranking = null,
+    $exibir_ranking = null,
+    $quantidade_ranking = null,
 
-	$habilitar_cotas_em_dobro,
-    $cotas_premiadas,
+    $habilitar_barra_progresso = null,
+	$ativar_progresso_manual = null,
+    $porcentagem_barra_progresso = null,
+    
+    
+    $numero_sorteio = null,
+    $tipo_sorteio = null,
+    $campanha_destaque = null,
+    $campanha_privada = null,
+    $vencedor_sorteio = null,
+
+	$habilitar_cotas_em_dobro = null,
+    $cotas_premiadas = null,
         
-    $premio_cotas_premiadas,
-    $descricao_cotas_premiadas,
+        $premio_cotas_premiadas = null,
+    $descricao_cotas_premiadas = null,
   
-    $selecionar_top_ganhadores,
-    $filtro_periodo_top_ganhadores,
+    $selecionar_top_ganhadores = null,
+    $filtro_periodo_top_ganhadores = null,
 
-    $mostrar_cotas_premiadas,
-    $status_cotas_premiadas,
+    $mostrar_cotas_premiadas = null,
+    $status_cotas_premiadas = null,
 
-    $titulo_cotas_dobro,
-    $subtitulo_cotas_dobro,
+    $titulo_cotas_dobro = null,
+    $subtitulo_cotas_dobro = null,
     
-    $imagem_capa,
-    $layout,
+    $imagem_capa = null,
+    $layout = null,
     
     // Novos parâmetros para Roletas e Raspadinhas
-    $habilitar_roleta,
-    $titulo_roleta,
-    $descricao_roleta,
-    $itens_roleta,
-    $habilitar_raspadinha,
-    $titulo_raspadinha,
-    $descricao_raspadinha,
-    $itens_raspadinha
+    $habilitar_roleta = null,
+    $titulo_roleta = null,
+    $descricao_roleta = null,
+    $itens_roleta = null,
+    $habilitar_raspadinha = null,
+    $titulo_raspadinha = null,
+    $descricao_raspadinha = null,
+    $itens_raspadinha = null
     
 ) {
     if (!is_numeric($id))
@@ -598,6 +598,7 @@ function editaCampanha(
     if($descricao_raspadinha != null)
         $campos[] = "descricao_raspadinha = '" . mysqli_real_escape_string($conn, $descricao_raspadinha) . "'";
 
+
     // Trata arrays para Itens da Roleta e Raspadinha
     if($itens_roleta != null) {
         if(is_array($itens_roleta)) {
@@ -615,7 +616,9 @@ function editaCampanha(
 
     $query = "UPDATE campanhas SET " . implode(", ", $campos) . " WHERE id = " . (int)$id;
     
-    //echo $query;
+    // echo $query;
+    // die();
+
     $result = mysqli_query($conn, $query);
 
     if ($result)

@@ -1,11 +1,11 @@
 <?php
 ob_start();
-require_once("../functions/functions_pedidos.php");
-require_once("../functions/functions_campanhas.php");
-require '../functions/functions_sistema.php';
-require '../functions/functions_usuarios.php';
-require '../functions/functions_uploads.php';
-require '../conexao.php';
+require_once(__DIR__ . "/../functions/functions_pedidos.php");
+require_once(__DIR__ . "/../functions/functions_campanhas.php");
+require __DIR__ . '/../functions/functions_sistema.php';
+require __DIR__ . '/../functions/functions_usuarios.php';
+require __DIR__ . '/../functions/functions_uploads.php';
+require __DIR__ . '/../conexao.php';
 
 $config = listaInformacoes($conn);
 

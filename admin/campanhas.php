@@ -229,47 +229,47 @@ $campanhas = listaCampanhas($conn, NULL, NULL, $status, NULL, NULL, NULL, NULL, 
                 <button onclick="fecharModalEdicao()" class="text-gray-500 hover:text-gray-700">✕</button>
             </div>
             <div class="space-y-4">
-                <button onclick="abrirModalCampo('dados')"
+                <button onclick="window.location.href='dados.php?id=' + campanhaAtual.id"
                     class="w-full text-left p-3 bg-gray-100 dark:bg-[#3F3F46] rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
                     📝 Dados Gerais
                 </button>
-                <button onclick="abrirModalCampo('imagens')"
+                <button onclick="window.location.href='imagens.php?id=' + campanhaAtual.id"
                     class="w-full text-left p-3 bg-gray-100 dark:bg-[#3F3F46] rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
                     🖼️ Imagens
                 </button>
-                <button onclick="abrirModalCampo('consultar_cota')"
+                <button onclick="window.location.href='consultar_cota.php?id=' + campanhaAtual.id"
                     class="w-full text-left p-3 bg-gray-100 dark:bg-[#3F3F46] rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
                     🔍 Consultar Cota
                 </button>
-                <button onclick="abrirModalCampo('desconto')"
+                <button onclick="window.location.href='desconto.php?id=' + campanhaAtual.id"
                     class="w-full text-left p-3 bg-gray-100 dark:bg-[#3F3F46] rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
                     💰 Desconto
                 </button>
-                <button onclick="abrirModalCampo('ranking')"
+                <button onclick="window.location.href='ranking.php?id=' + campanhaAtual.id"
                     class="w-full text-left p-3 bg-gray-100 dark:bg-[#3F3F46] rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
                     🏆 Top Compradores
                 </button>
-                <button onclick="abrirModalCampo('barra')"
+                <button onclick="window.location.href='barra.php?id=' + campanhaAtual.id"
                     class="w-full text-left p-3 bg-gray-100 dark:bg-[#3F3F46] rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
                     📊 Barra de Progresso
                 </button>
-                <button onclick="abrirModalCampo('ganhadores')"
+                <button onclick="window.location.href='ganhadores.php?id=' + campanhaAtual.id"
                     class="w-full text-left p-3 bg-gray-100 dark:bg-[#3F3F46] rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
                     🎯 Ganhadores
                 </button>
-                <button onclick="abrirModalCampo('cotas_premiadas')"
+                <button onclick="window.location.href='cotas_premiadas.php?id=' + campanhaAtual.id"
                     class="w-full text-left p-3 bg-gray-100 dark:bg-[#3F3F46] rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
                     🎌 Cotas Premiadas
                 </button>
-                <button onclick="abrirModalCampo('cotas_dobro')"
+                <button onclick="window.location.href='cotas_dobro.php?id=' + campanhaAtual.id"
                     class="w-full text-left p-3 bg-gray-100 dark:bg-[#3F3F46] rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
                     🔄 Cotas em Dobro
                 </button>
-                <button onclick="abrirModalCampo('sorteios')"
+                <button onclick="window.location.href='sorteios.php?id=' + campanhaAtual.id"
                     class="w-full text-left p-3 bg-gray-100 dark:bg-[#3F3F46] rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
                     🎲 Sorteios
                 </button>
-                <button onclick="abrirModalCampo('roletas_raspadinhas')"
+                <button onclick="window.location.href='roletas_raspadinhas.php?id=' + campanhaAtual.id"
                     class="w-full text-left p-3 bg-gray-100 dark:bg-[#3F3F46] rounded-md hover:bg-gray-200 dark:hover:bg-gray-600">
                     🎰 Roletas e Raspadinhas
                 </button>

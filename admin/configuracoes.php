@@ -180,51 +180,22 @@ $infos = listaInformacoes($conn);
             </header>
 
             <?php if (isset($mensagem)): ?>
-                <div id="mensagem-alerta" class="mb-4 p-4 rounded-md <?php echo $mensagem['tipo'] === 'sucesso' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'; ?> transition-all duration-500 opacity-100">
-                    <?php echo $mensagem['texto']; ?>
-                    <?php if ($mensagem['tipo'] === 'sucesso'): ?>
-                        <script>
-                            // Atualiza a logo da sidebar após salvar com sucesso
-                            const sidebarLogo = document.getElementById('logo');
-                            if (sidebarLogo) {
-                                const logoPath = '<?php echo isset($logo_path) ? "../" . $logo_path : ""; ?>';
-                                if (logoPath) {
-                                    sidebarLogo.src = logoPath;
-                                }
-                            }
-                        </script>
-                    <?php endif; ?>
-                </div>
+                <?php require_once('../assets/template_alerta.php'); ?>
+                <script>
+                    showCustomAlert(<?php echo json_encode($mensagem['texto']); ?>, <?php echo $mensagem['tipo'] === 'sucesso' ? json_encode('success') : json_encode('error'); ?>);
+                </script>
+                <?php if ($mensagem['tipo'] === 'sucesso'): ?>
+                    <script>
+                        const sidebarLogo = document.getElementById('logo');
+                        if (sidebarLogo) {
+                            const logoPath = '<?php echo isset($logo_path) ? "../" . $logo_path : ""; ?>';
+                            if (logoPath) { sidebarLogo.src = logoPath; }
+                        }
+                    </script>
+                <?php endif; ?>
             <?php endif; ?>
 
-            <script>
-                // Função para esconder a mensagem
-                function esconderMensagem() {
-                    const mensagem = document.getElementById('mensagem-alerta');
-                    if (mensagem) {
-                        // Primeiro aplica a transição de opacidade
-                        mensagem.style.opacity = '0';
-                        
-                        // Depois de 500ms (duração da transição) remove o elemento
-                        setTimeout(() => {
-                            mensagem.style.height = '0';
-                            mensagem.style.margin = '0';
-                            mensagem.style.padding = '0';
-                        }, 500);
-                    }
-                }
-
-                // Se existe uma mensagem de sucesso, configura o timer para escondê-la
-                <?php if (isset($mensagem) && $mensagem['tipo'] === 'sucesso'): ?>
-                    setTimeout(esconderMensagem, 5000);
-                <?php endif; ?>
-            </script>
-
             <style>
-                #mensagem-alerta {
-                    transition: all 0.5s ease-in-out;
-                }
-
                 /* Adiciona rolagem suave nas abas */
                 .overflow-x-auto {
                     -webkit-overflow-scrolling: touch;
